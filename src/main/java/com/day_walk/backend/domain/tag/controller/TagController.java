@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.tag.controller;
 
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;
+import com.day_walk.backend.domain.tag.data.out.GetTagByPlaceDto;
 import com.day_walk.backend.domain.tag.service.TagService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,20 @@ public class TagController {
         response.put("success", success);
         response.put("message", success ? "카테고리별 태그 전체 조회 성공!" : "카테고리별 태그 전체 조회 실패..");
         response.put("tagList", tagList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 장소와 연관되어있는 모든 태그 조회 API
+    @GetMapping("/all/place")
+    public ResponseEntity<Map<String, Object>> getAllTagByPlace(@RequestParam("placeId") UUID placeId) {
+        GetTagByPlaceDto getTagByPlaceDto = tagService.getTagByPlace(placeId);
+        boolean success = getTagByPlaceDto != null;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "장소별 태그 전체 조회 성공!" : "장소별 태그 전체 조회 실패..");
+        response.put("placeInfo", getTagByPlaceDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
