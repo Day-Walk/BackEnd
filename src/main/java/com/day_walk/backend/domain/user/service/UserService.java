@@ -16,9 +16,10 @@ import java.util.UUID;
 public class UserService {
 
     private final GetUserEntityBean getUserEntityBean;
+
     public GetUserDto getUserInfo(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
-        if(user == null) return null;
+        if (user == null) return null;
         return GetUserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -26,20 +27,22 @@ public class UserService {
     }
 
     private final SaveUserBean saveUserBean;
+
     public UUID saveUserInfo(SaveUserDto userInfo) {
         UserEntity getUser = getUserEntityBean.exec(userInfo.getId());
-        if(getUser.getAge() == -1 && getUser.getGender() == -1) {
+        if (getUser.getAge() == -1 && getUser.getGender() == -1) {
             getUser.saveUser(userInfo);
             saveUserBean.exec(getUser);
         }
-        return getUser == null ? null : getUser.getId();
+        return getUser.getId();
     }
+
     public UUID updateUserInfo(UpdateUserDto updateUserDto) {
         UserEntity getUser = getUserEntityBean.exec(updateUserDto.getId());
-        if(getUser == null) return null;
+        if (getUser == null) return null;
         getUser.updateUser(updateUserDto);
         saveUserBean.exec(getUser);
-        return getUser == null ? null : getUser.getId();
+        return getUser.getId();
     }
 
 }

@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Tag(name = "User 관련 API", description = "User에 관련된 API들입니다.")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getUserInfo(@RequestParam("userId")UUID userId){
+    public ResponseEntity<Map<String, Object>> getUserInfo(@RequestParam("userId") UUID userId) {
 
         GetUserDto userInfo = userService.getUserInfo(userId);
 

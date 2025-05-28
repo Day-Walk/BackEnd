@@ -12,6 +12,7 @@ import java.util.UUID;
 public class GetUserEntityBean {
 
     private final UserRepository userRepository;
+
     public UserEntity exec(UUID userId) {
         return userRepository.findById(userId).orElse(null);
     }
