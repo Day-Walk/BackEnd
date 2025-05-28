@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.bean.SaveUserBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,13 @@ public class UserService {
             getUser.saveUser(userInfo);
             saveUserBean.exec(getUser);
         }
+        return getUser == null ? null : getUser.getId();
+    }
+    public UUID updateUserInfo(UpdateUserDto updateUserDto) {
+        UserEntity getUser = getUserEntityBean.exec(updateUserDto.getId());
+        if(getUser == null) return null;
+        getUser.updateUser(updateUserDto);
+        saveUserBean.exec(getUser);
         return getUser == null ? null : getUser.getId();
     }
 

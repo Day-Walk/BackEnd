@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.user.data;
 
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -29,6 +30,10 @@ public class UserEntity {
         name = saveUserDto.getName();
         gender = saveUserDto.getGender();
         age = saveUserDto.getAge();
+    }
+
+    public void updateUser(UpdateUserDto updateUserDto) {
+        name = updateUserDto.getName();
     }
 
     @Builder

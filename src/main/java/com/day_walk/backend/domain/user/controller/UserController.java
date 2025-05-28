@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.user.controller;
 
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,19 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("userId", userId);
         response.put("message", userId == null ? "유저 초기정보 저장 실패.." : "유저 초기정보 저장 성공");
+        response.put("hasSuccess", userId != null);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateUserInfo(@RequestBody UpdateUserDto updateUserDto) {
+
+        UUID userId = userService.updateUserInfo(updateUserDto);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", userId);
+        response.put("message", userId == null ? "유저 수정 실패.." : "유저 수정 성공");
         response.put("hasSuccess", userId != null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
