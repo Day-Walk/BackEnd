@@ -94,4 +94,13 @@ public class CourseService {
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
         return courseId == null ? null : courseId.getId();
     }
+
+    public UUID deleteCourse(ChangeBooleanDto changeBooleanDto) {
+        CourseEntity courseEntity = getCourseEntityBean.exec(changeBooleanDto.getCourseId());
+        if (courseEntity == null) return null;
+        courseEntity.deleteCourse();
+        saveCourseEntityBean.exec(courseEntity);
+        CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
+        return courseId == null ? null : courseId.getId();
+    }
 }

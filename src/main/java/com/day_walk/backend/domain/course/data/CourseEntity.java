@@ -46,4 +46,8 @@ public class CourseEntity extends BaseEntity {
         this.visible = !this.visible;
     }
 
+    public void deleteCourse() {
+        this.hasDelete = true;
+    }
+
 }

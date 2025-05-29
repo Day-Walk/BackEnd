@@ -74,4 +74,18 @@ public class CourseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-}
+
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> deleteCourse(@RequestBody ChangeBooleanDto changeBooleanDto) {
+
+        UUID courseId = courseService.deleteCourse(changeBooleanDto);
+
+        boolean success = courseId != null;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "코스 삭제 성공!" : "코스 삭제 실패..");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+ }
