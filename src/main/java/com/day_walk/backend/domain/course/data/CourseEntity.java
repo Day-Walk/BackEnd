@@ -28,12 +28,13 @@ public class CourseEntity extends BaseEntity {
     private boolean hasDelete;
 
     @Builder
-    public CourseEntity(UUID id, UUID userId, String title, boolean visible, List<UUID> placeList) {
+    public CourseEntity(UUID id, UUID userId, String title, boolean visible, List<UUID> placeList, boolean hasDelete) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.visible = visible;
         this.placeList = placeList;
+        this.hasDelete = hasDelete;
     }
 
 }

@@ -37,6 +37,7 @@ public class CourseService {
                 .title(saveCourseDto.getTitle())
                 .visible(saveCourseDto.isVisible())
                 .placeList(saveCourseDto.getPlaceList())
+                .hasDelete(false)
                 .build();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity course = saveCourseEntityBean.exec(courseEntity.getId());
