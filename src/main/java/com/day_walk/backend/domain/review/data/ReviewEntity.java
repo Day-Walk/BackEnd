@@ -33,6 +33,10 @@ public class ReviewEntity extends BaseEntity {
     @Convert(converter = StringToListConverter.class)
     private List<UUID> tagList;
 
+    public void delete() {
+        this.hasDelete = true;
+    }
+
     @Builder
     public ReviewEntity(SaveReviewDto saveReviewDto) {
         this.id = UUID.randomUUID();

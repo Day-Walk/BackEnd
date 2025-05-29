@@ -35,8 +35,8 @@ public class ReviewController {
 
     @DeleteMapping
     public ResponseEntity<Map<String, Object>> deleteReview(@RequestBody DeleteReviewDto deleteReviewDto) {
+        boolean success = reviewService.deleteReview(deleteReviewDto);
 
-        boolean success = true;
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "리뷰 삭제 성공!" : "리뷰 삭제 실패..");

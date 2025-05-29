@@ -30,11 +30,13 @@ public class ReviewService {
     public boolean deleteReview(DeleteReviewDto deleteReviewDto) {
         ReviewEntity review = getReviewEntityBean.exec(deleteReviewDto.getReviewId());
 
-        if (review == null) {
+        if (review == null || review.isHasDelete()) {
             return false;
         }
 
-        deleteReviewEntityBean.exec(review);
+        ReviewEntity deleteReview = deleteReviewEntityBean.exec(review);
+        System.out.println(deleteReview.isHasDelete());
+        saveReviewEntityBean.exec(deleteReview);
         return true;
     }
 }
