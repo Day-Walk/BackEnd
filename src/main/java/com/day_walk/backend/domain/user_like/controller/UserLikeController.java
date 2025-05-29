@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.user_like.controller;
 
-import com.day_walk.backend.domain.user_like.data.dto.in.CreateUserLikeDto;
+import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
 import com.day_walk.backend.domain.user_like.service.UserLikeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +24,9 @@ public class UserLikeController {
     private final UserLikeService userLikeService;
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createUserLike(@RequestBody CreateUserLikeDto createUserLikeDto) {
+    public ResponseEntity<Map<String, Object>> createUserLike(@RequestBody SaveUserLikeDto saveUserLikeDto) {
 
-        UUID userId = userLikeService.createUserLike(createUserLikeDto);
+        UUID userId = userLikeService.createUserLike(saveUserLikeDto);
         boolean success = userId != null;
 
         Map<String, Object> response = new HashMap<>();

@@ -7,6 +7,6 @@ import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class CreateUserLikeDto {
+public class SaveUserLikeDto {
     private UUID userId;
 }

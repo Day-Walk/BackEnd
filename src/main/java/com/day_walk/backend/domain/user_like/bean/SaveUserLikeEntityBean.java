@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CreateUserLikeBean {
+public class SaveUserLikeEntityBean {
 
     private final UserLikeRepository userLikeRepository;
 

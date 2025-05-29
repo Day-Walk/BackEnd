@@ -2,10 +2,10 @@ package com.day_walk.backend.domain.user_like.service;
 
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
-import com.day_walk.backend.domain.user_like.bean.CreateUserLikeBean;
-import com.day_walk.backend.domain.user_like.bean.GetUserLikeBean;
+import com.day_walk.backend.domain.user_like.bean.SaveUserLikeEntityBean;
+import com.day_walk.backend.domain.user_like.bean.GetUserLikeEntityBean;
 import com.day_walk.backend.domain.user_like.data.UserLikeEntity;
-import com.day_walk.backend.domain.user_like.data.dto.in.CreateUserLikeDto;
+import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +15,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserLikeService {
 
-    private final CreateUserLikeBean createUserLikeBean;
-    private final GetUserLikeBean getUserLikeBean;
+    private final SaveUserLikeEntityBean saveUserLikeEntityBean;
+    private final GetUserLikeEntityBean getUserLikeEntityBean;
     private final GetUserEntityBean getUserEntityBean;
 
-    public UUID createUserLike(CreateUserLikeDto createUserLikeDto) {
+    public UUID createUserLike(SaveUserLikeDto saveUserLikeDto) {
 
-        UserEntity userEntity = getUserEntityBean.exec(createUserLikeDto.getUserId());
+        UserEntity userEntity = getUserEntityBean.exec(saveUserLikeDto.getUserId());
 
         if (userEntity == null) return null;
 
-        UserLikeEntity userLikeEntity = UserLikeEntity.builder()
-                .id(UUID.randomUUID())
-                .userId(createUserLikeDto.getUserId())
-                .build();
-        createUserLikeBean.exec(userLikeEntity);
+        UserLikeEntity userLikeEntity = UserLikeEntity.builder().id(UUID.randomUUID()).userId(saveUserLikeDto.getUserId()).build();
+        saveUserLikeEntityBean.exec(userLikeEntity);
 
-        UserLikeEntity userId = getUserLikeBean.exec(userLikeEntity.getId());
+        UserLikeEntity userId = getUserLikeEntityBean.exec(userLikeEntity.getId());
 
         return userId == null ? null : userId.getUserId();
     }

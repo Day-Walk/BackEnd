@@ -20,6 +20,7 @@ public class UserLikeEntity {
     // categoryId 추가 예정
     // List<UUID>tagList 추가 예정
 
+    // test builder
     @Builder
     public UserLikeEntity(UUID id, UUID userId) {
         this.id = id;

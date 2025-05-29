@@ -1,6 +1,5 @@
 package com.day_walk.backend.domain.user_like.data.dto.out;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class GetUserLikeBean {
+public class GetUserLikeEntityBean {
 
     private final UserLikeRepository userLikeRepository;
 
