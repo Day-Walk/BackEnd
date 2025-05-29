@@ -1,5 +1,7 @@
 package com.day_walk.backend.domain.user_like.data;
 
+import com.day_walk.backend.global.util.StringToListConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -7,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,8 +20,10 @@ public class UserLikeEntity {
     @Id
     private UUID id;
     private UUID userId;
-    // categoryId 추가 예정
-    // List<UUID>tagList 추가 예정
+    private String category;
+
+    @Convert(converter = StringToListConverter.class)
+    private List<String> tagList;
 
     // test builder
     @Builder
