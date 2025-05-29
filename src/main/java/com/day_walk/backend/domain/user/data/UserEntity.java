@@ -2,6 +2,7 @@ package com.day_walk.backend.domain.user.data;
 
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.global.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Table(name = "user")
 @Entity
-public class UserEntity {
+public class UserEntity extends BaseEntity {
     @Id
     private UUID id;
     private Long kakaoId;
