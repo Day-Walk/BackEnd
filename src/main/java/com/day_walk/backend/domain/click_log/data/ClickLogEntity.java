@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.click_log.data;
 import com.day_walk.backend.domain.click_log.data.in.SaveClickLogDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
+@Table(name = "click_log")
 public class ClickLogEntity {
     @Id
     private UUID id;
