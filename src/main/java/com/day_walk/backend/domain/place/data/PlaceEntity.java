@@ -31,6 +31,8 @@ public class PlaceEntity extends BaseEntity {
     private String phoneNum;
     private String openTime;
     private String closeDate;
+    private String category;
+    private String subCategory;
 
     @Convert(converter = StringToMapConverter.class)
     private Map<String, BigDecimal> location;
@@ -38,10 +40,8 @@ public class PlaceEntity extends BaseEntity {
     @Convert(converter = StringToListConverter.class)
     private List<String> imgList;
 
-    private UUID subCategoryId;
-
     @Builder
-    public PlaceEntity(String name, String content, String address, String phoneNum, String openTime, String closeDate, Map<String, BigDecimal> location, List<String> imgList, UUID subCategoryId) {
+    public PlaceEntity(String name, String content, String address, String phoneNum, String openTime, String closeDate, String category, String subCategory, Map<String, BigDecimal> location, List<String> imgList) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.content = content;
@@ -51,6 +51,7 @@ public class PlaceEntity extends BaseEntity {
         this.closeDate = closeDate;
         this.location = location;
         this.imgList = imgList;
-        this.subCategoryId = subCategoryId;
+        this.category = category;
+        this.subCategory = subCategory;
     }
 }

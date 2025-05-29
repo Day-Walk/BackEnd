@@ -23,13 +23,13 @@ public class GetSearchPlaceDto {
     private Map<String, BigDecimal> location;
 
     @Builder
-    public GetSearchPlaceDto(PlaceEntity place, String category, String subCategory) {
+    public GetSearchPlaceDto(PlaceEntity place) {
         this.placeId = place.getId();
         this.placeName = place.getName();
         this.address = place.getAddress();
-        this.imgUrl = place.getImgList().get(0);
+        this.imgUrl = place.getImgList() == null ? null : place.getImgList().get(0);
         this.location = place.getLocation();
-        this.category = category;
-        this.subCategory = subCategory;
+        this.category = place.getCategory();
+        this.subCategory = place.getSubCategory();
     }
 }

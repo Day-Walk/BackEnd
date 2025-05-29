@@ -22,32 +22,14 @@ public class PlaceService {
     private final GetSubCategoryEntityBean getSubCategoryEntityBean;
     private final GetCategoryEntityBean getCategoryEntityBean;
 
-    public GetPlaceDto getPlace(UUID placeId) {
-        PlaceEntity place = getPlaceEntityBean.exec(placeId);
-        SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
-        CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
-
-        return GetPlaceDto.builder()
-                .place(place)
-                .category(category.getName())
-                .subCategory(subCategory.getName())
-                .build();
-    }
-
     public List<GetSearchPlaceDto> searchPlace(String searchStr) {
         List<PlaceEntity> placeList = getPlaceEntityBean.exec(searchStr);
 
         return placeList.stream()
-                .map(place -> {
-                    SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
-                    CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
-
-                    return GetSearchPlaceDto.builder()
-                            .place(place)
-                            .category(category.getName())
-                            .subCategory(subCategory.getName())
-                            .build();
-                })
+                .map(place -> GetSearchPlaceDto.builder()
+                        .place(place)
+                        .build())
                 .collect(Collectors.toList());
+
     }
 }

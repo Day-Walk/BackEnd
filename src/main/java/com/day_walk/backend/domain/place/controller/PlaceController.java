@@ -24,19 +24,6 @@ import java.util.UUID;
 public class PlaceController {
     private final PlaceService placeService;
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getPlace(@RequestParam("placeId") UUID placeId) {
-        GetPlaceDto getPlaceDto = placeService.getPlace(placeId);
-        boolean success = getPlaceDto != null;
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", success);
-        response.put("message", success ? "장소 상세 조회 성공!" : "장소 상세 조회 실패..");
-        response.put("placeInfo", getPlaceDto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchPlace(@RequestParam("searchStr") String searchStr) {
         List<GetSearchPlaceDto> placeList = placeService.searchPlace(searchStr);
