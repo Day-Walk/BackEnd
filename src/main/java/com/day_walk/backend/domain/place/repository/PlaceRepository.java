@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<PlaceEntity, UUID> {
-    List<PlaceEntity> findByNameContaining(String searchStr);
+    List<PlaceEntity> findAllByNameContaining(String searchStr);
 }
