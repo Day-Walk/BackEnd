@@ -38,7 +38,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveUserInfo(@RequestBody SaveUserDto userInfo) {
-
         UUID userId = userService.saveUserInfo(userInfo);
 
         Map<String, Object> response = new HashMap<>();

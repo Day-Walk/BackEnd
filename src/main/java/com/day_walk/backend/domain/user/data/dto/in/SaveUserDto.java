@@ -8,11 +8,7 @@ import java.util.UUID;
 @Data
 @RequiredArgsConstructor
 public class SaveUserDto {
-
-    private UUID id;
-    private Long kakaoId;
     private String name;
     private int gender;
     private int age;
-
 }

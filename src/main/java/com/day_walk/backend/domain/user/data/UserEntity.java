@@ -43,4 +43,12 @@ public class UserEntity extends BaseEntity {
         this.kakaoId = 123456789L;
         this.name = name;
     }
+
+    public UserEntity(SaveUserDto saveUserDto) {
+        this.id = UUID.randomUUID();
+        this.kakaoId = 1234L;
+        this.name = saveUserDto.getName();
+        this.age = saveUserDto.getAge();
+        this.gender = saveUserDto.getGender();
+    }
 }

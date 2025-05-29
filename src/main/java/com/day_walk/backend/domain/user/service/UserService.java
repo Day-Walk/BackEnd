@@ -29,12 +29,10 @@ public class UserService {
     private final SaveUserBean saveUserBean;
 
     public UUID saveUserInfo(SaveUserDto userInfo) {
-        UserEntity getUser = getUserEntityBean.exec(userInfo.getId());
-        if (getUser.getAge() == -1 && getUser.getGender() == -1) {
-            getUser.saveUser(userInfo);
-            saveUserBean.exec(getUser);
-        }
-        return getUser.getId();
+        UserEntity user = new UserEntity(userInfo);
+        saveUserBean.exec(user);
+
+        return user.getId();
     }
 
     public UUID updateUserInfo(UpdateUserDto updateUserDto) {
