@@ -24,11 +24,13 @@ public class GetPlaceDto {
     private Map<String, BigDecimal> location;
 
     @Builder
-    public GetPlaceDto(PlaceEntity place) {
+    public GetPlaceDto(PlaceEntity place, String category, String subCategory) {
         this.placeId = place.getId();
         this.imageUrlList = place.getImgList();
         this.name = place.getName();
         this.address = place.getAddress();
         this.location = place.getLocation();
+        this.category = category;
+        this.subCategory = subCategory;
     }
 }

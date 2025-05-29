@@ -41,7 +41,7 @@ public class PlaceEntity extends BaseEntity {
     private UUID subCategoryId;
 
     @Builder
-    public PlaceEntity(String name, String content, String address, String phoneNum, String openTime, String closeDate, Map<String, BigDecimal> location, List<String> imgList) {
+    public PlaceEntity(String name, String content, String address, String phoneNum, String openTime, String closeDate, Map<String, BigDecimal> location, List<String> imgList, UUID subCategoryId) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.content = content;
@@ -51,6 +51,6 @@ public class PlaceEntity extends BaseEntity {
         this.closeDate = closeDate;
         this.location = location;
         this.imgList = imgList;
-        this.subCategoryId = UUID.randomUUID();
+        this.subCategoryId = subCategoryId;
     }
 }

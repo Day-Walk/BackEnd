@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -14,5 +15,9 @@ public class GetCategoryEntityBean {
 
     public List<CategoryEntity> exec() {
         return categoryRepository.findAll();
+    }
+
+    public CategoryEntity exec(UUID categoryId) {
+        return categoryRepository.findById(categoryId).orElse(null);
     }
 }
