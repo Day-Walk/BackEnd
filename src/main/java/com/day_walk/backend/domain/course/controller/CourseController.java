@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.course.controller;
 
+import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
@@ -60,4 +61,17 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PutMapping("/visible")
+    public ResponseEntity<Map<String, Object>> changeVisible(@RequestBody ChangeBooleanDto changeBooleanDto) {
+
+        UUID courseId = courseService.changeVisible(changeBooleanDto);
+
+        boolean success = courseId != null;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "코스 공개 여부 변경 성공!" : "코스 공개 여부 변경 실패..");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

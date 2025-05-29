@@ -42,4 +42,8 @@ public class CourseEntity extends BaseEntity {
         title = dto.getTitle();
     }
 
+    public void changeVisible() {
+        this.visible = !this.visible;
+    }
+
 }

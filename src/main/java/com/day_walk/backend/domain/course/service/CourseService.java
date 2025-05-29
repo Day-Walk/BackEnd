@@ -5,6 +5,7 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
 import com.day_walk.backend.domain.course.bean.SaveCourseEntityBean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
+import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
@@ -52,7 +53,7 @@ public class CourseService {
 
     public GetCourseDto getCourse(UUID courseId) {
         CourseEntity courseEntity = getCourseEntityBean.exec(courseId);
-        if((courseEntity == null)&& !courseEntity.isVisible() && !courseEntity.isHasDelete()) return null;
+        if ((courseEntity == null) && !courseEntity.isVisible() && !courseEntity.isHasDelete()) return null;
         UserEntity userEntity = getUserEntityBean.exec(courseEntity.getUserId());
         List<GetPlaceDto> getPlaceDtoList = new ArrayList<>();
 //        for (UUID placeId : courseEntity.getPlaceList()) {
@@ -78,8 +79,17 @@ public class CourseService {
 
     public UUID modifyCourseName(ModifyCourseTitleDto modifyCourseTitleDto) {
         CourseEntity courseEntity = getCourseEntityBean.exec(modifyCourseTitleDto.getCourseId());
-        if(courseEntity == null ) return null;
+        if (courseEntity == null) return null;
         courseEntity.modifyCourseTitle(modifyCourseTitleDto);
+        saveCourseEntityBean.exec(courseEntity);
+        CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
+        return courseId == null ? null : courseId.getId();
+    }
+
+    public UUID changeVisible(ChangeBooleanDto changeBooleanDto) {
+        CourseEntity courseEntity = getCourseEntityBean.exec(changeBooleanDto.getCourseId());
+        if (courseEntity == null) return null;
+        courseEntity.changeVisible();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
         return courseId == null ? null : courseId.getId();
