@@ -5,6 +5,7 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
 import com.day_walk.backend.domain.course.bean.SaveCourseEntityBean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
+import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
@@ -73,5 +74,14 @@ public class CourseService {
                 .build();
 
         return courseInfo == null ? null : courseInfo;
+    }
+
+    public UUID modifyCourseName(ModifyCourseTitleDto modifyCourseTitleDto) {
+        CourseEntity courseEntity = getCourseEntityBean.exec(modifyCourseTitleDto.getCourseId());
+        if(courseEntity == null ) return null;
+        courseEntity.modifyCourseTitle(modifyCourseTitleDto);
+        saveCourseEntityBean.exec(courseEntity);
+        CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
+        return courseId == null ? null : courseId.getId();
     }
 }

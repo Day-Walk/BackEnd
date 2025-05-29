@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.course.controller;
 
+import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
@@ -45,4 +46,17 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> modifyCourseName(@RequestBody ModifyCourseTitleDto modifyCourseTitleDto ) {
+
+        UUID courseId = courseService.modifyCourseName(modifyCourseTitleDto);
+
+        boolean success = courseId != null;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "코스 이름 수정 성공!" : "코스 이름 수정 실패..");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

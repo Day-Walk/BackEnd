@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.course.data;
 
+import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
 import jakarta.persistence.Convert;
@@ -35,6 +36,10 @@ public class CourseEntity extends BaseEntity {
         this.visible = visible;
         this.placeList = placeList;
         this.hasDelete = hasDelete;
+    }
+
+    public void modifyCourseTitle(ModifyCourseTitleDto dto) {
+        title = dto.getTitle();
     }
 
 }
