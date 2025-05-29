@@ -6,9 +6,11 @@ import com.day_walk.backend.domain.user_like.bean.SaveUserLikeEntityBean;
 import com.day_walk.backend.domain.user_like.bean.GetUserLikeEntityBean;
 import com.day_walk.backend.domain.user_like.data.UserLikeEntity;
 import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
+import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserTagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,17 +22,13 @@ public class UserLikeService {
     private final GetUserEntityBean getUserEntityBean;
 
     public UUID createUserLike(SaveUserLikeDto saveUserLikeDto) {
+        UUID userId = saveUserLikeDto.getUserId();
+        for (SaveUserTagDto saveUserTagDto : saveUserLikeDto.getCategoryList()) {
+            UserLikeEntity userLikeEntity = new UserLikeEntity(userId, saveUserTagDto);
+            saveUserLikeEntityBean.exec(userLikeEntity);
+        }
 
-        UserEntity userEntity = getUserEntityBean.exec(saveUserLikeDto.getUserId());
-
-        if (userEntity == null) return null;
-
-        UserLikeEntity userLikeEntity = UserLikeEntity.builder().id(UUID.randomUUID()).userId(saveUserLikeDto.getUserId()).build();
-        saveUserLikeEntityBean.exec(userLikeEntity);
-
-        UserLikeEntity userId = getUserLikeEntityBean.exec(userLikeEntity.getId());
-
-        return userId == null ? null : userId.getUserId();
+        return userId;
     }
 
 }

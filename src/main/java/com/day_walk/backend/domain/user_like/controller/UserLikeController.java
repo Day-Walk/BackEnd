@@ -25,7 +25,6 @@ public class UserLikeController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> createUserLike(@RequestBody SaveUserLikeDto saveUserLikeDto) {
-
         UUID userId = userLikeService.createUserLike(saveUserLikeDto);
         boolean success = userId != null;
 

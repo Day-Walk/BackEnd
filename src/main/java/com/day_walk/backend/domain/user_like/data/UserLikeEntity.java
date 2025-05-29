@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.user_like.data;
 
+import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserTagDto;
 import com.day_walk.backend.global.util.StringToListConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -32,4 +33,10 @@ public class UserLikeEntity {
         this.userId = userId;
     }
 
+    public UserLikeEntity(UUID userId, SaveUserTagDto saveUserTagDto) {
+        this.id = UUID.randomUUID();
+        this.userId = userId;
+        this.category = saveUserTagDto.getCategoryName();
+        this.tagList = saveUserTagDto.getTagList();
+    }
 }
