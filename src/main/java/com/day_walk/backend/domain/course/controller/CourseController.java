@@ -46,7 +46,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping
+    @PutMapping("/title")
     public ResponseEntity<Map<String, Object>> modifyCourseName(@RequestBody ModifyCourseTitleDto modifyCourseTitleDto ) {
 
         UUID courseId = courseService.modifyCourseName(modifyCourseTitleDto);
@@ -59,4 +59,5 @@ public class CourseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }
