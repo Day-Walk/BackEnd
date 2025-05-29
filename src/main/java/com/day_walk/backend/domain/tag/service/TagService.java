@@ -1,6 +1,8 @@
 package com.day_walk.backend.domain.tag.service;
 
-import com.day_walk.backend.domain.tag.bean.GetTagBean;
+import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
+import com.day_walk.backend.domain.category.data.CategoryEntity;
+import com.day_walk.backend.domain.tag.bean.GetTagEntityBean;
 import com.day_walk.backend.domain.tag.data.TagEntity;
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;
 import com.day_walk.backend.domain.tag.data.out.GetTagByPlaceDto;
@@ -15,14 +17,20 @@ import java.util.stream.Collectors;
 @Service
 public class TagService {
     // TagEntity 가져오는 컴포넌트
-    private final GetTagBean getTagBean;
+    private final GetTagEntityBean getTagEntityBean;
+    private final GetCategoryEntityBean getCategoryEntityBean;
 
     // 장소 가져오는 컴포넌트 추가 예정
     // private final GetPlaceBean getPlaceBean;
 
     // 카테고리와 연관되어있는 모든 태그 반환
     public List<GetTagByCategoryDto> getTagByCategory(UUID categoryId) {
-        List<TagEntity> tagEntityList = getTagBean.exec(categoryId);
+        CategoryEntity category = getCategoryEntityBean.exec(categoryId);
+        if (category == null) {
+            return null;
+        }
+
+        List<TagEntity> tagEntityList = getTagEntityBean.exec(category);
 
         return tagEntityList.stream()
                 .map(tag -> GetTagByCategoryDto.builder().tag(tag).build())

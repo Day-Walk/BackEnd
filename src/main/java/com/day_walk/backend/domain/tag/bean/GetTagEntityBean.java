@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.tag.bean;
 
+import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.tag.data.TagEntity;
 import com.day_walk.backend.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +11,14 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
-public class GetTagBean {
+public class GetTagEntityBean {
     private final TagRepository tagRepository;
 
-    public List<TagEntity> exec(UUID categoryId) {
-        return tagRepository.findAllByCategoryId(categoryId);
+    public List<TagEntity> exec(CategoryEntity category) {
+        return tagRepository.findAllByCategoryId(category.getId());
+    }
+
+    public TagEntity exec(UUID tagId) {
+        return tagRepository.findById(tagId).orElse(null);
     }
 }
