@@ -9,6 +9,7 @@ import com.day_walk.backend.domain.place.data.out.GetSearchPlaceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,8 @@ public class PlaceService {
 
     public List<GetSearchPlaceDto> searchPlace(String searchStr) {
         List<PlaceEntity> placeList = getPlaceEntityBean.exec(searchStr);
+        System.out.println(placeList.size());
+        System.out.println(!placeList.isEmpty() ? placeList.get(0).getName() : "실패!");
 
         return placeList.stream()
                 .map(place -> GetSearchPlaceDto.builder()
