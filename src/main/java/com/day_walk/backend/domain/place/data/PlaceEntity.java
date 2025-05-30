@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.place.data;
 
+import com.day_walk.backend.domain.place.data.in.SavePlaceDto;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
 import com.day_walk.backend.global.util.StringToMapConverter;
@@ -53,5 +54,19 @@ public class PlaceEntity extends BaseEntity {
         this.imgList = imgList;
         this.category = category;
         this.subCategory = subCategory;
+    }
+
+    public PlaceEntity(SavePlaceDto savePlaceDto) {
+        this.id = UUID.randomUUID();
+        this.name = savePlaceDto.getName();
+        this.content = savePlaceDto.getContent();
+        this.address = savePlaceDto.getAddress();
+        this.phoneNum = savePlaceDto.getPhoneNum();
+        this.openTime = savePlaceDto.getOpenTime();
+        this.closeDate = savePlaceDto.getCloseDate();
+        this.location = savePlaceDto.getLocation();
+        this.imgList = savePlaceDto.getImgList();
+        this.category = savePlaceDto.getCategory();
+        this.subCategory = savePlaceDto.getSubCategory();
     }
 }
