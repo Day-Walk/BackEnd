@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface TagRepository extends JpaRepository<TagEntity, UUID> {
     List<TagEntity> findAllByCategoryId(UUID categoryId);
+
+    List<TagEntity> findByIdIn(List<UUID> idList);
 }
