@@ -16,15 +16,13 @@ import com.day_walk.backend.domain.review.data.out.GetReviewTotalDto;
 import com.day_walk.backend.domain.sub_category.bean.GetSubCategoryEntityBean;
 import com.day_walk.backend.domain.sub_category.data.SubCategoryEntity;
 import com.day_walk.backend.domain.tag.bean.GetTagEntityBean;
-import com.day_walk.backend.domain.tag.bean.GetTagNameListBean;
+import com.day_walk.backend.domain.tag.data.TagEntity;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -38,7 +36,6 @@ public class ReviewService {
     private final GetTagEntityBean getTagEntityBean;
     private final GetCategoryEntityBean getCategoryEntityBean;
     private final GetSubCategoryEntityBean getSubCategoryEntityBean;
-    private final GetTagNameListBean getTagNameListBean;
 
     public UUID saveReview(SaveReviewDto saveReviewDto) {
         ReviewEntity review = ReviewEntity.builder().saveReviewDto(saveReviewDto).build();
@@ -62,6 +59,35 @@ public class ReviewService {
         return true;
     }
 
+    public List<GetReviewByUserDto> getReviewByUser(UUID userId) {
+        UserEntity user = getUserEntityBean.exec(userId);
+        if (user == null) {
+            return null;
+        }
+
+        List<ReviewEntity> reviewList = getReviewEntityBean.exec(user);
+
+        return reviewList.stream()
+                .map(review -> {
+                    PlaceEntity place = getPlaceEntityBean.exec(review.getPlaceId());
+                    SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
+                    CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                    List<TagEntity> tagList = getTagEntityBean.exec(review.getTagList());
+
+                    return GetReviewByUserDto.builder()
+                            .place(place)
+                            .categoryName(category.getName())
+                            .subCategoryName(subCategory.getName())
+                            .review(review)
+                            .tagList(tagList.isEmpty()
+                                    ? Collections.emptyList()
+                                    : tagList.stream()
+                                    .map(TagEntity::getFullName)
+                                    .toList())
+                            .build();
+                }).collect(Collectors.toList());
+    }
+
     public List<GetReviewByPlaceDto> getReviewByPlace(UUID placeId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
         if (place == null) {
@@ -71,11 +97,19 @@ public class ReviewService {
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
 
         return reviewList.stream()
-                .map(review -> GetReviewByPlaceDto.builder()
-                        .review(review)
-                        .user(getUserEntityBean.exec(review.getUserId()))
-                        .tagList(getTagNameListBean.exec(review.getTagList()))
-                        .build())
+                .map(review -> {
+                    List<TagEntity> tagList = getTagEntityBean.exec(review.getTagList());
+
+                    return GetReviewByPlaceDto.builder()
+                            .review(review)
+                            .user(getUserEntityBean.exec(review.getUserId()))
+                            .tagList(tagList.isEmpty()
+                                    ? Collections.emptyList()
+                                    : tagList.stream()
+                                    .map(TagEntity::getFullName)
+                                    .toList())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -103,30 +137,5 @@ public class ReviewService {
                                 .map(entry -> getTagEntityBean.exec(entry.getKey()).getFullName())
                                 .collect(Collectors.toList())
                 ).build();
-    }
-
-    public List<GetReviewByUserDto> getReviewByUser(UUID userId) {
-        UserEntity user = getUserEntityBean.exec(userId);
-        if (user == null) {
-            return null;
-        }
-
-        List<ReviewEntity> reviewList = getReviewEntityBean.exec(user);
-
-        return reviewList.stream()
-                .map(review -> {
-                    PlaceEntity place = getPlaceEntityBean.exec(review.getPlaceId());
-                    SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
-                    CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
-//                    List<String> tagList = getTagNameListBean.exec(review.getTagList());
-
-                    return GetReviewByUserDto.builder()
-                            .place(place)
-                            .categoryName(category.getName())
-                            .subCategoryName(subCategory.getName())
-                            .review(review)
-                            .tagList(new ArrayList<>())
-                            .build();
-                }).collect(Collectors.toList());
     }
 }

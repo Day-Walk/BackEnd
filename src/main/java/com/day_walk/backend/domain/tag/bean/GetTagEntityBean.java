@@ -6,7 +6,9 @@ import com.day_walk.backend.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -20,5 +22,21 @@ public class GetTagEntityBean {
 
     public TagEntity exec(UUID tagId) {
         return tagRepository.findById(tagId).orElse(null);
+    }
+
+    public List<TagEntity> exec(List<UUID> idList) {
+        if (idList == null || idList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<UUID> validIds = idList.stream()
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (validIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return tagRepository.findByIdIn(validIds);
     }
 }

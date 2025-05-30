@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.review.data;
 import com.day_walk.backend.domain.review.data.in.SaveReviewDto;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
+import com.day_walk.backend.global.util.StringToUUIDListConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -30,7 +31,7 @@ public class ReviewEntity extends BaseEntity {
 
     private UUID userId;
     private UUID placeId;
-    @Convert(converter = StringToListConverter.class)
+    @Convert(converter = StringToUUIDListConverter.class)
     private List<UUID> tagList;
 
     public void delete() {
