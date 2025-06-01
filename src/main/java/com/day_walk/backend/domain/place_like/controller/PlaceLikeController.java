@@ -1,5 +1,7 @@
 package com.day_walk.backend.domain.place_like.controller;
 
+import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
+import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.service.PlaceLikeService;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,6 +43,19 @@ public class PlaceLikeController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "유저별 장소 찜 저장 취소 성공!" : "유저별 장소 찜 저장 취소 실패..");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Map<String, Object>> getPlaceLike(@RequestParam("userId") UUID userId) {
+        List<GetPlaceByLikeDto> placeList = placeLikeService.getPlaceLike(userId);
+        boolean success = !placeList.isEmpty();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "유저별 장소 찜한 장소 조회 성공!" : "유저별 장소 찜한 장소 조회 실패..");
+        response.put("placeList", placeList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
