@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.course.bean.GetAllCourseEntityBean;
 import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
+import com.day_walk.backend.domain.course.bean.GetUsersAllCourseEntityBean;
 import com.day_walk.backend.domain.course.bean.SaveCourseEntityBean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
@@ -11,6 +12,7 @@ import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
+import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
@@ -130,5 +132,29 @@ public class CourseService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
+    }
+
+    private final GetUsersAllCourseEntityBean getUsersAllCourseEntityBean;
+
+    public List<GetUsersAllCourseDto> getUsersAllCourse(UUID userId) {
+        List<CourseEntity> courseEntityList = getUsersAllCourseEntityBean.exec(userId);
+        if(courseEntityList == null ) return Collections.emptyList();
+
+        return courseEntityList.stream()
+                .map(courseEntity -> {
+                    if (courseEntity.isHasDelete()) {
+                        return null;
+                    }
+
+                    // courseLike 총 갯수 추가 예정
+                    // placeInfo 추가 예정 (GetPlaceByCourseDto)
+                    return GetUsersAllCourseDto.builder()
+                            .courseId(courseEntity.getId())
+                            .title(courseEntity.getTitle())
+                            .visible(courseEntity.isVisible())
+                            .build();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }
