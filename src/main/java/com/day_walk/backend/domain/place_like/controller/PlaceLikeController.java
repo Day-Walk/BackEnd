@@ -54,7 +54,7 @@ public class PlaceLikeController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
-        response.put("message", success ? "유저별 장소 찜한 장소 조회 성공!" : "유저별 장소 찜한 장소 조회 실패..");
+        response.put("message", success ? "유저별 찜한 장소 조회 성공!" : "유저별 찜한 장소 조회 실패..");
         response.put("placeList", placeList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
