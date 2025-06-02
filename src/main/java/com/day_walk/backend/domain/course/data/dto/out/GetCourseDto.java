@@ -1,7 +1,6 @@
 package com.day_walk.backend.domain.course.data.dto.out;
 
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
-import jakarta.persistence.Convert;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -24,4 +23,3 @@ public class GetCourseDto {
         this.placeList = placeList;
     }
 }
-//, List<GetPlaceDto> placeList

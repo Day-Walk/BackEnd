@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.course.controller;
 import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
+import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -88,5 +90,19 @@ public class CourseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort")String sortStr) {
+
+        List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", courseList != null);
+        response.put("message", courseList == null ? "코스 전체조회 실패.." : "코스 전체조회 성공!");
+        response.put("courseInfo", courseList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
  }
