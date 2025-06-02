@@ -24,13 +24,11 @@ public class CourseLikeController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveCourseLike(@RequestBody SaveCourseLikeDto saveCourseLikeDto) {
-        UUID courseLikeId = courseLikeService.saveCourseLike(saveCourseLikeDto);
-        boolean success = courseLikeId != null;
+        boolean success = courseLikeService.saveCourseLike(saveCourseLikeDto);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "유저별 코스 찜 저장 성공!" : "유저별 코스 찜 저장 실패..");
-        response.put("courseLikeId", courseLikeId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -49,7 +47,7 @@ public class CourseLikeController {
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getCourseLike(@RequestParam("userId") UUID userId) {
         List<GetCourseByLikeDto> courseList = courseLikeService.getCourseLike(userId);
-        boolean success = !courseList.isEmpty();
+        boolean success = courseList == null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

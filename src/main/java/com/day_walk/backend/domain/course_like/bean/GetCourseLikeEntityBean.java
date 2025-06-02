@@ -21,7 +21,7 @@ public class GetCourseLikeEntityBean {
     }
 
     public CourseLikeEntity exec(DeleteCourseLikeDto deleteCourseLikeDto) {
-        return courseLikeRepository.findById(deleteCourseLikeDto.getCourseLikeId()).orElse(null);
+        return courseLikeRepository.findByUserIdAndCourseId(deleteCourseLikeDto.getUserId(), deleteCourseLikeDto.getCourseId());
     }
 
     public List<CourseLikeEntity> exec(UUID userId) {

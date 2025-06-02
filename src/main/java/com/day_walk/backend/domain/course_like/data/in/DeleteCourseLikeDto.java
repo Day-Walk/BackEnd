@@ -10,5 +10,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 public class DeleteCourseLikeDto {
-    private UUID courseLikeId;
+    private UUID userId;
+    private UUID courseId;
 }

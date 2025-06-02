@@ -34,7 +34,7 @@ public class CourseLikeService {
     private final GetCourseLikeEntityBean getCourseLikeEntityBean;
     private final GetPlaceEntityBean getPlaceEntityBean;
 
-    public UUID saveCourseLike(SaveCourseLikeDto saveCourseLikeDto) {
+    public boolean saveCourseLike(SaveCourseLikeDto saveCourseLikeDto) {
         UserEntity user = getUserEntityBean.exec(saveCourseLikeDto.getUserId());
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -56,7 +56,7 @@ public class CourseLikeService {
 
         saveCourseLikeEntityBean.exec(courseLike);
 
-        return courseLike.getId();
+        return true;
     }
 
     public boolean deleteCourseLike(DeleteCourseLikeDto deleteCourseLikeDto) {
