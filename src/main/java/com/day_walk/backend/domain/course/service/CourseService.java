@@ -22,9 +22,7 @@ import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,12 +113,21 @@ public class CourseService {
         // 코스 좋아요 전체 갯수 추가 예정
         // placeList 추가 예정
 
+        if(courseEntityList == null) return Collections.emptyList();
+
         return courseEntityList.stream()
-                .map(courseEntity -> GetAllCourseDto.builder()
-                        .courseId(courseEntity.getId())
-                        .title(courseEntity.getTitle())
-                        .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
-                        .build())
+                .map(courseEntity -> {
+                    if (!courseEntity.isVisible() || courseEntity.isHasDelete()) {
+                        return null;
+                    }
+
+                    return GetAllCourseDto.builder()
+                            .courseId(courseEntity.getId())
+                            .title(courseEntity.getTitle())
+                            .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
+                            .build();
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
     }

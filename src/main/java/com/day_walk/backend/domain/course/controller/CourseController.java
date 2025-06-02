@@ -38,7 +38,7 @@ public class CourseController {
     }
 
     @PutMapping("/title")
-    public ResponseEntity<Map<String, Object>> modifyCourseName(@RequestBody ModifyCourseTitleDto modifyCourseTitleDto ) {
+    public ResponseEntity<Map<String, Object>> modifyCourseName(@RequestBody ModifyCourseTitleDto modifyCourseTitleDto) {
 
         UUID courseId = courseService.modifyCourseName(modifyCourseTitleDto);
 
@@ -92,7 +92,7 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort")String sortStr) {
+    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort") String sortStr) {
 
         List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr);
 
@@ -104,5 +104,4 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
- }
+}
