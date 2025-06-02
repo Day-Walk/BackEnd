@@ -2,7 +2,6 @@ package com.day_walk.backend.domain.course.data;
 
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.global.BaseEntity;
-import com.day_walk.backend.global.util.StringToListConverter;
 import com.day_walk.backend.global.util.StringToUUIDListConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
