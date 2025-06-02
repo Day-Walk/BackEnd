@@ -35,18 +35,6 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getCourse(@RequestParam("courseId") UUID courseId) {
-        GetCourseDto courseInfo = courseService.getCourse(courseId);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", courseInfo != null);
-        response.put("message", courseInfo == null ? "코스 상세조회 실패.." : "코스 상세조회 성공!");
-        response.put("courseInfo", courseInfo);
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @PutMapping("/title")
     public ResponseEntity<Map<String, Object>> modifyCourseName(@RequestBody ModifyCourseTitleDto modifyCourseTitleDto ) {
 
@@ -88,4 +76,17 @@ public class CourseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getCourse(@RequestParam("courseId") UUID courseId) {
+        GetCourseDto courseInfo = courseService.getCourse(courseId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", courseInfo != null);
+        response.put("message", courseInfo == null ? "코스 상세조회 실패.." : "코스 상세조회 성공!");
+        response.put("courseInfo", courseInfo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
  }
