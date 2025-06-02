@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.course_like.controller;
 
+import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
 import com.day_walk.backend.domain.course_like.data.in.DeleteCourseLikeDto;
 import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
 import com.day_walk.backend.domain.course_like.service.CourseLikeService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,13 +24,13 @@ public class CourseLikeController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveCourseLike(@RequestBody SaveCourseLikeDto saveCourseLikeDto) {
-        UUID placeLikeId = courseLikeService.saveCourseLike(saveCourseLikeDto);
-        boolean success = placeLikeId != null;
+        UUID courseLikeId = courseLikeService.saveCourseLike(saveCourseLikeDto);
+        boolean success = courseLikeId != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "유저별 코스 찜 저장 성공!" : "유저별 코스 찜 저장 실패..");
-        response.put("placeLikeId", placeLikeId);
+        response.put("courseLikeId", courseLikeId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -40,6 +42,19 @@ public class CourseLikeController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "유저별 코스 찜 저장 취소 성공!" : "유저별 코스 찜 저장 취소 실패..");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Map<String, Object>> getCourseLike(@RequestParam("userId") UUID userId) {
+        List<GetCourseByLikeDto> courseList = courseLikeService.getCourseLike(userId);
+        boolean success = !courseList.isEmpty();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "유저별 찜한 코스 조회 성공!" : "유저별 찜한 코스 조회 실패..");
+        response.put("courseList", courseList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

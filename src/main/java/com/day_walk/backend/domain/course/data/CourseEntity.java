@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.course.data;
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
+import com.day_walk.backend.global.util.StringToUUIDListConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,7 +23,7 @@ public class CourseEntity extends BaseEntity {
     @Id
     private UUID id;
     private UUID userId;
-    @Convert(converter = StringToListConverter.class)
+    @Convert(converter = StringToUUIDListConverter.class)
     private List<UUID> placeList;
     private String title;
     private boolean visible;
