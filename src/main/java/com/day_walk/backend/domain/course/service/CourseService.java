@@ -2,16 +2,14 @@ package com.day_walk.backend.domain.course.service;
 
 import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
-import com.day_walk.backend.domain.course.bean.GetAllCourseEntityBean;
-import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
-import com.day_walk.backend.domain.course.bean.GetUsersAllCourseEntityBean;
-import com.day_walk.backend.domain.course.bean.SaveCourseEntityBean;
+import com.day_walk.backend.domain.course.bean.*;
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
 import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
+import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
@@ -20,7 +18,6 @@ import com.day_walk.backend.domain.sub_category.bean.GetSubCategoryEntityBean;
 import com.day_walk.backend.domain.sub_category.data.SubCategoryEntity;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
-import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -108,9 +105,9 @@ public class CourseService {
                 .build();
     }
 
-    private final GetAllCourseEntityBean getAllCourseEnitityBean;
+    private final GetAllCourseEntityBean getAllCourseEntityBean;
     public List<GetAllCourseDto> getAllCourse(String sortStr) {
-        List<CourseEntity> courseEntityList = getAllCourseEnitityBean.exec(sortStr);
+        List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec(sortStr);
         // 코스 좋아요 갯수 추가 예정
         // 코스 좋아요 전체 갯수 추가 예정
         // placeList 추가 예정
@@ -152,6 +149,29 @@ public class CourseService {
                             .courseId(courseEntity.getId())
                             .title(courseEntity.getTitle())
                             .visible(courseEntity.isVisible())
+                            .build();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private final GetSearchCourseEntityBean getSearchCourseEntityBean;
+    public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr) {
+        List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
+        if(courseEntityList == null) return Collections.emptyList();
+        return courseEntityList.stream()
+                .map(courseEntity -> {
+                    if (courseEntity.isHasDelete()) {
+                        return null;
+                    }
+
+                    // courseLike 총 갯수 추가 예정
+                    // like 여부 추가 예정
+                    // placeInfo 추가 예정 (GetPlaceByCourseDto)
+                    return GetSearchCourseDto.builder()
+                            .courseId(courseEntity.getId())
+                            .title(courseEntity.getTitle())
+                            .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
                             .build();
                 })
                 .filter(Objects::nonNull)

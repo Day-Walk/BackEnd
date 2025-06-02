@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class GetAllCourseEntityBean {
     private final CourseRepository courseRepository;
 

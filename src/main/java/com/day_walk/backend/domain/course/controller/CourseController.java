@@ -5,6 +5,7 @@ import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
 import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
+import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,7 +67,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping
+    @DeleteMapping
     public ResponseEntity<Map<String, Object>> deleteCourse(@RequestBody ChangeBooleanDto changeBooleanDto) {
 
         UUID courseId = courseService.deleteCourse(changeBooleanDto);
@@ -112,6 +113,18 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
         response.put("message", courseList == null ? "유저별 코스 조회 실패.." : "유저별 코스 조회 성공!");
+        response.put("courseInfo", courseList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr")String searchStr, @RequestParam("sortStr")String sortStr) {
+        List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", courseList != null);
+        response.put("message", courseList == null ? "코스 검색 실패.." : "코스 검색 성공!");
         response.put("courseInfo", courseList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
