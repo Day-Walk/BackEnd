@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class GetUserEntityBean {
-
     private final UserRepository userRepository;
 
     public UserEntity exec(UUID userId) {
