@@ -2,6 +2,7 @@ package com.day_walk.backend.domain.user_like.controller;
 
 import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
 import com.day_walk.backend.domain.user_like.service.UserLikeService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/user-like")
 @RequiredArgsConstructor
-@Tag(name = "UserLike 관련 API", description = "UserLike에 관련된 API들입니다.")
+@Tag(name = "UserLike 관련 API", description = "UserLike 관련된 API 명세서입니다.")
 public class UserLikeController {
 
     private final UserLikeService userLikeService;
 
+    @Operation(summary = "유저 선호 저장", description = "유저 선호를 저장합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Object>> createUserLike(@RequestBody SaveUserLikeDto saveUserLikeDto) {
 

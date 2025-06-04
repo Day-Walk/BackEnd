@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.tag.controller;
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;
 import com.day_walk.backend.domain.tag.data.out.GetTagByPlaceDto;
 import com.day_walk.backend.domain.tag.service.TagService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.*;
 public class TagController {
     private final TagService tagService;
 
+    @Operation(summary = "카테고리별 전체 조회", description = "카테고리별 연관된 태그 전체 조회합니다.")
     @GetMapping("/all/category")
     public ResponseEntity<Map<String, Object>> getAllTagByCategory(@RequestParam("categoryId") UUID categoryId) {
         List<GetTagByCategoryDto> tagList = tagService.getTagByCategory(categoryId);
@@ -34,6 +36,7 @@ public class TagController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "장소별 태그 전체 조회", description = "하나의 장소와 연관된 태그 전체 조회합니다.")
     @GetMapping("/all/place")
     public ResponseEntity<Map<String, Object>> getAllTagByPlace(@RequestParam("placeId") UUID placeId) {
         GetTagByPlaceDto getTagByPlaceDto = tagService.getTagByPlace(placeId);

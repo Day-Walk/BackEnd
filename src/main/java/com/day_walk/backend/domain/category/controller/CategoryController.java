@@ -2,6 +2,7 @@ package com.day_walk.backend.domain.category.controller;
 
 import com.day_walk.backend.domain.category.data.dto.out.GetCategoryDto;
 import com.day_walk.backend.domain.category.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/category")
 @RestController
-@Tag(name = "Category 관련 API", description = "Category에 관련된 API들입니다.")
+@Tag(name = "Category 관련 API", description = "Category 관련된 API 명세서들니다.")
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @Operation(summary = "카테고리 전체 조회", description = "카테고리와 카테고리별 태그들을 같이 조회합니다.")
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllCategory() {
         List<GetCategoryDto> categoryList = categoryService.getAllCategory();

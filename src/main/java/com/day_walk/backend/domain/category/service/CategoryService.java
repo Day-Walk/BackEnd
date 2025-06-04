@@ -21,8 +21,9 @@ public class CategoryService {
         List<CategoryEntity> categoryEntityList = getCategoryEntityBean.exec();
 
         return categoryEntityList.stream()
-                .map(category -> GetCategoryDto.builder().category(category).tagList(
-                        getTagEntityBean.exec(category).stream()
+                .map(category -> GetCategoryDto.builder()
+                        .category(category)
+                        .tagList(getTagEntityBean.exec(category).stream()
                                 .map(tag -> GetTagByCategoryDto.builder().tag(tag).build())
                                 .toList()
                 ).build())

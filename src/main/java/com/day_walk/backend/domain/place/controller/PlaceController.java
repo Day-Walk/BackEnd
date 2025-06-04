@@ -2,6 +2,7 @@ package com.day_walk.backend.domain.place.controller;
 
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place.service.PlaceService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/place")
 @RestController
-@Tag(name = "Place 관련 API", description = "Place에 관련된 API들입니다.")
+@Tag(name = "Place 관련 API", description = "Place 관련된 API 명세서입니다.")
 public class PlaceController {
     private final PlaceService placeService;
 
+    @Operation(summary = "장소 상세 조회", description = "하나의 장소에 대한 상세 내용을 조회합니다.")
     @GetMapping
     public ResponseEntity<Map<String, Object>> getPlace(@RequestParam("placeId") UUID placeId) {
         GetPlaceDto getPlaceDto = placeService.getPlace(placeId);
