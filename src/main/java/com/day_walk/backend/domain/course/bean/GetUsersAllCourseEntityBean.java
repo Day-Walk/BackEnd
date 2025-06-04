@@ -2,7 +2,6 @@ package com.day_walk.backend.domain.course.bean;
 
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.course.repository.CourseRepository;
-import com.day_walk.backend.domain.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

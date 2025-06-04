@@ -1,9 +1,10 @@
 package com.day_walk.backend.domain.course.data.dto.out;
 
-import lombok.AllArgsConstructor;
+import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,5 +13,5 @@ public class GetUsersAllCourseDto {
     private UUID courseId;
     private String title;
     private boolean visible;
-//    private List<GetPlaceByCourse> placeList;
+    private List<GetPlaceByCourseDto> placeList;
 }
