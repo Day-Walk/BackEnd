@@ -1,0 +1,44 @@
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GitHub Repository checkout
+        uses: actions/checkout@v4
+
+      - name: EC2 서버에 SSH 접속해서 애플리케이션 배포
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+
+          script: |
+            # 1. 작업 디렉토리로 이동
+            cd ~/BackEnd
+
+            # 2. 최신 코드 받아오기
+            git reset --hard
+            git checkout main
+            git pull origin main
+
+            # 3. application.properties 설정
+            echo "${{ secrets.APPLICATION_DB_PROPERTIES }}" > ./src/main/resources/application-db.properties
+
+            # 4. 빌드
+            ./gradlew clean build
+
+            # 5. 기존 컨테이너 중지 및 삭제
+            docker stop be-server || true
+            docker rm be-server || true
+
+            # 6. 도커 이미지 생성 및 실행
+            docker build -t be-server .
+            docker run -d --name be-server -p 8080:8080 be-server
