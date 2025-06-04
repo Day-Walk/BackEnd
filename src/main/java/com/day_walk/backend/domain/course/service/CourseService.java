@@ -191,22 +191,36 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr) {
+    public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
         if (courseEntityList == null) return Collections.emptyList();
-        return courseEntityList.stream()
-                .map(courseEntity -> {
-                    if (courseEntity.isHasDelete()) {
-                        return null;
-                    }
 
-                    // courseLike 총 갯수 추가 예정
-                    // like 여부 추가 예정
-                    // placeInfo 추가 예정 (GetPlaceByCourseDto)
+        UserEntity userEntity = getUserEntityBean.exec(userId);
+        if(userEntity == null ) return null;
+
+        return courseEntityList.stream()
+                .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
+                .map(courseEntity -> {
+                    boolean liked = getCourseLikeEntityBean.exec(
+                            new SaveCourseLikeDto(userId, courseEntity.getId())
+                    ) != null;
+
+                    List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
+                            .map(placeId -> {
+                                PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+                                return GetPlaceByCourseDto.builder()
+                                        .place(placeEntity)
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
+
                     return GetSearchCourseDto.builder()
                             .courseId(courseEntity.getId())
                             .title(courseEntity.getTitle())
                             .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
+                            .placeList(placeList)
+                            .like(liked)
+                            .courseLike(getCourseLikeEntityBean.exec(courseEntity))
                             .build();
                 })
                 .filter(Objects::nonNull)

@@ -119,8 +119,8 @@ public class CourseController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr")String searchStr, @RequestParam("sortStr")String sortStr) {
-        List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr);
+    public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr")String searchStr, @RequestParam("sortStr")String sortStr, @RequestParam("userId") UUID userId) {
+        List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr, userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
