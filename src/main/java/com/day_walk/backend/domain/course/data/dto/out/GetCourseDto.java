@@ -14,12 +14,15 @@ public class GetCourseDto {
     private String userName;
     private String title;
     private List<GetPlaceDto> placeList;
-//    private boolean like 추가 예정;
+    private boolean like;
+    private int courseLike;
 
     @Builder
-    public GetCourseDto(String userName, String title, List<GetPlaceDto> placeList) {
+    public GetCourseDto(String userName, String title, List<GetPlaceDto> placeList, boolean like, int courseLike) {
         this.userName = userName;
         this.title = title;
         this.placeList = placeList;
+        this.like = like;
+        this.courseLike = courseLike;
     }
 }
