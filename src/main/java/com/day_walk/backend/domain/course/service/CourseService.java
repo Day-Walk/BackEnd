@@ -18,6 +18,7 @@ import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
+import com.day_walk.backend.domain.place.data.out.GetPlaceWithStarDto;
 import com.day_walk.backend.domain.review.bean.GetReviewEntityBean;
 import com.day_walk.backend.domain.review.bean.GetReviewStarsAvgBean;
 import com.day_walk.backend.domain.review.data.ReviewEntity;
@@ -99,23 +100,24 @@ public class CourseService {
 
         UserEntity userEntity = getUserEntityBean.exec(courseEntity.getUserId());
 
-        List<GetPlaceDto> getPlaceDtoList = new ArrayList<>();
-        for (UUID placeId : courseEntity.getPlaceList()) {
-            PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
-            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(placeEntity.getSubCategoryId());
-            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
-            // 리뷰의 평균 값 추가 예정 , GetPlaceList에 해당 내용이 없음
-            List<ReviewEntity> reviewList = getReviewEntityBean.exec(placeEntity);
-            double stars = getReviewStarsAvgBean.exec(reviewList);
+        List<GetPlaceWithStarDto> getPlaceDtoList = courseEntity.getPlaceList().stream()
+                .map(placeId -> {
+                    PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+                    SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(placeEntity.getSubCategoryId());
+                    CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
 
-            GetPlaceDto getPlaceDto = GetPlaceDto.builder()
-                    .place(placeEntity)
-                    .category(category.getName())
-                    .subCategory(subCategory.getName())
-                    .build();
-            getPlaceDtoList.add(getPlaceDto);
-        }
-        // 좋아요 여부 판단
+                    List<ReviewEntity> reviewList = getReviewEntityBean.exec(placeEntity);
+                    double stars = getReviewStarsAvgBean.exec(reviewList);
+
+                    return GetPlaceWithStarDto.builder()
+                            .place(placeEntity)
+                            .category(category.getName())
+                            .subCategory(subCategory.getName())
+                            .star(stars)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
         boolean like = false;
         CourseLikeEntity likeEntity = getCourseLikeEntityBean.exec(new SaveCourseLikeDto(userEntity.getId(), courseEntity.getId()));
         like = (likeEntity != null);
