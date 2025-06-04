@@ -32,13 +32,16 @@ jobs:
             # 3. application.properties 설정
             echo "${{ secrets.APPLICATION_DB_PROPERTIES }}" > ./src/main/resources/application-db.properties
 
-            # 4. 빌드
+            # 4. 빌드 권한 확보
+            chmod +x ./gradlew
+
+            # 5. 빌드
             ./gradlew clean build
 
-            # 5. 기존 컨테이너 중지 및 삭제
+            # 6. 기존 컨테이너 중지 및 삭제
             docker stop be-server || true
             docker rm be-server || true
 
-            # 6. 도커 이미지 생성 및 실행
+            # 7. 도커 이미지 생성 및 실행
             docker build -t be-server .
             docker run -d --name be-server -p 8080:8080 be-server
