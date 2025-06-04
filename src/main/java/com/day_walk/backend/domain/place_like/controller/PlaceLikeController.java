@@ -5,6 +5,7 @@ import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.service.PlaceLikeService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class PlaceLikeController {
     private final PlaceLikeService placeLikeService;
 
+    @Operation(summary = "장소 찜 저장", description = "한 명의 유저가 하나의 장소를 찜 합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Object>> savePlaceLike(@RequestBody SavePlaceLikeDto savePlaceLikeDto) {
         UUID placeLikeId = placeLikeService.savePlaceLike(savePlaceLikeDto);
@@ -36,6 +38,7 @@ public class PlaceLikeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "장소 찜 취소", description = "한 명의 유저가 하나의 장소를 찜 취소합니다.")
     @DeleteMapping
     public ResponseEntity<Map<String, Object>> deletePlaceLike(@RequestBody DeletePlaceLikeDto deletePlaceLikeDto) {
         boolean success = placeLikeService.deletePlaceLike(deletePlaceLikeDto);
@@ -47,6 +50,7 @@ public class PlaceLikeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "유저별 찜한 장소 전체 조회", description = "한 명의 유저가 찜한 모든 장소를 조회합니다.")
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getPlaceLike(@RequestParam("userId") UUID userId) {
         List<GetPlaceByLikeDto> placeList = placeLikeService.getPlaceLike(userId);
