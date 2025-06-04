@@ -2,10 +2,17 @@ package com.day_walk.backend.domain.tag.service;
 
 import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
+import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
+import com.day_walk.backend.domain.place.data.PlaceEntity;
+import com.day_walk.backend.domain.sub_category.bean.GetSubCategoryEntityBean;
+import com.day_walk.backend.domain.sub_category.data.SubCategoryEntity;
 import com.day_walk.backend.domain.tag.bean.GetTagEntityBean;
 import com.day_walk.backend.domain.tag.data.TagEntity;
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;
 import com.day_walk.backend.domain.tag.data.out.GetTagByPlaceDto;
+import com.day_walk.backend.domain.tag.data.out.GetTagByReviewDto;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,40 +23,46 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class TagService {
-    // TagEntity 가져오는 컴포넌트
     private final GetTagEntityBean getTagEntityBean;
     private final GetCategoryEntityBean getCategoryEntityBean;
+    private final GetPlaceEntityBean getPlaceEntityBean;
+    private final GetSubCategoryEntityBean getSubCategoryEntityBean;
 
-    // 장소 가져오는 컴포넌트 추가 예정
-    // private final GetPlaceBean getPlaceBean;
-
-    // 카테고리와 연관되어있는 모든 태그 반환
     public List<GetTagByCategoryDto> getTagByCategory(UUID categoryId) {
         CategoryEntity category = getCategoryEntityBean.exec(categoryId);
         if (category == null) {
-            return null;
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
         List<TagEntity> tagEntityList = getTagEntityBean.exec(category);
 
         return tagEntityList.stream()
-                .map(tag -> GetTagByCategoryDto.builder().tag(tag).build())
+                .map(tag -> GetTagByCategoryDto.builder()
+                        .tag(tag)
+                        .build())
                 .collect(Collectors.toList());
     }
 
-    // 장소와 연관되어있는 모든 태그 반환
     public GetTagByPlaceDto getTagByPlace(UUID placeId) {
-        /*
-        PlaceEntity place = getPlaceBean.exec(placeId);
+        PlaceEntity place = getPlaceEntityBean.exec(placeId);
+        if (place == null) {
+            throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
+        }
 
-        place 관련 validation check 추가
+        SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place);
+        CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
 
-        UUID categoryId = place.getCategoryId();
-        */
+        List<GetTagByReviewDto> tagList = getTagEntityBean.exec(category).stream()
+                .map(tag -> GetTagByReviewDto.builder()
+                        .tag(tag)
+                        .build())
+                .collect(Collectors.toList());
 
-        List<GetTagByCategoryDto> tagList = this.getTagByCategory(placeId); // categoryId로 변경 예정
-
-        // return GetTagByPlaceDto.Builder().place(place).tagList(tagList).build();
-        return null;
+        return GetTagByPlaceDto.builder()
+                .place(place)
+                .categoryName(category.getName())
+                .subCategoryName(subCategory.getName())
+                .tagList(tagList)
+                .build();
     }
 }
