@@ -94,9 +94,9 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort") String sortStr) {
+    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort") String sortStr, @RequestParam("userId")UUID userId) {
 
-        List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr);
+        List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr, userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);

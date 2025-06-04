@@ -16,6 +16,7 @@ import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
+import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.review.bean.GetReviewEntityBean;
 import com.day_walk.backend.domain.review.bean.GetReviewStarsAvgBean;
@@ -125,32 +126,42 @@ public class CourseService {
 
     private final GetAllCourseEntityBean getAllCourseEntityBean;
 
-    public List<GetAllCourseDto> getAllCourse(String sortStr) {
+    public List<GetAllCourseDto> getAllCourse(String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec(sortStr);
-        // 코스 좋아요 갯수 추가 예정
-        // 코스 좋아요 전체 갯수 추가 예정
-        // placeList 추가 예정
-
         if (courseEntityList == null) return Collections.emptyList();
 
+        UserEntity userEntity = getUserEntityBean.exec(userId);
+        if(userEntity == null) return null;
+
         return courseEntityList.stream()
+                .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
                 .map(courseEntity -> {
-                    if (!courseEntity.isVisible() || courseEntity.isHasDelete()) {
-                        return null;
-                    }
+                    boolean liked = getCourseLikeEntityBean.exec(
+                            new SaveCourseLikeDto(userId, courseEntity.getId())
+                    ) != null;
+
+                    List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
+                            .map(placeId -> {
+                                PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+                                return GetPlaceByCourseDto.builder()
+                                        .place(placeEntity)
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
+
                     return GetAllCourseDto.builder()
                             .courseId(courseEntity.getId())
                             .title(courseEntity.getTitle())
                             .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
+                            .placeList(placeList)
+                            .like(liked)
+                            .courseLike(getCourseLikeEntityBean.exec(courseEntity))
                             .build();
                 })
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-
     }
 
     private final GetUsersAllCourseEntityBean getUsersAllCourseEntityBean;
-
     public List<GetUsersAllCourseDto> getUsersAllCourse(UUID userId) {
         List<CourseEntity> courseEntityList = getUsersAllCourseEntityBean.exec(userId);
         if (courseEntityList == null) return Collections.emptyList();
@@ -174,7 +185,6 @@ public class CourseService {
     }
 
     private final GetSearchCourseEntityBean getSearchCourseEntityBean;
-
     public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr) {
         List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
         if (courseEntityList == null) return Collections.emptyList();
