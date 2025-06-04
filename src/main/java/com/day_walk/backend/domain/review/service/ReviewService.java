@@ -19,6 +19,8 @@ import com.day_walk.backend.domain.tag.bean.GetTagEntityBean;
 import com.day_walk.backend.domain.tag.data.TagEntity;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,31 +40,48 @@ public class ReviewService {
     private final GetSubCategoryEntityBean getSubCategoryEntityBean;
 
     public UUID saveReview(SaveReviewDto saveReviewDto) {
-        ReviewEntity review = ReviewEntity.builder().saveReviewDto(saveReviewDto).build();
+        UserEntity user = getUserEntityBean.exec(saveReviewDto.getUserId());
+        if (user == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        PlaceEntity place = getPlaceEntityBean.exec(saveReviewDto.getPlaceId());
+        if (place == null) {
+            throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
+        }
+
+        List<TagEntity> tagList = getTagEntityBean.exec(saveReviewDto.getTagList());
+        if (tagList.size() != saveReviewDto.getTagList().size()) {
+            throw new CustomException(ErrorCode.TAG_NOT_FOUND);
+        }
+
+        ReviewEntity review = ReviewEntity.builder()
+                .saveReviewDto(saveReviewDto)
+                .build();
 
         saveReviewEntityBean.exec(review);
 
-        ReviewEntity check = getReviewEntityBean.exec(review.getId());
-        return check == null ? null : check.getId();
+        return review.getId();
     }
 
     public boolean deleteReview(DeleteReviewDto deleteReviewDto) {
         ReviewEntity review = getReviewEntityBean.exec(deleteReviewDto.getReviewId());
 
         if (review == null || review.isHasDelete()) {
-            return false;
+            throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
         }
 
         ReviewEntity deleteReview = deleteReviewEntityBean.exec(review);
-        System.out.println(deleteReview.isHasDelete());
+
         saveReviewEntityBean.exec(deleteReview);
+
         return true;
     }
 
     public List<GetReviewByUserDto> getReviewByUser(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
         if (user == null) {
-            return null;
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(user);
@@ -91,7 +110,7 @@ public class ReviewService {
     public List<GetReviewByPlaceDto> getReviewByPlace(UUID placeId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
         if (place == null) {
-            return null;
+            throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
         }
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
@@ -116,7 +135,7 @@ public class ReviewService {
     public GetReviewTotalDto getReviewTotal(UUID placeId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
         if (place == null) {
-            return null;
+            throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
         }
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
