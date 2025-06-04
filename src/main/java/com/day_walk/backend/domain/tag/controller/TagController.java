@@ -22,7 +22,7 @@ import java.util.*;
 public class TagController {
     private final TagService tagService;
 
-    @Operation(summary = "카테고리별 전체 조회", description = "카테고리별 연관된 태그 전체 조회입니다.")
+    @Operation(summary = "카테고리별 전체 조회", description = "카테고리별 연관된 태그 전체 조회합니다.")
     @GetMapping("/all/category")
     public ResponseEntity<Map<String, Object>> getAllTagByCategory(@RequestParam("categoryId") UUID categoryId) {
         List<GetTagByCategoryDto> tagList = tagService.getTagByCategory(categoryId);
@@ -36,7 +36,7 @@ public class TagController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "장소별 태그 전체 조회", description = "하나의 장소와 연관된 태그 전체 조회입니다.")
+    @Operation(summary = "장소별 태그 전체 조회", description = "하나의 장소와 연관된 태그 전체 조회합니다.")
     @GetMapping("/all/place")
     public ResponseEntity<Map<String, Object>> getAllTagByPlace(@RequestParam("placeId") UUID placeId) {
         GetTagByPlaceDto getTagByPlaceDto = tagService.getTagByPlace(placeId);
