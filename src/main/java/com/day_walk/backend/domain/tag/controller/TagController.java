@@ -17,11 +17,10 @@ import java.util.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/tag")
 @RestController
-@Tag(name = "Tag 관련 API", description = "Tag에 관련된 API들입니다.")
+@Tag(name = "Tag 관련 API", description = "Tag 관련된 API 명세서입니다.")
 public class TagController {
     private final TagService tagService;
 
-    // 카테고리와 연관되어있는 모든 태그 조회 API
     @GetMapping("/all/category")
     public ResponseEntity<Map<String, Object>> getAllTagByCategory(@RequestParam("categoryId") UUID categoryId) {
         List<GetTagByCategoryDto> tagList = tagService.getTagByCategory(categoryId);
@@ -35,7 +34,6 @@ public class TagController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 장소와 연관되어있는 모든 태그 조회 API
     @GetMapping("/all/place")
     public ResponseEntity<Map<String, Object>> getAllTagByPlace(@RequestParam("placeId") UUID placeId) {
         GetTagByPlaceDto getTagByPlaceDto = tagService.getTagByPlace(placeId);

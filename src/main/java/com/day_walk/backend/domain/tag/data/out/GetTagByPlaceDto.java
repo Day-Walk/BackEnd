@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.tag.data.out;
 
+import com.day_walk.backend.domain.place.data.PlaceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,14 +15,16 @@ import java.util.UUID;
 public class GetTagByPlaceDto {
     private UUID placeId;
     private String placeName;
-    private List<GetTagByCategoryDto> tagList;
+    private String categoryName;
+    private String subCategoryName;
+    private List<GetTagByReviewDto> tagList;
 
-    /*
     @Builder
-    public GetTagByPlaceDto(PlaceEntity place, List<GetTagByCategoryDto> tagList) {
+    public GetTagByPlaceDto(PlaceEntity place, String categoryName, String subCategoryName, List<GetTagByReviewDto> tagList) {
         this.placeId = place.getId();
+        this.categoryName = categoryName;
+        this.subCategoryName = subCategoryName;
         this.placeName = place.getName();
         this.tagList = tagList;
     }
-    */
 }
