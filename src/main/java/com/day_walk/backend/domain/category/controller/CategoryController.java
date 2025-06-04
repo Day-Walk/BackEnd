@@ -22,7 +22,7 @@ import java.util.Map;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @Operation(summary = "카테고리 전체 조회", description = "카테고리와 카테고리별 태그들이 같이 반환됩니다.")
+    @Operation(summary = "카테고리 전체 조회", description = "카테고리와 카테고리별 태그들을 같이 조회합니다.")
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllCategory() {
         List<GetCategoryDto> categoryList = categoryService.getAllCategory();

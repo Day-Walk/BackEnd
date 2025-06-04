@@ -114,7 +114,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "유저별 코스 전체 조회", description = "한 명의 유저가 작성한 모든 코스를 조회할 수 있습니다.")
+    @Operation(summary = "유저별 코스 전체 조회", description = "한 명의 유저가 작성한 모든 코스를 조회합니다.")
     @GetMapping("/all/user")
     public ResponseEntity<Map<String, Object>> getUsersAllCourse(@RequestParam("userId") UUID userId) {
         List<GetUsersAllCourseDto> courseList = courseService.getUsersAllCourse(userId);
@@ -127,7 +127,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "코스 검색", description = "검색 결과로 나온 코스들을 반환합니다. 이때 정렬 기준을 설정할 수 있습니다.")
+    @Operation(summary = "코스 검색", description = "검색 결과로 나온 코스들을 조회합니다. 이때 정렬 기준을 설정할 수 있습니다.")
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr") String searchStr, @RequestParam(value = "sort", defaultValue = "like") String sortStr, @RequestParam("userId") UUID userId) {
         List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr, userId);
