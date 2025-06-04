@@ -10,7 +10,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class GetCourseEntityBean {
-
     private final CourseRepository courseRepository;
 
     public CourseEntity exec(UUID courseId) {
