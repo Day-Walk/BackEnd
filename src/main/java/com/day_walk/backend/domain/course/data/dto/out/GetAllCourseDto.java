@@ -14,7 +14,6 @@ public class GetAllCourseDto {
     private UUID courseId;
     private String title;
     private String userName;
-    // 추후 추가할 data
     private List<GetPlaceByCourseDto> placeList;
     private boolean like;
     private int courseLike;

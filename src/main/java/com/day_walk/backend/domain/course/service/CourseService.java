@@ -17,7 +17,6 @@ import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
-import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceWithStarDto;
 import com.day_walk.backend.domain.review.bean.GetReviewEntityBean;
 import com.day_walk.backend.domain.review.bean.GetReviewStarsAvgBean;
@@ -48,8 +47,6 @@ public class CourseService {
     private final GetAllCourseEntityBean getAllCourseEntityBean;
     private final GetUsersAllCourseEntityBean getUsersAllCourseEntityBean;
     private final GetSearchCourseEntityBean getSearchCourseEntityBean;
-
-
 
     public UUID saveCourse(SaveCourseDto saveCourseDto) {
         UserEntity userEntity = getUserEntityBean.exec(saveCourseDto.getUserId());
@@ -135,7 +132,7 @@ public class CourseService {
         if (courseEntityList == null) return Collections.emptyList();
 
         UserEntity userEntity = getUserEntityBean.exec(userId);
-        if(userEntity == null) return null;
+        if (userEntity == null) return null;
 
         return courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
@@ -198,7 +195,7 @@ public class CourseService {
         if (courseEntityList == null) return Collections.emptyList();
 
         UserEntity userEntity = getUserEntityBean.exec(userId);
-        if(userEntity == null ) return null;
+        if (userEntity == null) return null;
 
         return courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())

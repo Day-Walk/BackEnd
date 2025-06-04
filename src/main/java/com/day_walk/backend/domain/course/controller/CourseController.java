@@ -94,7 +94,7 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort") String sortStr, @RequestParam("userId")UUID userId) {
+    public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam("sort") String sortStr, @RequestParam("userId") UUID userId) {
 
         List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr, userId);
 
@@ -107,7 +107,7 @@ public class CourseController {
     }
 
     @GetMapping("/all/user")
-    public ResponseEntity<Map<String, Object>> getUsersAllCourse(@RequestParam("userId")UUID userId) {
+    public ResponseEntity<Map<String, Object>> getUsersAllCourse(@RequestParam("userId") UUID userId) {
         List<GetUsersAllCourseDto> courseList = courseService.getUsersAllCourse(userId);
 
         Map<String, Object> response = new HashMap<>();
@@ -119,7 +119,7 @@ public class CourseController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr")String searchStr, @RequestParam("sortStr")String sortStr, @RequestParam("userId") UUID userId) {
+    public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr") String searchStr, @RequestParam("sortStr") String sortStr, @RequestParam("userId") UUID userId) {
         List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr, userId);
 
         Map<String, Object> response = new HashMap<>();
