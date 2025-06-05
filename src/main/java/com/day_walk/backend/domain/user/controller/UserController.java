@@ -1,0 +1,69 @@
+package com.day_walk.backend.domain.user.controller;
+
+import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
+import com.day_walk.backend.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+
+@RestController
+@RequestMapping("/api/user")
+@RequiredArgsConstructor
+@Tag(name = "User 관련 API", description = "User 관련된 API 명세서입니다.")
+public class UserController {
+
+    private final UserService userService;
+
+    @Operation(summary = "유저 상세 조회", description = "한 유저의 상세 정보를 조회합니다.")
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getUserInfo(@RequestParam("userId") UUID userId) {
+
+        GetUserDto userInfo = userService.getUserInfo(userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", userInfo != null);
+        response.put("message", userInfo == null ? "유저조회 실패.." : "유저조회 성공");
+        response.put("userInfo", userInfo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "유저 초기 정보 저장", description = "초기 회원이 작성한 정보를 저장합니다.")
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> saveUserInfo(@RequestBody SaveUserDto userInfo) {
+
+        UUID userId = userService.saveUserInfo(userInfo);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", userId != null);
+        response.put("message", userId == null ? "유저 초기정보 저장 실패.." : "유저 초기정보 저장 성공");
+        response.put("userId", userId);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "유저 수정", description = "한 유저의 정보를 수정합니다.")
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateUserInfo(@RequestBody UpdateUserDto updateUserDto) {
+
+        UUID userId = userService.updateUserInfo(updateUserDto);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", userId != null);
+        response.put("message", userId == null ? "유저 수정 실패.." : "유저 수정 성공");
+        response.put("userId", userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+}
