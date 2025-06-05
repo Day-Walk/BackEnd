@@ -25,6 +25,8 @@ import com.day_walk.backend.domain.sub_category.bean.GetSubCategoryEntityBean;
 import com.day_walk.backend.domain.sub_category.data.SubCategoryEntity;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +52,9 @@ public class CourseService {
 
     public UUID saveCourse(SaveCourseDto saveCourseDto) {
         UserEntity userEntity = getUserEntityBean.exec(saveCourseDto.getUserId());
-        if (userEntity == null) return null;
+        if (userEntity == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         CourseEntity courseEntity = CourseEntity.builder()
                 .id(UUID.randomUUID())
                 .userId(saveCourseDto.getUserId())
@@ -66,7 +70,9 @@ public class CourseService {
 
     public UUID modifyCourseName(ModifyCourseTitleDto modifyCourseTitleDto) {
         CourseEntity courseEntity = getCourseEntityBean.exec(modifyCourseTitleDto.getCourseId());
-        if (courseEntity == null) return null;
+        if (courseEntity == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        }
         courseEntity.modifyCourseTitle(modifyCourseTitleDto);
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -75,7 +81,10 @@ public class CourseService {
 
     public UUID changeVisible(ChangeBooleanDto changeBooleanDto) {
         CourseEntity courseEntity = getCourseEntityBean.exec(changeBooleanDto.getCourseId());
-        if (courseEntity == null) return null;
+        if (courseEntity == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        }
+        ;
         courseEntity.changeVisible();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -84,7 +93,11 @@ public class CourseService {
 
     public UUID deleteCourse(ChangeBooleanDto changeBooleanDto) {
         CourseEntity courseEntity = getCourseEntityBean.exec(changeBooleanDto.getCourseId());
-        if (courseEntity == null || courseEntity.isHasDelete()) return null;
+        if (courseEntity == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        } else if (courseEntity.isHasDelete()) {
+            throw new CustomException(ErrorCode.COURSE_DELETE_TRUE);
+        }
         courseEntity.deleteCourse();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -93,21 +106,41 @@ public class CourseService {
 
     public GetCourseDto getCourse(UUID courseId) {
         CourseEntity courseEntity = getCourseEntityBean.exec(courseId);
-        if ((courseEntity == null) || !courseEntity.isVisible() || courseEntity.isHasDelete()) return null;
+        if (courseEntity == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        } else if (courseEntity.isHasDelete()) {
+            throw new CustomException(ErrorCode.COURSE_DELETE_TRUE);
+        } else if (!courseEntity.isVisible()) {
+            throw new CustomException(ErrorCode.COURSE_VISIBLE_FALSE);
+        }
 
         UserEntity userEntity = getUserEntityBean.exec(courseEntity.getUserId());
+        if (userEntity == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
 
         List<GetPlaceWithStarDto> getPlaceDtoList = courseEntity.getPlaceList().stream()
                 .map(placeId -> {
                     PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
                     List<String> imgUrlList = placeEntity.getImgList();
-                    String firstImgUrl = (imgUrlList != null && !imgUrlList.isEmpty()) ? imgUrlList.get(0) : null;
+                    String firstImgUrl;
+                    if (imgUrlList != null && !imgUrlList.isEmpty()) {
+                        firstImgUrl = imgUrlList.get(0);
+                    } else {
+                        return null;
+                    }
 
                     SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(placeEntity.getSubCategoryId());
                     CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                    if (category == null) {
+                        throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+                    }
 
                     List<ReviewEntity> reviewList = getReviewEntityBean.exec(placeEntity);
-                    double stars = getReviewStarsAvgBean.exec(reviewList);
+                    if (reviewList == null) {
+                        throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
+                    }
+                    double stars = reviewList.isEmpty() ? 0.0 : getReviewStarsAvgBean.exec(reviewList);
 
                     return GetPlaceWithStarDto.builder()
                             .place(placeEntity)
@@ -134,10 +167,16 @@ public class CourseService {
 
     public List<GetAllCourseDto> getAllCourse(String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec(sortStr);
-        if (courseEntityList == null) return Collections.emptyList();
+        if (courseEntityList == null) {
+            throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
+        } else if (courseEntityList.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         UserEntity userEntity = getUserEntityBean.exec(userId);
-        if (userEntity == null) return null;
+        if (userEntity == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
 
         return courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
@@ -149,6 +188,7 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+//                                if (placeEntity == null) return null;
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
@@ -169,7 +209,11 @@ public class CourseService {
 
     public List<GetUsersAllCourseDto> getUsersAllCourse(UUID userId) {
         List<CourseEntity> courseEntityList = getUsersAllCourseEntityBean.exec(userId);
-        if (courseEntityList == null) return Collections.emptyList();
+        if (courseEntityList == null) {
+            throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
+        } else if (courseEntityList.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         return courseEntityList.stream()
                 .filter(courseEntity -> !courseEntity.isHasDelete())
@@ -178,6 +222,7 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+//                                if (placeEntity == null) return null;
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
@@ -197,10 +242,16 @@ public class CourseService {
 
     public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
-        if (courseEntityList == null) return Collections.emptyList();
+        if (courseEntityList == null) {
+            throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
+        } else if (courseEntityList.isEmpty()) {
+            Collections.emptyList();
+        }
 
         UserEntity userEntity = getUserEntityBean.exec(userId);
-        if (userEntity == null) return null;
+        if (userEntity == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
 
         return courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
@@ -212,6 +263,7 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+//                                if (placeEntity == null) return null;
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
