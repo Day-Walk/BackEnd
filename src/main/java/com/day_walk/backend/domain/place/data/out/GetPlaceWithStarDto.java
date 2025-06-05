@@ -16,22 +16,23 @@ import java.util.UUID;
 @Getter
 public class GetPlaceWithStarDto {
     private UUID placeId;
-    private List<String> imageUrlList;
-    private String name;
+    private String imgUrl;
+    private String placeName;
     private String address;
     private String category;
     private String subCategory;
     private Map<String, BigDecimal> location;
-    private double star;
+    private double stars;
 
     @Builder
-    public GetPlaceWithStarDto(PlaceEntity place, String category, String subCategory, double star) {
+    public GetPlaceWithStarDto(PlaceEntity place, double stars,String category, String subCategory, String imgUrl) {
         this.placeId = place.getId();
-        this.imageUrlList = place.getImgList();
-        this.name = place.getName();
+        this.placeName = place.getName();
         this.address = place.getAddress();
         this.location = place.getLocation();
+        this.stars = stars;
         this.category = category;
         this.subCategory = subCategory;
+        this.imgUrl = imgUrl;
     }
 }
