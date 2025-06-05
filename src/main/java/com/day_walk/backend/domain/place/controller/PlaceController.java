@@ -1,5 +1,6 @@
 package com.day_walk.backend.domain.place.controller;
 
+import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchListDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place.service.PlaceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,20 @@ public class PlaceController {
         response.put("success", success);
         response.put("message", success ? "장소 상세 조회 성공!" : "장소 상세 조회 실패..");
         response.put("placeInfo", getPlaceDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "장소 검색", description = "검색어를 토대로 장소 데이터를 조회합니다.")
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> searchPlace(@RequestParam("searchStr") String searchStr) {
+        GetPlaceBySearchListDto getPlaceBySearchListDto = placeService.searchPlace(searchStr);
+        boolean success = getPlaceBySearchListDto != null;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", success ? "장소 검색 성공!" : "장소 검색 실패..");
+        response.put("searchData", getPlaceBySearchListDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
