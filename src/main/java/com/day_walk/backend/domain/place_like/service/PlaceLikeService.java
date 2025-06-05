@@ -8,6 +8,8 @@ import com.day_walk.backend.domain.place_like.bean.SavePlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
 import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
+import com.day_walk.backend.global.util.page.PageDto;
+import com.day_walk.backend.global.util.page.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,16 +47,18 @@ public class PlaceLikeService {
         return true;
     }
 
-    public List<GetPlaceByLikeDto> getPlaceLike(UUID userId) {
+    public List<PageDto<GetPlaceByLikeDto>> getPlaceLike(UUID userId) {
         List<PlaceLikeEntity> placeLikeList = getPlaceLikeEntityBean.exec(userId);
         if (placeLikeList == null || placeLikeList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return placeLikeList.stream()
+        List<GetPlaceByLikeDto> placeByLikeDtoList = placeLikeList.stream()
                 .map(placeLike -> GetPlaceByLikeDto.builder()
                         .place(getPlaceEntityBean.exec(placeLike.getPlaceId()))
                         .build())
-                .collect(Collectors.toList());
+                .toList();
+
+        return PaginationUtil.paginate(placeByLikeDtoList, 10);
     }
 }

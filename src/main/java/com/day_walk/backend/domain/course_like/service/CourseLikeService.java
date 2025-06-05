@@ -15,6 +15,8 @@ import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
+import com.day_walk.backend.global.util.page.PageDto;
+import com.day_walk.backend.global.util.page.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +71,7 @@ public class CourseLikeService {
         return true;
     }
 
-    public List<GetCourseByLikeDto> getCourseLike(UUID userId) {
+    public List<PageDto<GetCourseByLikeDto>> getCourseLike(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -80,7 +82,7 @@ public class CourseLikeService {
             return Collections.emptyList();
         }
 
-        return courseLikeList.stream()
+        List<GetCourseByLikeDto> courseByLikeDtoList = courseLikeList.stream()
                 .map(courseLike -> {
                     CourseEntity course = getCourseEntityBean.exec(courseLike.getCourseId());
                     if (!course.isVisible()) {
@@ -99,6 +101,8 @@ public class CourseLikeService {
                             .build();
                 })
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
+
+        return PaginationUtil.paginate(courseByLikeDtoList, 10);
     }
 }

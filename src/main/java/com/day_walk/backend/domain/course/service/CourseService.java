@@ -27,6 +27,8 @@ import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
+import com.day_walk.backend.global.util.page.PageDto;
+import com.day_walk.backend.global.util.page.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -165,7 +167,7 @@ public class CourseService {
                 .build();
     }
 
-    public List<GetAllCourseDto> getAllCourse(String sortStr, UUID userId) {
+    public List<PageDto<GetAllCourseDto>> getAllCourse(String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec(sortStr);
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
@@ -178,7 +180,7 @@ public class CourseService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return courseEntityList.stream()
+        List<GetAllCourseDto> allCourseDtoList = courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
                 .map(courseEntity -> {
                     boolean liked = getCourseLikeEntityBean.exec(
@@ -204,7 +206,9 @@ public class CourseService {
                             .courseLike(getCourseLikeEntityBean.exec(courseEntity))
                             .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
+
+        return PaginationUtil.paginate(allCourseDtoList, 10);
     }
 
     public List<GetUsersAllCourseDto> getUsersAllCourse(UUID userId) {
@@ -240,7 +244,7 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public List<GetSearchCourseDto> getSearchCourse(String searchStr, String sortStr, UUID userId) {
+    public List<PageDto<GetSearchCourseDto>> getSearchCourse(String searchStr, String sortStr, UUID userId) {
         List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
@@ -253,7 +257,7 @@ public class CourseService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return courseEntityList.stream()
+        List<GetSearchCourseDto> courseDtoList = courseEntityList.stream()
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
                 .map(courseEntity -> {
                     boolean liked = getCourseLikeEntityBean.exec(
@@ -280,6 +284,8 @@ public class CourseService {
                             .build();
                 })
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
+
+        return PaginationUtil.paginate(courseDtoList, 10);
     }
 }

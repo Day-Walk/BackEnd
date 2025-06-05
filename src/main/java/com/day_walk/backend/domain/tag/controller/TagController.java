@@ -26,7 +26,7 @@ public class TagController {
     @GetMapping("/all/category")
     public ResponseEntity<Map<String, Object>> getAllTagByCategory(@RequestParam("categoryId") UUID categoryId) {
         List<GetTagByCategoryDto> tagList = tagService.getTagByCategory(categoryId);
-        boolean success = !tagList.isEmpty();
+        boolean success = tagList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

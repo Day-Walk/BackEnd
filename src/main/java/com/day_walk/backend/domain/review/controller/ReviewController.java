@@ -6,6 +6,7 @@ import com.day_walk.backend.domain.review.data.out.GetReviewByPlaceDto;
 import com.day_walk.backend.domain.review.data.out.GetReviewByUserDto;
 import com.day_walk.backend.domain.review.data.out.GetReviewTotalDto;
 import com.day_walk.backend.domain.review.service.ReviewService;
+import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class ReviewController {
     @Operation(summary = "유저별 리뷰 전체 조회", description = "한 명의 유저가 작성한 모든 리뷰를 조회합니다.")
     @GetMapping("/all/user")
     public ResponseEntity<Map<String, Object>> getAllReviewByUser(@RequestParam("userId") UUID userId) {
-        List<GetReviewByUserDto> reviewList = reviewService.getReviewByUser(userId);
+        List<PageDto<GetReviewByUserDto>> reviewList = reviewService.getReviewByUser(userId);
         boolean success = reviewList != null;
 
         Map<String, Object> response = new HashMap<>();
@@ -68,8 +69,8 @@ public class ReviewController {
     @Operation(summary = "장소별 리뷰 전체 조회", description = "한 장소에 대해 작성된 모든 리뷰를 조회합니다.")
     @GetMapping("/all/place")
     public ResponseEntity<Map<String, Object>> getAllReviewByPlace(@RequestParam("placeId") UUID placeId) {
-        List<GetReviewByPlaceDto> reviewList = reviewService.getReviewByPlace(placeId);
-        boolean success = !reviewList.isEmpty();
+        List<PageDto<GetReviewByPlaceDto>> reviewList = reviewService.getReviewByPlace(placeId);
+        boolean success = reviewList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

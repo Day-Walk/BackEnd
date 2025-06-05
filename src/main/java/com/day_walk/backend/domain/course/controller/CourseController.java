@@ -9,6 +9,7 @@ import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
 import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
+import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +105,7 @@ public class CourseController {
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllCourse(@RequestParam(value = "sort", defaultValue = "like") String sortStr, @RequestParam("userId") UUID userId) {
 
-        List<GetAllCourseDto> courseList = courseService.getAllCourse(sortStr, userId);
+        List<PageDto<GetAllCourseDto>> courseList = courseService.getAllCourse(sortStr, userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
@@ -130,7 +131,7 @@ public class CourseController {
     @Operation(summary = "코스 검색", description = "검색 결과로 나온 코스들을 조회합니다. 이때 정렬 기준을 설정할 수 있습니다.")
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> getSearchCourse(@RequestParam("searchStr") String searchStr, @RequestParam(value = "sort", defaultValue = "like") String sortStr, @RequestParam("userId") UUID userId) {
-        List<GetSearchCourseDto> courseList = courseService.getSearchCourse(searchStr, sortStr, userId);
+        List<PageDto<GetSearchCourseDto>> courseList = courseService.getSearchCourse(searchStr, sortStr, userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);

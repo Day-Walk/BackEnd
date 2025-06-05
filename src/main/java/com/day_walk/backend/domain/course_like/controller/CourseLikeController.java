@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
 import com.day_walk.backend.domain.course_like.data.in.DeleteCourseLikeDto;
 import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
 import com.day_walk.backend.domain.course_like.service.CourseLikeService;
+import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,8 @@ public class CourseLikeController {
     @Operation(summary = "유저별 찜한 코스 전체 조회", description = "한 명의 유저가 찜한 모든 코스를 조회합니다.")
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getCourseLike(@RequestParam("userId") UUID userId) {
-        List<GetCourseByLikeDto> courseList = courseLikeService.getCourseLike(userId);
-        boolean success = courseList == null;
+        List<PageDto<GetCourseByLikeDto>> courseList = courseLikeService.getCourseLike(userId);
+        boolean success = courseList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
