@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class SaveUserLikeDto {
-    private UUID userId;
-    private List<SaveCategoryListDto> categoryList;
+public class SaveCategoryListDto {
+    private UUID categoryId;
+    private List<UUID> tagList;
 }
