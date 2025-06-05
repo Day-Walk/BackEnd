@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class GetUserDto {
-    private UUID id;
+    private UUID userId;
     private String name;
 
 }

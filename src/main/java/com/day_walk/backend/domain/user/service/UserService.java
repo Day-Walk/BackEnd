@@ -6,6 +6,8 @@ import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,11 @@ public class UserService {
 
     public GetUserDto getUserInfo(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
-        if (user == null) return null;
+        if (user == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         return GetUserDto.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .name(user.getName())
                 .build();
     }
@@ -30,18 +34,34 @@ public class UserService {
 
     public UUID saveUserInfo(SaveUserDto userInfo) {
         UserEntity getUser = getUserEntityBean.exec(userInfo.getId());
+        if (getUser == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         if (getUser.getAge() == -1 && getUser.getGender() == -1) {
-            getUser.saveUser(userInfo);
-            saveUserBean.exec(getUser);
+            try {
+                getUser.saveUser(userInfo);
+                saveUserBean.exec(getUser);
+            } catch (Exception e) {
+                throw new CustomException(ErrorCode.USER_SAVE_FAILED);
+            }
+        } else if (getUser.getAge() != -1 && getUser.getGender() != -1) {
+            throw new CustomException(ErrorCode.USER_AGE_GENDER_SAVE_FAILED);
         }
         return getUser.getId();
     }
 
     public UUID updateUserInfo(UpdateUserDto updateUserDto) {
         UserEntity getUser = getUserEntityBean.exec(updateUserDto.getId());
-        if (getUser == null) return null;
-        getUser.updateUser(updateUserDto);
-        saveUserBean.exec(getUser);
+        if (getUser == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        try {
+            getUser.updateUser(updateUserDto);
+            saveUserBean.exec(getUser);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.USER_SAVE_FAILED);
+        }
+
         return getUser.getId();
     }
 
