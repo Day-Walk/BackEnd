@@ -25,8 +25,8 @@ public class PlaceController {
 
     @Operation(summary = "장소 상세 조회", description = "하나의 장소에 대한 상세 내용을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getPlace(@RequestParam("placeId") UUID placeId) {
-        GetPlaceDto getPlaceDto = placeService.getPlace(placeId);
+    public ResponseEntity<Map<String, Object>> getPlace(@RequestParam("placeId") UUID placeId, @RequestParam("userId") UUID userId) {
+        GetPlaceDto getPlaceDto = placeService.getPlace(placeId, userId);
         boolean success = getPlaceDto != null;
 
         Map<String, Object> response = new HashMap<>();

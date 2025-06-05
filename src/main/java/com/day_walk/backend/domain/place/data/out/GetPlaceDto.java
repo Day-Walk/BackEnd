@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,9 +23,14 @@ public class GetPlaceDto {
     private String category;
     private String subCategory;
     private Map<String, BigDecimal> location;
+    private String openTime;
+    private String closeDate;
+    private String content;
+    private List<String> phoneNum;
+    private boolean like;
 
     @Builder
-    public GetPlaceDto(PlaceEntity place, String category, String subCategory) {
+    public GetPlaceDto(PlaceEntity place, String category, String subCategory, boolean like) {
         this.placeId = place.getId();
         this.imageUrlList = place.getImgList();
         this.name = place.getName();
@@ -32,5 +38,10 @@ public class GetPlaceDto {
         this.location = place.getLocation();
         this.category = category;
         this.subCategory = subCategory;
+        this.openTime = place.getOpenTime();
+        this.closeDate = place.getCloseDate();
+        this.content = place.getContent();
+        this.phoneNum = Arrays.stream(place.getPhoneNum().split("<br>")).toList();
+        this.like = like;
     }
 }
