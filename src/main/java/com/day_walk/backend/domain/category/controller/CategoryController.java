@@ -27,7 +27,7 @@ public class CategoryController {
     public ResponseEntity<Map<String, Object>> getAllCategory() {
         List<GetCategoryDto> categoryList = categoryService.getAllCategory();
 
-        boolean success = !categoryList.isEmpty();
+        boolean success = categoryList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

@@ -52,7 +52,7 @@ public class CourseLikeController {
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getCourseLike(@RequestParam("userId") UUID userId) {
         List<PageDto<GetCourseByLikeDto>> courseList = courseLikeService.getCourseLike(userId);
-        boolean success = courseList == null;
+        boolean success = courseList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

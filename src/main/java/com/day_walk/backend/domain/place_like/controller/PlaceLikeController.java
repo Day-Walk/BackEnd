@@ -54,7 +54,7 @@ public class PlaceLikeController {
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getPlaceLike(@RequestParam("userId") UUID userId) {
         List<PageDto<GetPlaceByLikeDto>> placeList = placeLikeService.getPlaceLike(userId);
-        boolean success = !placeList.isEmpty();
+        boolean success = placeList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

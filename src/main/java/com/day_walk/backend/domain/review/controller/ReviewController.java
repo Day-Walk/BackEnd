@@ -70,7 +70,7 @@ public class ReviewController {
     @GetMapping("/all/place")
     public ResponseEntity<Map<String, Object>> getAllReviewByPlace(@RequestParam("placeId") UUID placeId) {
         List<PageDto<GetReviewByPlaceDto>> reviewList = reviewService.getReviewByPlace(placeId);
-        boolean success = !reviewList.isEmpty();
+        boolean success = reviewList != null;
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
