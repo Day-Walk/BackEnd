@@ -12,7 +12,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GetUsersAllCourseEntityBean {
     private final CourseRepository courseRepository;
+
     public List<CourseEntity> exec(UUID userId) {
-        return courseRepository.findAllByUserId(userId);
+        return courseRepository.findAllByUserIdOrderByCreateAtDesc(userId);
     }
 }

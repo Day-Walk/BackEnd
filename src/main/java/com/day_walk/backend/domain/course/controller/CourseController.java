@@ -35,9 +35,9 @@ public class CourseController {
         UUID courseId = courseService.saveCourse(saveCourseDto);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("courseId", courseId);
         response.put("message", courseId == null ? "코스 저장 실패.." : "코스 저장 성공!");
         response.put("success", courseId != null);
+        response.put("courseId", courseId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

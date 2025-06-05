@@ -84,7 +84,7 @@ public class CourseService {
 
     public UUID deleteCourse(ChangeBooleanDto changeBooleanDto) {
         CourseEntity courseEntity = getCourseEntityBean.exec(changeBooleanDto.getCourseId());
-        if (courseEntity == null) return null;
+        if (courseEntity == null || courseEntity.isHasDelete()) return null;
         courseEntity.deleteCourse();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -100,6 +100,9 @@ public class CourseService {
         List<GetPlaceWithStarDto> getPlaceDtoList = courseEntity.getPlaceList().stream()
                 .map(placeId -> {
                     PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
+                    List<String> imgUrlList = placeEntity.getImgList();
+                    String firstImgUrl = (imgUrlList != null && !imgUrlList.isEmpty()) ? imgUrlList.get(0) : null;
+
                     SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(placeEntity.getSubCategoryId());
                     CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
 
@@ -108,9 +111,10 @@ public class CourseService {
 
                     return GetPlaceWithStarDto.builder()
                             .place(placeEntity)
+                            .imgUrl(firstImgUrl)
                             .category(category.getName())
                             .subCategory(subCategory.getName())
-                            .star(stars)
+                            .stars(stars)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -120,6 +124,7 @@ public class CourseService {
         like = (likeEntity != null);
 
         return GetCourseDto.builder()
+                .userName(userEntity.getName())
                 .title(courseEntity.getTitle())
                 .placeList(getPlaceDtoList)
                 .like(like)
@@ -167,7 +172,7 @@ public class CourseService {
         if (courseEntityList == null) return Collections.emptyList();
 
         return courseEntityList.stream()
-                .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
+                .filter(courseEntity -> !courseEntity.isHasDelete())
                 .map(courseEntity -> {
 
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
