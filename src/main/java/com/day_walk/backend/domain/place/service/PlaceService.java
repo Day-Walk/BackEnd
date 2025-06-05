@@ -4,6 +4,8 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
+import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchDto;
+import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchListDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.bean.GetPlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
@@ -16,7 +18,10 @@ import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -47,6 +52,44 @@ public class PlaceService {
                 .category(category.getName())
                 .subCategory(subCategory.getName())
                 .like(placeLike != null)
+                .build();
+    }
+
+    public GetPlaceBySearchListDto searchPlace(String searchStr) {
+        // 검색엔진 사용 로직 추가
+
+        // 테스트 로직 추후 삭제 예정
+        List<PlaceEntity> placeEntityList = getPlaceEntityBean.exec(searchStr);
+        List<PlaceEntity> recommendList = new ArrayList<>();
+        List<PlaceEntity> placeList = new ArrayList<>();
+
+        if (!placeEntityList.isEmpty() && placeEntityList.size() < 5) {
+            recommendList.add(placeEntityList.get(0));
+            for (int i = 1; i < placeEntityList.size(); i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        } else if (!placeEntityList.isEmpty() && placeEntityList.size() < 15) {
+            recommendList.add(placeEntityList.get(0));
+            recommendList.add(placeEntityList.get(1));
+            for (int i = 2; i < placeEntityList.size(); i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        } else if(!placeEntityList.isEmpty() && placeEntityList.size() < 23) {
+            recommendList.add(placeEntityList.get(0));
+            recommendList.add(placeEntityList.get(1));
+            recommendList.add(placeEntityList.get(2));
+            for (int i = 3; i < placeEntityList.size(); i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        }
+
+        return GetPlaceBySearchListDto.builder()
+                .recommendList(recommendList.stream()
+                        .map(place -> GetPlaceBySearchDto.builder().place(place).build())
+                        .collect(Collectors.toList()))
+                .placeList(placeList.stream()
+                        .map(place -> GetPlaceBySearchDto.builder().place(place).build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
