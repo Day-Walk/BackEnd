@@ -5,10 +5,15 @@ import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.domain.user_like.bean.SaveUserLikeEntityBean;
 import com.day_walk.backend.domain.user_like.bean.GetUserLikeEntityBean;
 import com.day_walk.backend.domain.user_like.data.UserLikeEntity;
+import com.day_walk.backend.domain.user_like.data.dto.in.SaveCategoryListDto;
 import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,15 +27,23 @@ public class UserLikeService {
     public UUID createUserLike(SaveUserLikeDto saveUserLikeDto) {
 
         UserEntity userEntity = getUserEntityBean.exec(saveUserLikeDto.getUserId());
+        if (userEntity == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
 
-        if (userEntity == null) return null;
 
-        UserLikeEntity userLikeEntity = UserLikeEntity.builder().id(UUID.randomUUID()).userId(saveUserLikeDto.getUserId()).build();
-        saveUserLikeEntityBean.exec(userLikeEntity);
+        List<UserLikeEntity> userLikeEntityList = saveUserLikeDto.getCategoryList().stream()
+                .map(saveCategoryListDto -> UserLikeEntity.builder()
+                            .id(UUID.randomUUID())
+                            .userId(userEntity.getId())
+                            .categoryId(saveCategoryListDto.getCategoryId())
+                            .tagList(saveCategoryListDto.getTagList())
+                            .build())
+                .toList();
 
-        UserLikeEntity userId = getUserLikeEntityBean.exec(userLikeEntity.getId());
+        saveUserLikeEntityBean.exec(userLikeEntityList);
 
-        return userId == null ? null : userId.getUserId();
+        return userEntity.getId() == null ? null : userEntity.getId();
     }
 
 }

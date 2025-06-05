@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,14 +18,15 @@ public class UserLikeEntity {
     @Id
     private UUID id;
     private UUID userId;
-    // categoryId 추가 예정
-    // List<UUID>tagList 추가 예정
+    private UUID categoryId;
+    private List<UUID> tagList;
 
-    // test builder
     @Builder
-    public UserLikeEntity(UUID id, UUID userId) {
+    public UserLikeEntity(UUID id, UUID userId, UUID categoryId, List<UUID> tagList) {
         this.id = id;
         this.userId = userId;
+        this.categoryId = categoryId;
+        this.tagList = tagList;
     }
 
 }
