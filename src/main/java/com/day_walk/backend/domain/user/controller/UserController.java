@@ -31,9 +31,9 @@ public class UserController {
         GetUserDto userInfo = userService.getUserInfo(userId);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("userInfo", userInfo);
-        response.put("message", userInfo == null ? "유저조회 실패.." : "유저조회 성공");
         response.put("success", userInfo != null);
+        response.put("message", userInfo == null ? "유저조회 실패.." : "유저조회 성공");
+        response.put("userInfo", userInfo);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -45,9 +45,10 @@ public class UserController {
         UUID userId = userService.saveUserInfo(userInfo);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("userId", userId);
-        response.put("message", userId == null ? "유저 초기정보 저장 실패.." : "유저 초기정보 저장 성공");
         response.put("success", userId != null);
+        response.put("message", userId == null ? "유저 초기정보 저장 실패.." : "유저 초기정보 저장 성공");
+        response.put("userId", userId);
+
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -59,9 +60,9 @@ public class UserController {
         UUID userId = userService.updateUserInfo(updateUserDto);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("userId", userId);
-        response.put("message", userId == null ? "유저 수정 실패.." : "유저 수정 성공");
         response.put("success", userId != null);
+        response.put("message", userId == null ? "유저 수정 실패.." : "유저 수정 성공");
+        response.put("userId", userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
