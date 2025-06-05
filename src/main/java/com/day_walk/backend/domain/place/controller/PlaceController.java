@@ -39,7 +39,7 @@ public class PlaceController {
     }
 
     @Operation(summary = "장소 검색", description = "검색어를 토대로 장소 데이터를 조회합니다.")
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchPlace(@RequestParam("searchStr") String searchStr) {
         GetPlaceBySearchListDto getPlaceBySearchListDto = placeService.searchPlace(searchStr);
         boolean success = getPlaceBySearchListDto != null;

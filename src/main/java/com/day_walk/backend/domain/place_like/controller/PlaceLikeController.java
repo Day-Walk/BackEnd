@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.service.PlaceLikeService;
+import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ public class PlaceLikeController {
     @Operation(summary = "유저별 찜한 장소 전체 조회", description = "한 명의 유저가 찜한 모든 장소를 조회합니다.")
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getPlaceLike(@RequestParam("userId") UUID userId) {
-        List<GetPlaceByLikeDto> placeList = placeLikeService.getPlaceLike(userId);
+        List<PageDto<GetPlaceByLikeDto>> placeList = placeLikeService.getPlaceLike(userId);
         boolean success = !placeList.isEmpty();
 
         Map<String, Object> response = new HashMap<>();

@@ -22,6 +22,8 @@ import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
+import com.day_walk.backend.global.util.page.PageDto;
+import com.day_walk.backend.global.util.page.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +80,7 @@ public class ReviewService {
         return true;
     }
 
-    public List<GetReviewByUserDto> getReviewByUser(UUID userId) {
+    public List<PageDto<GetReviewByUserDto>> getReviewByUser(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -86,7 +88,7 @@ public class ReviewService {
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(user);
 
-        return reviewList.stream()
+        List<GetReviewByUserDto> reviewByUserDtoList = reviewList.stream()
                 .map(review -> {
                     PlaceEntity place = getPlaceEntityBean.exec(review.getPlaceId());
                     SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
@@ -104,10 +106,12 @@ public class ReviewService {
                                     .map(TagEntity::getFullName)
                                     .toList())
                             .build();
-                }).collect(Collectors.toList());
+                }).toList();
+
+        return PaginationUtil.paginate(reviewByUserDtoList, 10);
     }
 
-    public List<GetReviewByPlaceDto> getReviewByPlace(UUID placeId) {
+    public List<PageDto<GetReviewByPlaceDto>> getReviewByPlace(UUID placeId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
         if (place == null) {
             throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
@@ -115,7 +119,7 @@ public class ReviewService {
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
 
-        return reviewList.stream()
+        List<GetReviewByPlaceDto> reviewByPlaceDtoList = reviewList.stream()
                 .map(review -> {
                     List<TagEntity> tagList = getTagEntityBean.exec(review.getTagList());
 
@@ -125,7 +129,9 @@ public class ReviewService {
                             .tagList(getTagNameBean.exec(tagList))
                             .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
+
+        return PaginationUtil.paginate(reviewByPlaceDtoList, 10);
     }
 
     public GetReviewTotalDto getReviewTotal(UUID placeId) {
