@@ -21,4 +21,8 @@ public class GetPlaceLikeEntityBean {
     public List<PlaceLikeEntity> exec(UUID userId) {
         return placeLikeRepository.findAllByUserId(userId);
     }
+
+    public PlaceLikeEntity exec(UUID userId, UUID placeId) {
+        return placeLikeRepository.findByUserIdAndPlaceId(userId, placeId);
+    }
 }

@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface PlaceLikeRepository extends JpaRepository<PlaceLikeEntity, UUID> {
     List<PlaceLikeEntity> findAllByUserId(UUID userId);
+
+    PlaceLikeEntity findByUserIdAndPlaceId(UUID userId, UUID placeId);
 }

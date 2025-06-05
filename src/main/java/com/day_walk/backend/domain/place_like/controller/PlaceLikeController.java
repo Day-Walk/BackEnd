@@ -1,7 +1,6 @@
 package com.day_walk.backend.domain.place_like.controller;
 
 import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
-import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
 import com.day_walk.backend.domain.place_like.service.PlaceLikeService;

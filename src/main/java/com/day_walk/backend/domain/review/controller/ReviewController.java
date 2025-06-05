@@ -39,7 +39,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "리뷰 저장", description = "한 명의 유저가 한 장소에 대해 작성한 리뷰를 저장합니다.")
+    @Operation(summary = "리뷰 삭제", description = "한 명의 유저가 한 장소에 대해 작성한 리뷰를 삭제합니다.")
     @DeleteMapping
     public ResponseEntity<Map<String, Object>> deleteReview(@RequestBody DeleteReviewDto deleteReviewDto) {
         boolean success = reviewService.deleteReview(deleteReviewDto);

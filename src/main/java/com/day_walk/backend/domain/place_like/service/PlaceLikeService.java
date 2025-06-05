@@ -2,7 +2,6 @@ package com.day_walk.backend.domain.place_like.service;
 
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
-import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.bean.DeletePlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.bean.GetPlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.bean.SavePlaceLikeEntityBean;
