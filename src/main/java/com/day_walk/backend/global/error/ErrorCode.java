@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "USER_010", "유저를 찾을 수 없습니다."),
 //    USER_AGE_BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "USER_020", "유저의 나이 입력이 잘못되었습니다."),
+    USER_SAVE_FAILED(HttpStatus.BAD_REQUEST, false, "USER_020", "유저의 정보를 저장할 수 없습니다."),
+    USER_AGE_GENDER_SAVE_FAILED(HttpStatus.BAD_REQUEST, false, "USER_030", "유저의 나이와 성별 정보가 이미 존재합니다."),
 
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_010", "장소를 찾을 수 없습니다."),
     PLACE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_011", "이미지가 존재하지 않습니다."),
