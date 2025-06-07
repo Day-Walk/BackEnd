@@ -77,7 +77,7 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", getUserBySignInDto != null);
         response.put("message", getUserBySignInDto == null ? "로그인 실패.." : "로그인 성공");
-        response.put("userId", getUserBySignInDto);
+        response.put("userInfo", getUserBySignInDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

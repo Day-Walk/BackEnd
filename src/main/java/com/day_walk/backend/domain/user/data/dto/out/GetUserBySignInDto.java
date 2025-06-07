@@ -13,16 +13,12 @@ public class GetUserBySignInDto {
     private Long kakaoId;
     private String name;
     private String nextPage;
-    private int gender;
-    private int age;
 
     @Builder
-    public GetUserBySignInDto(UUID userId, Long kakaoId, String name, String nextPage, int gender, int age) {
+    public GetUserBySignInDto(UUID userId, Long kakaoId, String name, String nextPage) {
         this.userId = userId;
         this.kakaoId = kakaoId;
         this.name = name;
         this.nextPage = nextPage;
-        this.gender = gender;
-        this.age = age;
     }
 }

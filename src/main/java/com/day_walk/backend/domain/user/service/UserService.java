@@ -98,7 +98,6 @@ public class UserService {
 
         return GetUserBySignInDto.builder()
                 .userId(getEntityByKakaoId.getId())
-                .name(getEntityByKakaoId.getName())
                 .nextPage("home")
                 .build();
     }
