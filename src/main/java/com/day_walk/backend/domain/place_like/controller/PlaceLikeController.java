@@ -27,13 +27,11 @@ public class PlaceLikeController {
     @Operation(summary = "장소 찜 저장", description = "한 명의 유저가 하나의 장소를 찜 합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Object>> savePlaceLike(@RequestBody SavePlaceLikeDto savePlaceLikeDto) {
-        UUID placeLikeId = placeLikeService.savePlaceLike(savePlaceLikeDto);
-        boolean success = placeLikeId != null;
+        boolean success = placeLikeService.savePlaceLike(savePlaceLikeDto);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", success ? "유저별 장소 찜 저장 성공!" : "유저별 장소 찜 저장 실패..");
-        response.put("placeLikeId", placeLikeId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
