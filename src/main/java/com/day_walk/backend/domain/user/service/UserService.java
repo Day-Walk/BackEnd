@@ -1,11 +1,15 @@
 package com.day_walk.backend.domain.user.service;
 
+import com.day_walk.backend.domain.user.bean.GetUserByKakaoIdBean;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.bean.SaveUserBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
+import com.day_walk.backend.domain.user.data.UserRole;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
+import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +67,40 @@ public class UserService {
         }
 
         return getUser.getId();
+    }
+
+
+    private final GetUserByKakaoIdBean getUserByKakaoIdBean;
+
+    public GetUserBySignInDto signIn(SignInUserDto signInUserDto) {
+        UserEntity getEntityByKakaoId = getUserByKakaoIdBean.exec(signInUserDto.getKakaoId());
+
+        if (getEntityByKakaoId == null) {
+            UserEntity saveUser = UserEntity.builder()
+                    .kakaoId(signInUserDto.getKakaoId())
+                    .name(signInUserDto.getName())
+                    .id(UUID.randomUUID())
+                    .userRole(UserRole.USER)
+                    .gender(-1)
+                    .age(-1)
+                    .build();
+            saveUserBean.exec(saveUser);
+            return GetUserBySignInDto.builder()
+                    .userId(saveUser.getId())
+                    .name(saveUser.getName())
+                    .nextPage("init")
+                    .build();
+        }
+
+        if (getEntityByKakaoId.getKakaoId() != null && getEntityByKakaoId.getName() == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        return GetUserBySignInDto.builder()
+                .userId(getEntityByKakaoId.getId())
+                .name(getEntityByKakaoId.getName())
+                .nextPage("home")
+                .build();
     }
 
 }
