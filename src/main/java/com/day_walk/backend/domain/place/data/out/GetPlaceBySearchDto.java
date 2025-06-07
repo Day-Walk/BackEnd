@@ -16,7 +16,7 @@ import java.util.UUID;
 public class GetPlaceBySearchDto {
     private UUID placeId;
     private String imgUrl;
-    private String name;
+    private String placeName;
     private String address;
     private String category;
     private String subCategory;
@@ -26,7 +26,7 @@ public class GetPlaceBySearchDto {
     public GetPlaceBySearchDto(PlaceEntity place, String category, String subCategory) {
         this.placeId = place.getId();
         this.imgUrl = place.getImgList().isEmpty() ? null : place.getImgList().get(0);
-        this.name = place.getName();
+        this.placeName = place.getName();
         this.address = place.getAddress();
         this.category = category;
         this.subCategory = subCategory;

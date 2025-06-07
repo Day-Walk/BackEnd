@@ -106,7 +106,9 @@ public class ReviewService {
                                     .map(TagEntity::getFullName)
                                     .toList())
                             .build();
-                }).toList();
+                }).collect(Collectors.toList());
+
+        reviewByUserDtoList.sort(Comparator.comparing(GetReviewByUserDto::getCreateAt).reversed());
 
         return PaginationUtil.paginate(reviewByUserDtoList, 10);
     }
@@ -128,8 +130,9 @@ public class ReviewService {
                             .user(getUserEntityBean.exec(review.getUserId()))
                             .tagList(getTagNameBean.exec(tagList))
                             .build();
-                })
-                .toList();
+                }).collect(Collectors.toList());
+
+        reviewByPlaceDtoList.sort(Comparator.comparing(GetReviewByPlaceDto::getCreateAt).reversed());
 
         return PaginationUtil.paginate(reviewByPlaceDtoList, 10);
     }

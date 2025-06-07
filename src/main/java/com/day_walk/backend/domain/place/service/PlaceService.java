@@ -55,7 +55,7 @@ public class PlaceService {
                 .build();
     }
 
-    public GetPlaceBySearchListDto searchPlace(String searchStr) {
+    public GetPlaceBySearchListDto searchPlace(String searchStr, UUID userId) {
         // 검색엔진 사용 로직 추가
 
         // 테스트 로직 추후 삭제 예정
@@ -85,10 +85,28 @@ public class PlaceService {
 
         return GetPlaceBySearchListDto.builder()
                 .recommendList(recommendList.stream()
-                        .map(place -> GetPlaceBySearchDto.builder().place(place).build())
+                        .map(place -> {
+                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
+                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+
+                            return GetPlaceBySearchDto.builder()
+                                    .place(place)
+                                    .category(category.getName())
+                                    .subCategory(subCategory.getName())
+                                    .build();
+                        })
                         .collect(Collectors.toList()))
                 .placeList(placeList.stream()
-                        .map(place -> GetPlaceBySearchDto.builder().place(place).build())
+                        .map(place -> {
+                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
+                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+
+                            return GetPlaceBySearchDto.builder()
+                                    .place(place)
+                                    .category(category.getName())
+                                    .subCategory(subCategory.getName())
+                                    .build();
+                        })
                         .collect(Collectors.toList()))
                 .build();
     }

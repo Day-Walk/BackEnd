@@ -27,7 +27,9 @@ public enum ErrorCode {
     COURSE_VISIBLE_FALSE(HttpStatus.BAD_REQUEST, false, "COURSE_031", "비공개 처리된 코스입니다."),
 
     COURSE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "COURSE_LIKE_010", "코스 찜한 내역을 찾을 수 없습니다."),
-    COURSE_LIKE_IS_EXIST(HttpStatus.BAD_REQUEST, false, "COURSE_LIKE_030", "이미 찜한 코스입니다.");
+    COURSE_LIKE_IS_EXIST(HttpStatus.BAD_REQUEST, false, "COURSE_LIKE_030", "이미 찜한 코스입니다."),
+
+    PLACE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_LIKE_010", "장소 찜 내역을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final boolean success;
