@@ -110,7 +110,7 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
         response.put("message", courseList == null ? "코스 전체조회 실패.." : "코스 전체조회 성공!");
-        response.put("courseInfo", courseList);
+        response.put("courseList", courseList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -118,12 +118,12 @@ public class CourseController {
     @Operation(summary = "유저별 코스 전체 조회", description = "한 명의 유저가 작성한 모든 코스를 조회합니다.")
     @GetMapping("/all/user")
     public ResponseEntity<Map<String, Object>> getUsersAllCourse(@RequestParam("userId") UUID userId) {
-        List<GetUsersAllCourseDto> courseList = courseService.getUsersAllCourse(userId);
+        List<PageDto<GetUsersAllCourseDto>> courseList = courseService.getUsersAllCourse(userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
         response.put("message", courseList == null ? "유저별 코스 조회 실패.." : "유저별 코스 조회 성공!");
-        response.put("courseInfo", courseList);
+        response.put("courseList", courseList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -136,7 +136,7 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseList != null);
         response.put("message", courseList == null ? "코스 검색 실패.." : "코스 검색 성공!");
-        response.put("courseInfo", courseList);
+        response.put("courseList", courseList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
