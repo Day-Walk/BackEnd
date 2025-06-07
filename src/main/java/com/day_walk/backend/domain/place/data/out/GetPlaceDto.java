@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 public class GetPlaceDto {
     private UUID placeId;
-    private List<String> imageUrlList;
+    private List<String> imgUrlList;
     private String name;
     private String address;
     private String category;
@@ -32,7 +32,7 @@ public class GetPlaceDto {
     @Builder
     public GetPlaceDto(PlaceEntity place, String category, String subCategory, boolean like) {
         this.placeId = place.getId();
-        this.imageUrlList = place.getImgList();
+        this.imgUrlList = place.getImgList();
         this.name = place.getName();
         this.address = place.getAddress();
         this.location = place.getLocation();
