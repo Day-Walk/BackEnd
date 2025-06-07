@@ -1,7 +1,9 @@
 package com.day_walk.backend.domain.user.controller;
 
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,4 +68,18 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @Operation(summary = "로그인 및 회원가입", description = "최초 로그인 시 회원가입이 됩니다.")
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInUserDto signInDto) {
+        GetUserBySignInDto getUserBySignInDto = userService.signIn(signInDto);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", getUserBySignInDto != null);
+        response.put("message", getUserBySignInDto == null ? "로그인 실패.." : "로그인 성공");
+        response.put("userInfo", getUserBySignInDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }
