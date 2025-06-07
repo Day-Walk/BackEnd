@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class GetReviewByUserDto {
+    private UUID reviewId;
     private String placeName;
     private String address;
     private String categoryName;
@@ -26,6 +28,7 @@ public class GetReviewByUserDto {
 
     @Builder
     public GetReviewByUserDto(PlaceEntity place, String categoryName, String subCategoryName, ReviewEntity review, List<String> tagList) {
+        this.reviewId = review.getId();
         this.placeName = place.getName();
         this.address = place.getAddress();
         this.categoryName = categoryName;
