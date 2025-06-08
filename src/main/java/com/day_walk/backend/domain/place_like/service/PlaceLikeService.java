@@ -60,6 +60,11 @@ public class PlaceLikeService {
     }
 
     public List<PageDto<GetPlaceByLikeDto>> getPlaceLike(UUID userId) {
+        UserEntity user = getUserEntityBean.exec(userId);
+        if (user == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
         List<PlaceLikeEntity> placeLikeList = getPlaceLikeEntityBean.exec(userId);
         if (placeLikeList == null || placeLikeList.isEmpty()) {
             return Collections.emptyList();
