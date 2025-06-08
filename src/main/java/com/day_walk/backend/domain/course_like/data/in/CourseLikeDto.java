@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class DeleteCourseLikeDto {
+public class CourseLikeDto {
     private UUID userId;
     private UUID courseId;
 }
