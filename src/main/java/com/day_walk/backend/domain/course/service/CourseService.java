@@ -211,7 +211,7 @@ public class CourseService {
         return PaginationUtil.paginate(allCourseDtoList, 10);
     }
 
-    public List<GetUsersAllCourseDto> getUsersAllCourse(UUID userId) {
+    public List<PageDto<GetUsersAllCourseDto>> getUsersAllCourse(UUID userId) {
         List<CourseEntity> courseEntityList = getUsersAllCourseEntityBean.exec(userId);
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
@@ -219,7 +219,7 @@ public class CourseService {
             return Collections.emptyList();
         }
 
-        return courseEntityList.stream()
+        List<GetUsersAllCourseDto> usersAllCourseDtoList = courseEntityList.stream()
                 .filter(courseEntity -> !courseEntity.isHasDelete())
                 .map(courseEntity -> {
 
@@ -242,6 +242,8 @@ public class CourseService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        return PaginationUtil.paginate(usersAllCourseDtoList, 10);
     }
 
     public List<PageDto<GetSearchCourseDto>> getSearchCourse(String searchStr, String sortStr, UUID userId) {

@@ -1,9 +1,13 @@
 package com.day_walk.backend.domain.user.controller;
 
+import com.day_walk.backend.domain.user.data.UserRole;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
+import com.day_walk.backend.global.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @Operation(summary = "유저 상세 조회", description = "한 유저의 상세 정보를 조회합니다.")
     @GetMapping
@@ -66,4 +71,25 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @Operation(summary = "로그인 및 회원가입", description = "최초 로그인 시 회원가입이 됩니다.")
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInUserDto signInDto) {
+        GetUserBySignInDto getUserBySignInDto = userService.signIn(signInDto);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", getUserBySignInDto != null);
+        response.put("message", getUserBySignInDto == null ? "로그인 실패.." : "로그인 성공");
+        response.put("userInfo", getUserBySignInDto);
+
+        if (getUserBySignInDto != null) {
+            UserRole role = userService.getUserRole(getUserBySignInDto.getUserId());
+            String token = jwtUtil.generateToken(getUserBySignInDto.getUserId(), role);
+
+            return ResponseEntity.status(HttpStatus.OK).header("Authorization", "Bearer " + token).body(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

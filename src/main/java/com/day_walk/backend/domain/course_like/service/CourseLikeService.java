@@ -62,12 +62,23 @@ public class CourseLikeService {
     }
 
     public boolean deleteCourseLike(DeleteCourseLikeDto deleteCourseLikeDto) {
+        UserEntity user = getUserEntityBean.exec(deleteCourseLikeDto.getUserId());
+        if (user == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        CourseEntity course = getCourseEntityBean.exec(deleteCourseLikeDto.getCourseId());
+        if (course == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        }
+
         CourseLikeEntity courseLike = getCourseLikeEntityBean.exec(deleteCourseLikeDto);
         if (courseLike == null) {
             throw new CustomException(ErrorCode.COURSE_LIKE_NOT_FOUND);
         }
 
         deleteCourseLikeEntityBean.exec(courseLike);
+
         return true;
     }
 
