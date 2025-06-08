@@ -31,9 +31,12 @@ public class WebSecurityConfig {
                         auth
                                 // Swagger 접근 가능
                                 .requestMatchers(
-                                        "/v3/api-docs/**",
+                                        "/swagger",
                                         "/swagger-ui.html",
-                                        "/swagger-ui/**"
+                                        "/swagger-ui/**",
+                                        "/api-docs",
+                                        "/api-docs/**",
+                                        "/v3/api-docs/**"
                                 ).permitAll()
                                 // 누구나 가능
                                 .requestMatchers(
