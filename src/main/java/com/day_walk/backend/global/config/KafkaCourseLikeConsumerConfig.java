@@ -1,6 +1,6 @@
 package com.day_walk.backend.global.config;
 
-import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
+import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -14,23 +14,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaConsumerConfig {
+public class KafkaCourseLikeConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, PlaceLikeDto> consumerFactory() {
+    public ConsumerFactory<String, CourseLikeDto> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.day_walk.backend.domain.course_like.data.in.CourseLikeDto");
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PlaceLikeDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PlaceLikeDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, CourseLikeDto> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CourseLikeDto> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
