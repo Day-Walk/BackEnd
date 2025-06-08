@@ -31,7 +31,8 @@ jobs:
 
             # 3. application.properties 설정
             echo "${{ secrets.APPLICATION_DB_PROPERTIES }}" > ./src/main/resources/application-db.properties
-            echo "${{ secrets.APPLICATION_OAUTH_PROPERTIES }}" > ./src/main/resources/application-oauth.properties
+            echo "${{ secrets.APPLICATION_JWT_PROPERTIES }}" > ./src/main/resources/application-jwt.properties
+            echo "${{ secrets.APPLICATION_KAFKA_PROPERTIES }}" > ./src/main/resources/application-kafka.properties
 
             # 4. 빌드 권한 확보
             chmod +x ./gradlew
@@ -40,9 +41,7 @@ jobs:
             ./gradlew clean build
 
             # 6. 기존 컨테이너 중지 및 삭제
-            docker stop be-server || true
-            docker rm be-server || true
+            docker compose down -v || true
 
             # 7. 도커 이미지 생성 및 실행
-            docker build -t be-server .
-            docker run -d --name be-server -p 8080:8080 be-server
+            docker compose up -d --build
