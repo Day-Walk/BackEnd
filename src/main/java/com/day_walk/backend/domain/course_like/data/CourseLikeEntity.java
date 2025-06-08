@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.course_like.data;
 
-import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.global.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,7 +24,7 @@ public class CourseLikeEntity extends BaseEntity {
     private UUID courseId;
 
     @Builder
-    public CourseLikeEntity(SaveCourseLikeDto saveCourseLikeDto) {
+    public CourseLikeEntity(CourseLikeDto saveCourseLikeDto) {
         this.id = UUID.randomUUID();
         this.userId = saveCourseLikeDto.getUserId();
         this.courseId = saveCourseLikeDto.getCourseId();
