@@ -15,4 +15,8 @@ public class GetUserEntityBean {
     public UserEntity exec(UUID userId) {
         return userRepository.findById(userId).orElse(null);
     }
+
+    public UserEntity exec(Long kakaoId) {
+        return userRepository.findByKakaoId(kakaoId);
+    }
 }
