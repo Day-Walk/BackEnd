@@ -1,8 +1,7 @@
 package com.day_walk.backend.domain.place_like.controller;
 
 import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
-import com.day_walk.backend.domain.place_like.data.in.DeletePlaceLikeDto;
-import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
+import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
 import com.day_walk.backend.domain.place_like.service.PlaceLikeService;
 import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +25,7 @@ public class PlaceLikeController {
 
     @Operation(summary = "장소 찜 저장", description = "한 명의 유저가 하나의 장소를 찜 합니다.")
     @PostMapping
-    public ResponseEntity<Map<String, Object>> savePlaceLike(@RequestBody SavePlaceLikeDto savePlaceLikeDto) {
+    public ResponseEntity<Map<String, Object>> savePlaceLike(@RequestBody PlaceLikeDto savePlaceLikeDto) {
         boolean success = placeLikeService.savePlaceLike(savePlaceLikeDto);
 
         Map<String, Object> response = new HashMap<>();
@@ -38,8 +37,8 @@ public class PlaceLikeController {
 
     @Operation(summary = "장소 찜 취소", description = "한 명의 유저가 하나의 장소를 찜 취소합니다.")
     @DeleteMapping
-    public ResponseEntity<Map<String, Object>> deletePlaceLike(@RequestBody DeletePlaceLikeDto deletePlaceLikeDto) {
-        boolean success = placeLikeService.deletePlaceLike(deletePlaceLikeDto);
+    public ResponseEntity<Map<String, Object>> deletePlaceLike(@RequestBody PlaceLikeDto placeLikeDto) {
+        boolean success = placeLikeService.deletePlaceLike(placeLikeDto);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

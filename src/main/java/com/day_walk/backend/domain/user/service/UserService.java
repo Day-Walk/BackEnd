@@ -1,6 +1,5 @@
 package com.day_walk.backend.domain.user.service;
 
-import com.day_walk.backend.domain.user.bean.GetUserByKakaoIdBean;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.bean.SaveUserBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
@@ -22,6 +21,7 @@ import java.util.UUID;
 public class UserService {
 
     private final GetUserEntityBean getUserEntityBean;
+    private final SaveUserBean saveUserBean;
 
     public GetUserDto getUserInfo(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
@@ -33,8 +33,6 @@ public class UserService {
                 .name(user.getName())
                 .build();
     }
-
-    private final SaveUserBean saveUserBean;
 
     public UUID saveUserInfo(SaveUserDto userInfo) {
         UserEntity getUser = getUserEntityBean.exec(userInfo.getId());
@@ -69,11 +67,8 @@ public class UserService {
         return getUser.getId();
     }
 
-
-    private final GetUserByKakaoIdBean getUserByKakaoIdBean;
-
     public GetUserBySignInDto signIn(SignInUserDto signInUserDto) {
-        UserEntity getEntityByKakaoId = getUserByKakaoIdBean.exec(signInUserDto.getKakaoId());
+        UserEntity getEntityByKakaoId = getUserEntityBean.exec(signInUserDto.getKakaoId());
 
         if (getEntityByKakaoId == null) {
             UserEntity saveUser = UserEntity.builder()

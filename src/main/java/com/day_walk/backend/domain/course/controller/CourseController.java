@@ -8,7 +8,6 @@ import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
-import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
 import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

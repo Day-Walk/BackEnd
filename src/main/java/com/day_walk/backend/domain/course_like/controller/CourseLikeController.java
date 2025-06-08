@@ -1,8 +1,7 @@
 package com.day_walk.backend.domain.course_like.controller;
 
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
-import com.day_walk.backend.domain.course_like.data.in.DeleteCourseLikeDto;
-import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.course_like.service.CourseLikeService;
 import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +25,7 @@ public class CourseLikeController {
 
     @Operation(summary = "코스 찜 저장", description = "한 명의 유저가 하나의 코스를 찜합니다.")
     @PostMapping
-    public ResponseEntity<Map<String, Object>> saveCourseLike(@RequestBody SaveCourseLikeDto saveCourseLikeDto) {
+    public ResponseEntity<Map<String, Object>> saveCourseLike(@RequestBody CourseLikeDto saveCourseLikeDto) {
         boolean success = courseLikeService.saveCourseLike(saveCourseLikeDto);
 
         Map<String, Object> response = new HashMap<>();
@@ -38,7 +37,7 @@ public class CourseLikeController {
 
     @Operation(summary = "코스 찜 취소", description = "한 명의 유저가 하나의 코스를 찜 취소합니다.")
     @DeleteMapping
-    public ResponseEntity<Map<String, Object>> deleteCourseLike(@RequestBody DeleteCourseLikeDto deleteCourseLikeDto) {
+    public ResponseEntity<Map<String, Object>> deleteCourseLike(@RequestBody CourseLikeDto deleteCourseLikeDto) {
         boolean success = courseLikeService.deleteCourseLike(deleteCourseLikeDto);
 
         Map<String, Object> response = new HashMap<>();
