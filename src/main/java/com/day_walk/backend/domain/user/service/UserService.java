@@ -84,7 +84,9 @@ public class UserService {
                     .gender(-1)
                     .age(-1)
                     .build();
+
             saveUserBean.exec(saveUser);
+
             return GetUserBySignInDto.builder()
                     .userId(saveUser.getId())
                     .name(saveUser.getName())
@@ -102,4 +104,12 @@ public class UserService {
                 .build();
     }
 
+    public UserRole getUserRole(UUID userId) {
+        UserEntity user = getUserEntityBean.exec(userId);
+        if (user == null) {
+            return null;
+        }
+
+        return user.getUserRole();
+    }
 }
