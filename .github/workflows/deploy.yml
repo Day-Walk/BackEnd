@@ -31,6 +31,7 @@ jobs:
 
             # 3. application.properties 설정
             echo "${{ secrets.APPLICATION_DB_PROPERTIES }}" > ./src/main/resources/application-db.properties
+            echo "${{ secrets.APPLICATION_OAUTH_PROPERTIES }}" > ./src/main/resources/application-oauth.properties
 
             # 4. 빌드 권한 확보
             chmod +x ./gradlew
