@@ -16,7 +16,7 @@ import java.util.Map;
 @Configuration
 public class KafkaPlaceLikeProducerConfig {
     @Bean
-    public ProducerFactory<String, PlaceLikeDto> producerFactory() {
+    public ProducerFactory<String, PlaceLikeDto> placeLikeProducerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -25,7 +25,7 @@ public class KafkaPlaceLikeProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, PlaceLikeDto> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, PlaceLikeDto> placeLikeKafkaTemplate() {
+        return new KafkaTemplate<>(placeLikeProducerFactory());
     }
 }

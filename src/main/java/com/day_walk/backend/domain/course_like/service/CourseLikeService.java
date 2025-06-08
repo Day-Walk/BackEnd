@@ -3,9 +3,7 @@ package com.day_walk.backend.domain.course_like.service;
 import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
-import com.day_walk.backend.domain.course_like.bean.DeleteCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.bean.GetCourseLikeEntityBean;
-import com.day_walk.backend.domain.course_like.bean.SaveCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
@@ -33,8 +31,6 @@ public class CourseLikeService {
 
     private final GetUserEntityBean getUserEntityBean;
     private final GetCourseEntityBean getCourseEntityBean;
-    private final SaveCourseLikeEntityBean saveCourseLikeEntityBean;
-    private final DeleteCourseLikeEntityBean deleteCourseLikeEntityBean;
     private final GetCourseLikeEntityBean getCourseLikeEntityBean;
     private final GetPlaceEntityBean getPlaceEntityBean;
 

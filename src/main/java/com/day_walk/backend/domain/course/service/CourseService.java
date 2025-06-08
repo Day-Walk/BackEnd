@@ -13,7 +13,7 @@ import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
 import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course_like.bean.GetCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
-import com.day_walk.backend.domain.course_like.data.in.SaveCourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
@@ -155,7 +155,7 @@ public class CourseService {
                 .collect(Collectors.toList());
 
         boolean like = false;
-        CourseLikeEntity likeEntity = getCourseLikeEntityBean.exec(new SaveCourseLikeDto(userEntity.getId(), courseEntity.getId()));
+        CourseLikeEntity likeEntity = getCourseLikeEntityBean.exec(new CourseLikeDto(userEntity.getId(), courseEntity.getId()));
         like = (likeEntity != null);
 
         return GetCourseDto.builder()
@@ -184,7 +184,7 @@ public class CourseService {
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
                 .map(courseEntity -> {
                     boolean liked = getCourseLikeEntityBean.exec(
-                            new SaveCourseLikeDto(userId, courseEntity.getId())
+                            new CourseLikeDto(userId, courseEntity.getId())
                     ) != null;
 
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
@@ -263,7 +263,7 @@ public class CourseService {
                 .filter(courseEntity -> courseEntity.isVisible() && !courseEntity.isHasDelete())
                 .map(courseEntity -> {
                     boolean liked = getCourseLikeEntityBean.exec(
-                            new SaveCourseLikeDto(userId, courseEntity.getId())
+                            new CourseLikeDto(userId, courseEntity.getId())
                     ) != null;
 
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()

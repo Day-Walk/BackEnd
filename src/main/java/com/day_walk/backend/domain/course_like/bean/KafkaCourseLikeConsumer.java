@@ -16,17 +16,17 @@ public class KafkaCourseLikeConsumer {
     private final CourseLikeRepository courseLikeRepository;
     private final CourseLikeRedisRepository courseLikeRedisRepository;
 
-    @KafkaListener(topics = "save-course-like", groupId = "save-course-like")
+    @KafkaListener(topics = "save-course-like", groupId = "save-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
     public void redisSaveConsume(CourseLikeDto courseLikeDto) {
         courseLikeRedisRepository.saveCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
     }
 
-    @KafkaListener(topics = "delete-course-like", groupId = "delete-course-like")
+    @KafkaListener(topics = "delete-course-like", groupId = "delete-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
     public void redisDeleteConsume(CourseLikeDto courseLikeDto) {
         courseLikeRedisRepository.deleteCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
     }
 
-    @KafkaListener(topics = "bulk-course-like", groupId = "bulk-course-like")
+    @KafkaListener(topics = "bulk-course-like", groupId = "bulk-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
     public void mysqlConsume(CourseLikeDto courseLikeDto) {
         CourseLikeEntity courseLike = new CourseLikeEntity(UUID.randomUUID(), courseLikeDto.getUserId(), courseLikeDto.getCourseId());
         courseLikeRepository.save(courseLike);

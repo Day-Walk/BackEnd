@@ -3,9 +3,7 @@ package com.day_walk.backend.domain.place_like.service;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
-import com.day_walk.backend.domain.place_like.bean.DeletePlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.bean.GetPlaceLikeEntityBean;
-import com.day_walk.backend.domain.place_like.bean.SavePlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
 import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
@@ -32,9 +30,7 @@ public class PlaceLikeService {
     private final KafkaTemplate<String, PlaceLikeDto> kafkaTemplate;
 
     private final GetUserEntityBean getUserEntityBean;
-    private final SavePlaceLikeEntityBean savePlaceLikeEntityBean;
     private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
-    private final DeletePlaceLikeEntityBean deletePlaceLikeEntityBean;
     private final GetPlaceEntityBean getPlaceEntityBean;
 
     public boolean savePlaceLike(PlaceLikeDto savePlaceLikeDto) {
