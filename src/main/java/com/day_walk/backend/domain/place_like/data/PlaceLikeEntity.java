@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.place_like.data;
 
-import com.day_walk.backend.domain.place_like.data.in.SavePlaceLikeDto;
+import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
 import com.day_walk.backend.global.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,7 +24,7 @@ public class PlaceLikeEntity extends BaseEntity {
     private UUID placeId;
 
     @Builder
-    public PlaceLikeEntity(SavePlaceLikeDto savePlaceLikeDto) {
+    public PlaceLikeEntity(PlaceLikeDto savePlaceLikeDto) {
         this.id = UUID.randomUUID();
         this.userId = savePlaceLikeDto.getUserId();
         this.placeId = savePlaceLikeDto.getPlaceId();

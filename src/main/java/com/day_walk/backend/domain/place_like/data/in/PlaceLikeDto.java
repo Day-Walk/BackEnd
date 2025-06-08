@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class DeletePlaceLikeDto {
+public class PlaceLikeDto {
     private UUID userId;
     private UUID placeId;
 }
