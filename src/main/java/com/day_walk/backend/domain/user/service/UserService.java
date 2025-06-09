@@ -89,8 +89,11 @@ public class UserService {
                     .build();
         }
 
-        if (getEntityByKakaoId.getKakaoId() != null && getEntityByKakaoId.getName() == null) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        if (getEntityByKakaoId.isInit()) {
+            return GetUserBySignInDto.builder()
+                    .userId(getEntityByKakaoId.getId())
+                    .nextPage("init")
+                    .build();
         }
 
         return GetUserBySignInDto.builder()
