@@ -1,6 +1,7 @@
 package com.day_walk.backend.global.config;
 
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,7 @@ import java.util.Map;
 @Configuration
 public class KafkaCourseLikeProducerConfig {
     @Bean
-    public ProducerFactory<String, CourseLikeDto> courseLikeProducerFactory() {
+    public ProducerFactory<String, CourseLikeEvent> courseLikeProducerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -25,7 +26,7 @@ public class KafkaCourseLikeProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, CourseLikeDto> courseLikeKafkaTemplate() {
+    public KafkaTemplate<String, CourseLikeEvent> courseLikeKafkaTemplate() {
         return new KafkaTemplate<>(courseLikeProducerFactory());
     }
 }

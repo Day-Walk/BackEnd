@@ -14,9 +14,9 @@ import java.util.UUID;
 public class PlaceLikeRedisRepository {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void savePlaceLike(UUID userId, UUID placeId) {
+    public void savePlaceLike(UUID userId, UUID placeId, boolean liked) {
         String key = "place-like:" + userId + ":" + placeId;
-        redisTemplate.opsForValue().set(key, true, Duration.ofDays(1));
+        redisTemplate.opsForValue().set(key, liked, Duration.ofDays(1));
     }
 
     public void deletePlaceLike(UUID userId, UUID placeId) {
@@ -33,6 +33,10 @@ public class PlaceLikeRedisRepository {
         }
 
         return keys.stream()
+                .filter(key -> {
+                    Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
+                    return Boolean.TRUE.equals(value);
+                })
                 .map(key -> {
                     String[] parts = key.split(":");
                     return UUID.fromString(parts[2]);

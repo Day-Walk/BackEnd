@@ -1,7 +1,7 @@
 package com.day_walk.backend.domain.place_like.bean;
 
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
-import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
+import com.day_walk.backend.domain.place_like.data.out.PlaceLikeEvent;
 import com.day_walk.backend.domain.place_like.repository.PlaceLikeRedisRepository;
 import com.day_walk.backend.domain.place_like.repository.PlaceLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,21 +15,26 @@ import java.util.UUID;
 public class KafkaPlaceLikeConsumer {
     private final PlaceLikeRepository placeLikeRepository;
     private final PlaceLikeRedisRepository placeLikeRedisRepository;
+    private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
 
     @KafkaListener(topics = "save-place-like", groupId = "save-place-like", containerFactory = "placeLikeKafkaListenerContainerFactory")
-    public void redisSaveConsume(PlaceLikeDto placeLikeDto) {
-        placeLikeRedisRepository.savePlaceLike(placeLikeDto.getUserId(), placeLikeDto.getPlaceId());
-    }
-
-    @KafkaListener(topics = "delete-place-like", groupId = "delete-place-like", containerFactory = "placeLikeKafkaListenerContainerFactory")
-    public void redisDeleteConsume(PlaceLikeDto placeLikeDto) {
-        placeLikeRedisRepository.deletePlaceLike(placeLikeDto.getUserId(), placeLikeDto.getPlaceId());
+    public void redisSaveConsume(PlaceLikeEvent placeLikeEvent) {
+        placeLikeRedisRepository.savePlaceLike(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId(), placeLikeEvent.isLiked());
     }
 
     @KafkaListener(topics = "bulk-place-like", groupId = "bulk-place-like", containerFactory = "placeLikeKafkaListenerContainerFactory")
-    public void mysqlConsume(PlaceLikeDto placeLikeDto) {
-        PlaceLikeEntity placeLike = new PlaceLikeEntity(UUID.randomUUID(), placeLikeDto.getUserId(), placeLikeDto.getPlaceId());
-        placeLikeRepository.save(placeLike);
-        placeLikeRedisRepository.deletePlaceLike(placeLikeDto.getUserId(), placeLikeDto.getPlaceId());
+    public void mysqlConsume(PlaceLikeEvent placeLikeEvent) {
+        if (placeLikeEvent.isLiked()) {
+            PlaceLikeEntity placeLike = new PlaceLikeEntity(UUID.randomUUID(), placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
+            placeLikeRepository.save(placeLike);
+        } else {
+            PlaceLikeEntity placeLike = getPlaceLikeEntityBean.exec(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
+
+            if (placeLike != null) {
+                placeLikeRepository.delete(placeLike);
+            }
+        }
+
+        placeLikeRedisRepository.deletePlaceLike(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
     }
 }

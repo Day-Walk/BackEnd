@@ -6,6 +6,7 @@ import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
 import com.day_walk.backend.domain.course_like.bean.GetCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class CourseLikeService {
     private final RedisTemplate<String, Object> redisTemplate;
-    private final KafkaTemplate<String, CourseLikeDto> kafkaTemplate;
+    private final KafkaTemplate<String, CourseLikeEvent> kafkaTemplate;
 
     private final GetUserEntityBean getUserEntityBean;
     private final GetCourseEntityBean getCourseEntityBean;
@@ -45,13 +46,13 @@ public class CourseLikeService {
             throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
         }
 
-        kafkaTemplate.send("save-course-like", new CourseLikeDto(saveCourseLikeDto.getUserId(), saveCourseLikeDto.getCourseId()));
+        kafkaTemplate.send("save-course-like", new CourseLikeEvent(saveCourseLikeDto.getUserId(), saveCourseLikeDto.getCourseId(), true));
 
         return true;
     }
 
     public boolean deleteCourseLike(CourseLikeDto deleteCourseLikeDto) {
-        kafkaTemplate.send("delete-course-like", new CourseLikeDto(deleteCourseLikeDto.getUserId(), deleteCourseLikeDto.getCourseId()));
+        kafkaTemplate.send("save-course-like", new CourseLikeEvent(deleteCourseLikeDto.getUserId(), deleteCourseLikeDto.getCourseId(), false));
 
         return true;
     }
@@ -97,9 +98,9 @@ public class CourseLikeService {
         if (keys != null) {
             for (String key : keys) {
                 Boolean liked = (Boolean) redisTemplate.opsForValue().get(key);
-                if (liked != null && liked) {
+                if (liked != null) {
                     String[] parts = key.split(":");
-                    kafkaTemplate.send("bulk-course-like", new CourseLikeDto(UUID.fromString(parts[1]), UUID.fromString(parts[2])));
+                    kafkaTemplate.send("bulk-course-like", new CourseLikeEvent(UUID.fromString(parts[1]), UUID.fromString(parts[2]), liked));
                 }
             }
         }
