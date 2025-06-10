@@ -38,6 +38,15 @@ public class GetPlaceLikeEntityBean {
     }
 
     public PlaceLikeEntity exec(UUID userId, UUID placeId) {
-        return placeLikeRepository.findByUserIdAndPlaceId(userId, placeId);
+        PlaceLikeEntity placeLike = placeLikeRepository.findByUserIdAndPlaceId(userId, placeId);
+        if (placeLike != null) {
+            return placeLike;
+        }
+
+        if (placeLikeRedisRepository.findPlaceLike(userId, placeId)) {
+            return new PlaceLikeEntity(UUID.randomUUID(), userId, placeId);
+        }
+
+        return null;
     }
 }

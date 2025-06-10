@@ -24,6 +24,12 @@ public class PlaceLikeRedisRepository {
         redisTemplate.delete(key);
     }
 
+    public boolean findPlaceLike(UUID userId, UUID placeId) {
+        String key = "place-like:" + userId + ":" + placeId;
+        Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
+        return Boolean.TRUE.equals(value);
+    }
+
     public List<UUID> findAllLikedPlaceIds(UUID userId) {
         String pattern = "place-like:" + userId + ":*";
         Set<String> keys = redisTemplate.keys(pattern);

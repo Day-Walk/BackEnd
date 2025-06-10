@@ -18,6 +18,6 @@ public class GetPlaceEntityBean {
     }
 
     public List<PlaceEntity> exec(String searchStr) {
-        return placeRepository.findByNameContains(searchStr);
+        return placeRepository.findByNameContaining(searchStr);
     }
 }
