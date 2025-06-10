@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/category")
 @RestController
-@Tag(name = "Category 관련 API", description = "Category 관련된 API 명세서들니다.")
+@Tag(name = "Category 관련 API", description = "Category 관련된 API 명세서들입니다.")
 public class CategoryController {
     private final CategoryService categoryService;
 

@@ -14,9 +14,9 @@ import java.util.UUID;
 public class CourseLikeRedisRepository {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void saveCourseLike(UUID userId, UUID courseId) {
+    public void saveCourseLike(UUID userId, UUID courseId, boolean liked) {
         String key = "course-like:" + userId + ":" + courseId;
-        redisTemplate.opsForValue().set(key, true, Duration.ofDays(1));
+        redisTemplate.opsForValue().set(key, liked, Duration.ofDays(1));
     }
 
     public void deleteCourseLike(UUID userId, UUID courseId) {
@@ -33,6 +33,10 @@ public class CourseLikeRedisRepository {
         }
 
         return keys.stream()
+                .filter(key -> {
+                    Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
+                    return Boolean.TRUE.equals(value);
+                })
                 .map(key -> {
                     String[] parts = key.split(":");
                     return UUID.fromString(parts[2]);

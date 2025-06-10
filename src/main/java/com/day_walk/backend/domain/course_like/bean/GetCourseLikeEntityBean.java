@@ -3,6 +3,7 @@ package com.day_walk.backend.domain.course_like.bean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRedisRepository;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,10 @@ import java.util.stream.Stream;
 public class GetCourseLikeEntityBean {
     private final CourseLikeRepository courseLikeRepository;
     private final CourseLikeRedisRepository courseLikeRedisRepository;
+
+    public CourseLikeEntity exec(CourseLikeEvent courseLikeEvent) {
+        return courseLikeRepository.findByUserIdAndCourseId(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId());
+    }
 
     public CourseLikeEntity exec(CourseLikeDto courseLikeDto) {
         return courseLikeRepository.findByUserIdAndCourseId(courseLikeDto.getUserId(), courseLikeDto.getCourseId());

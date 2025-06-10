@@ -36,6 +36,10 @@ public class UserEntity extends BaseEntity {
         name = updateUserDto.getName();
     }
 
+    public boolean isInit() {
+        return this.age == -1 && this.gender == -1;
+    }
+
     @Builder
     public UserEntity(Long kakaoId, UUID id, String name, UserRole userRole, int gender, int age) {
         this.kakaoId = kakaoId;

@@ -1,7 +1,7 @@
 package com.day_walk.backend.domain.course_like.bean;
 
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
-import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
+import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRedisRepository;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,21 +15,26 @@ import java.util.UUID;
 public class KafkaCourseLikeConsumer {
     private final CourseLikeRepository courseLikeRepository;
     private final CourseLikeRedisRepository courseLikeRedisRepository;
+    private final GetCourseLikeEntityBean getCourseLikeEntityBean;
 
     @KafkaListener(topics = "save-course-like", groupId = "save-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
-    public void redisSaveConsume(CourseLikeDto courseLikeDto) {
-        courseLikeRedisRepository.saveCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
-    }
-
-    @KafkaListener(topics = "delete-course-like", groupId = "delete-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
-    public void redisDeleteConsume(CourseLikeDto courseLikeDto) {
-        courseLikeRedisRepository.deleteCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+    public void redisSaveConsume(CourseLikeEvent courseLikeEvent) {
+        courseLikeRedisRepository.saveCourseLike(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId(), courseLikeEvent.isLiked());
     }
 
     @KafkaListener(topics = "bulk-course-like", groupId = "bulk-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
-    public void mysqlConsume(CourseLikeDto courseLikeDto) {
-        CourseLikeEntity courseLike = new CourseLikeEntity(UUID.randomUUID(), courseLikeDto.getUserId(), courseLikeDto.getCourseId());
-        courseLikeRepository.save(courseLike);
-        courseLikeRedisRepository.deleteCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+    public void mysqlConsume(CourseLikeEvent courseLikeEvent) {
+        if (courseLikeEvent.isLiked()) {
+            CourseLikeEntity courseLike = new CourseLikeEntity(UUID.randomUUID(), courseLikeEvent.getUserId(), courseLikeEvent.getCourseId());
+            courseLikeRepository.save(courseLike);
+        } else {
+            CourseLikeEntity courseLike = getCourseLikeEntityBean.exec(courseLikeEvent);
+
+            if (courseLike != null) {
+                courseLikeRepository.delete(courseLike);
+            }
+        }
+
+        courseLikeRedisRepository.deleteCourseLike(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId());
     }
 }

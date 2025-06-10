@@ -6,6 +6,7 @@ import com.day_walk.backend.domain.place.data.out.GetPlaceByLikeDto;
 import com.day_walk.backend.domain.place_like.bean.GetPlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
 import com.day_walk.backend.domain.place_like.data.in.PlaceLikeDto;
+import com.day_walk.backend.domain.place_like.data.out.PlaceLikeEvent;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.global.error.CustomException;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @Service
 public class PlaceLikeService {
     private final RedisTemplate<String, Object> redisTemplate;
-    private final KafkaTemplate<String, PlaceLikeDto> kafkaTemplate;
+    private final KafkaTemplate<String, PlaceLikeEvent> kafkaTemplate;
 
     private final GetUserEntityBean getUserEntityBean;
     private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
@@ -44,13 +45,13 @@ public class PlaceLikeService {
             throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
         }
 
-        kafkaTemplate.send("save-place-like", new PlaceLikeDto(savePlaceLikeDto.getUserId(), savePlaceLikeDto.getPlaceId()));
+        kafkaTemplate.send("save-place-like", new PlaceLikeEvent(savePlaceLikeDto.getUserId(), savePlaceLikeDto.getPlaceId(), true));
 
         return true;
     }
 
     public boolean deletePlaceLike(PlaceLikeDto deletePlaceDto) {
-        kafkaTemplate.send("delete-place-like", new PlaceLikeDto(deletePlaceDto.getUserId(), deletePlaceDto.getPlaceId()));
+        kafkaTemplate.send("save-place-like", new PlaceLikeEvent(deletePlaceDto.getUserId(), deletePlaceDto.getPlaceId(), false));
 
         return true;
     }
@@ -75,15 +76,15 @@ public class PlaceLikeService {
         return PaginationUtil.paginate(placeByLikeDtoList, 10);
     }
 
-    @Scheduled(cron = "0 0 9 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 45 17 * * *", zone = "Asia/Seoul")
     public void flushLikesToKafka() {
         Set<String> keys = redisTemplate.keys("*:*");
         if (keys != null) {
             for (String key : keys) {
                 Boolean liked = (Boolean) redisTemplate.opsForValue().get(key);
-                if (liked != null && liked) {
+                if (liked != null) {
                     String[] parts = key.split(":");
-                    kafkaTemplate.send("bulk-place-like", new PlaceLikeDto(UUID.fromString(parts[1]), UUID.fromString(parts[2])));
+                    kafkaTemplate.send("bulk-place-like", new PlaceLikeEvent(UUID.fromString(parts[1]), UUID.fromString(parts[2]), liked));
                 }
             }
         }
