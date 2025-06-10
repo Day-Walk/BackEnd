@@ -23,7 +23,16 @@ public class GetCourseLikeEntityBean {
     }
 
     public CourseLikeEntity exec(CourseLikeDto courseLikeDto) {
-        return courseLikeRepository.findByUserIdAndCourseId(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+        CourseLikeEntity courseLike = courseLikeRepository.findByUserIdAndCourseId(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+        if (courseLike != null) {
+            return courseLike;
+        }
+
+        if (courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId())) {
+            return new CourseLikeEntity(UUID.randomUUID(), courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+        }
+
+        return null;
     }
 
     public List<CourseLikeEntity> exec(UUID userId) {
@@ -49,6 +58,6 @@ public class GetCourseLikeEntityBean {
     }
 
     public int exec(CourseEntity course) {
-        return courseLikeRepository.findAllByCourseId(course.getId()).size();
+        return courseLikeRepository.findAllByCourseId(course.getId()).size() + courseLikeRedisRepository.findAllLikedUserIds(course.getId()).size();
     }
 }
