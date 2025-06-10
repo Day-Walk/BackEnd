@@ -18,9 +18,7 @@ import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -63,22 +61,22 @@ public class PlaceService {
         List<PlaceEntity> recommendList = new ArrayList<>();
         List<PlaceEntity> placeList = new ArrayList<>();
 
-        if (!placeEntityList.isEmpty() && placeEntityList.size() < 5) {
+        if (!placeEntityList.isEmpty() && placeEntityList.size() < 12) {
             recommendList.add(placeEntityList.get(0));
             for (int i = 1; i < placeEntityList.size(); i++) {
                 placeList.add(placeEntityList.get(i));
             }
-        } else if (!placeEntityList.isEmpty() && placeEntityList.size() < 15) {
+        } else if (!placeEntityList.isEmpty() && placeEntityList.size() < 23) {
             recommendList.add(placeEntityList.get(0));
             recommendList.add(placeEntityList.get(1));
             for (int i = 2; i < placeEntityList.size(); i++) {
                 placeList.add(placeEntityList.get(i));
             }
-        } else if(!placeEntityList.isEmpty() && placeEntityList.size() < 23) {
+        } else if(!placeEntityList.isEmpty()) {
             recommendList.add(placeEntityList.get(0));
             recommendList.add(placeEntityList.get(1));
             recommendList.add(placeEntityList.get(2));
-            for (int i = 3; i < placeEntityList.size(); i++) {
+            for (int i = 3; i < 24; i++) {
                 placeList.add(placeEntityList.get(i));
             }
         }

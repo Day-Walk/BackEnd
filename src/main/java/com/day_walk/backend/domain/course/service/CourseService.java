@@ -222,7 +222,6 @@ public class CourseService {
         List<GetUsersAllCourseDto> usersAllCourseDtoList = courseEntityList.stream()
                 .filter(courseEntity -> !courseEntity.isHasDelete())
                 .map(courseEntity -> {
-
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
