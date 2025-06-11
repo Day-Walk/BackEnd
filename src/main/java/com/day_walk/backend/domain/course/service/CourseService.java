@@ -106,7 +106,7 @@ public class CourseService {
         return courseId == null ? null : courseId.getId();
     }
 
-    public GetCourseDto getCourse(UUID courseId) {
+    public GetCourseDto getCourse(UUID courseId, UUID userId) {
         CourseEntity courseEntity = getCourseEntityBean.exec(courseId);
         if (courseEntity == null) {
             throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
@@ -116,7 +116,7 @@ public class CourseService {
             throw new CustomException(ErrorCode.COURSE_VISIBLE_FALSE);
         }
 
-        UserEntity userEntity = getUserEntityBean.exec(courseEntity.getUserId());
+        UserEntity userEntity = getUserEntityBean.exec(userId);
         if (userEntity == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
