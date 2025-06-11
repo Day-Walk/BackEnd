@@ -129,7 +129,7 @@ public class CourseService {
                     if (imgUrlList != null && !imgUrlList.isEmpty()) {
                         firstImgUrl = imgUrlList.get(0);
                     } else {
-                        return null;
+                        firstImgUrl = null;
                     }
 
                     SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(placeEntity.getSubCategoryId());
