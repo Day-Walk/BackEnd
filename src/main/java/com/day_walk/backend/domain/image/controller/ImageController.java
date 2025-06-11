@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.image.controller;
 
 import com.day_walk.backend.domain.image.service.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    // 파일 업로드 API
+    @Operation(summary = "이미지 업로드", description = "S3에 이미지를 저장 합니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadImage(@RequestBody MultipartFile file) {
 
@@ -33,4 +34,18 @@ public class ImageController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @Operation(summary = "이미지 삭제", description = "S3에 저장된 이미지를 삭제합니다.")
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteImage(@RequestBody String imgUrl) {
+
+        boolean result = imageService.deleteImage(imgUrl);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", result ? "이미지 삭제 성공!" : "이미지 삭제 실패..");
+        response.put("success", result);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }
