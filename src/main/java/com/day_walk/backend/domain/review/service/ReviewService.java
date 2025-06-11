@@ -160,9 +160,11 @@ public class ReviewService {
 
         List<String> tagNames = getTagNameBean.exec(topTags);
 
+        double stars = Math.round(getReviewStarsAvgBean.exec(reviewList) * 10) / 10.0;
+
         return GetReviewTotalDto.builder()
                 .reviewNum(reviewList.size())
-                .stars(getReviewStarsAvgBean.exec(reviewList))
+                .stars(Math.max(0.0, Math.min(stars, 5.0)))
                 .tagList(tagNames)
                 .build();
     }
