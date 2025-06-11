@@ -89,8 +89,8 @@ public class CourseController {
 
     @Operation(summary = "코스 상세 조회", description = "하나의 코스에 대한 내용을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getCourse(@RequestParam("courseId") UUID courseId) {
-        GetCourseDto courseInfo = courseService.getCourse(courseId);
+    public ResponseEntity<Map<String, Object>> getCourse(@RequestParam("courseId") UUID courseId, @RequestParam("userId") UUID userId) {
+        GetCourseDto courseInfo = courseService.getCourse(courseId, userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", courseInfo != null);
