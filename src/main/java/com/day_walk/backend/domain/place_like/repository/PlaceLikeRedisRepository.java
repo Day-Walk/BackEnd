@@ -45,6 +45,7 @@ public class PlaceLikeRedisRepository {
                 })
                 .map(key -> {
                     String[] parts = key.split(":");
+                    System.out.println(parts[2]);
                     return UUID.fromString(parts[2]);
                 })
                 .toList();
