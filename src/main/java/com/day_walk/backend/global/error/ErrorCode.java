@@ -29,7 +29,10 @@ public enum ErrorCode {
     COURSE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "COURSE_LIKE_010", "코스 찜한 내역을 찾을 수 없습니다."),
     COURSE_LIKE_IS_EXIST(HttpStatus.BAD_REQUEST, false, "COURSE_LIKE_030", "이미 찜한 코스입니다."),
 
-    PLACE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_LIKE_010", "장소 찜 내역을 찾을 수 없습니다.");
+    PLACE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_LIKE_010", "장소 찜 내역을 찾을 수 없습니다."),
+
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "IMAGE_010", "이미지를 불러올 수 없습니다."),
+    IMAGE_DELETE_FAIL(HttpStatus.BAD_REQUEST, false, "IMAGE_040", "이미지 삭제를 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final boolean success;
