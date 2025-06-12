@@ -21,9 +21,10 @@ public class GetPlaceBySearchDto {
     private String category;
     private String subCategory;
     private Map<String, BigDecimal> location;
+    private double stars;
 
     @Builder
-    public GetPlaceBySearchDto(PlaceEntity place, String category, String subCategory) {
+    public GetPlaceBySearchDto(PlaceEntity place, String category, String subCategory, double stars) {
         this.placeId = place.getId();
         this.imgUrl = place.getImgList().isEmpty() ? null : place.getImgList().get(0);
         this.placeName = place.getName();
@@ -31,5 +32,6 @@ public class GetPlaceBySearchDto {
         this.category = category;
         this.subCategory = subCategory;
         this.location = place.getLocation();
+        this.stars = stars;
     }
 }
