@@ -18,12 +18,13 @@ public class ImageService {
 
     private final S3Client s3Client;
 
+    String prefix = "images/userReview/";
 
     public String uploadImage(MultipartFile multipartFile) {
         try {
             // S3에 저장될 고유한 파일 이름 생성
             String randomName = UUID.randomUUID().toString();
-            String fileName = randomName + "_" + multipartFile.getOriginalFilename();
+            String fileName = prefix + randomName + "_" + multipartFile.getOriginalFilename();
 
             // S3 업로드 요청 객체 생성
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
