@@ -9,6 +9,9 @@ import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchListDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
 import com.day_walk.backend.domain.place_like.bean.GetPlaceLikeEntityBean;
 import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
+import com.day_walk.backend.domain.review.bean.GetReviewEntityBean;
+import com.day_walk.backend.domain.review.bean.GetReviewStarsAvgBean;
+import com.day_walk.backend.domain.review.data.ReviewEntity;
 import com.day_walk.backend.domain.sub_category.bean.GetSubCategoryEntityBean;
 import com.day_walk.backend.domain.sub_category.data.SubCategoryEntity;
 import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
@@ -29,6 +32,8 @@ public class PlaceService {
     private final GetSubCategoryEntityBean getSubCategoryEntityBean;
     private final GetCategoryEntityBean getCategoryEntityBean;
     private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
+    private final GetReviewEntityBean getReviewEntityBean;
+    private final GetReviewStarsAvgBean getReviewStarsAvgBean;
 
     public GetPlaceDto getPlace(UUID placeId, UUID userId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
@@ -86,11 +91,14 @@ public class PlaceService {
                         .map(place -> {
                             SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
                             CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                            List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
+                            double stars = getReviewStarsAvgBean.exec(reviewList);
 
                             return GetPlaceBySearchDto.builder()
                                     .place(place)
                                     .category(category.getName())
                                     .subCategory(subCategory.getName())
+                                    .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
                                     .build();
                         })
                         .collect(Collectors.toList()))
@@ -98,11 +106,14 @@ public class PlaceService {
                         .map(place -> {
                             SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
                             CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                            List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
+                            double stars = getReviewStarsAvgBean.exec(reviewList);
 
                             return GetPlaceBySearchDto.builder()
                                     .place(place)
                                     .category(category.getName())
                                     .subCategory(subCategory.getName())
+                                    .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
                                     .build();
                         })
                         .collect(Collectors.toList()))
