@@ -19,12 +19,11 @@ public class GetPlaceByLikeDto {
     private double stars;
 
     @Builder
-    public GetPlaceByLikeDto(PlaceEntity place) {
+    public GetPlaceByLikeDto(PlaceEntity place, double stars) {
         this.placeId = place.getId();
         this.name = place.getName();
         this.address = place.getAddress();
         this.imgUrl = place.getImgList().isEmpty() ? null : place.getImgList().get(0);
-        // review merge 후 추가 예정
-        this.stars = 2.5;
+        this.stars = stars;
     }
 }
