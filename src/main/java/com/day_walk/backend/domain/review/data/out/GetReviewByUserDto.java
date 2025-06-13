@@ -16,6 +16,7 @@ import java.util.UUID;
 @Getter
 public class GetReviewByUserDto {
     private UUID reviewId;
+    private UUID placeId;
     private String placeName;
     private String address;
     private String categoryName;
@@ -29,6 +30,7 @@ public class GetReviewByUserDto {
     @Builder
     public GetReviewByUserDto(PlaceEntity place, String categoryName, String subCategoryName, ReviewEntity review, List<String> tagList) {
         this.reviewId = review.getId();
+        this.placeId = place.getId();
         this.placeName = place.getName();
         this.address = place.getAddress();
         this.categoryName = categoryName;
