@@ -112,7 +112,7 @@ public class CourseService {
             throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
         } else if (courseEntity.isHasDelete()) {
             throw new CustomException(ErrorCode.COURSE_DELETE_TRUE);
-        } else if (!courseEntity.isVisible()) {
+        } else if (!courseEntity.isVisible() && courseEntity.getUserId() != userId) {
             throw new CustomException(ErrorCode.COURSE_VISIBLE_FALSE);
         }
 
