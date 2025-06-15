@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
 import com.day_walk.backend.domain.place.data.PlaceEntity;
+import com.day_walk.backend.domain.place.data.in.GetPlaceByMlDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceBySearchListDto;
 import com.day_walk.backend.domain.place.data.out.GetPlaceDto;
@@ -19,7 +20,11 @@ import com.day_walk.backend.domain.user.data.UserEntity;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +39,10 @@ public class PlaceService {
     private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
     private final GetReviewEntityBean getReviewEntityBean;
     private final GetReviewStarsAvgBean getReviewStarsAvgBean;
+    private final RestTemplate restTemplate;
+
+    @Value("${ml-server-url}")
+    private String ML_SERVER_URL;
 
     public GetPlaceDto getPlace(UUID placeId, UUID userId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
@@ -59,60 +68,48 @@ public class PlaceService {
     }
 
     public GetPlaceBySearchListDto searchPlace(String searchStr, UUID userId) {
-        // 검색엔진 사용 로직 추가
+        String uri = UriComponentsBuilder
+                .fromUriString(ML_SERVER_URL + "/place/search")
+                .queryParam("query", searchStr)
+                .toUriString();
 
-        // 테스트 로직 추후 삭제 예정
-        List<PlaceEntity> placeEntityList = getPlaceEntityBean.exec(searchStr);
-        List<PlaceEntity> recommendList = new ArrayList<>();
-        List<PlaceEntity> placeList = new ArrayList<>();
+        GetPlaceByMlDto response = restTemplate.getForEntity(uri, GetPlaceByMlDto.class).getBody();
 
-        if (!placeEntityList.isEmpty() && placeEntityList.size() < 12) {
-            recommendList.add(placeEntityList.get(0));
-            for (int i = 1; i < placeEntityList.size(); i++) {
-                placeList.add(placeEntityList.get(i));
-            }
-        } else if (!placeEntityList.isEmpty() && placeEntityList.size() < 23) {
-            recommendList.add(placeEntityList.get(0));
-            recommendList.add(placeEntityList.get(1));
-            for (int i = 2; i < placeEntityList.size(); i++) {
-                placeList.add(placeEntityList.get(i));
-            }
-        } else if(!placeEntityList.isEmpty()) {
-            recommendList.add(placeEntityList.get(0));
-            recommendList.add(placeEntityList.get(1));
-            recommendList.add(placeEntityList.get(2));
-            for (int i = 3; i < 24; i++) {
-                placeList.add(placeEntityList.get(i));
-            }
+        System.out.println(response.getPlaces().getNormal().size());
+        System.out.println(response.getTotal());
+
+        if (!response.isSuccess()) {
+            return GetPlaceBySearchListDto.builder()
+                    .recommendList(Collections.emptyList())
+                    .placeList(Collections.emptyList())
+                    .build();
         }
 
         return GetPlaceBySearchListDto.builder()
-                .recommendList(recommendList.stream()
-                        .map(place -> {
-                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
-                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                .recommendList(response.getPlaces().getRecommend().stream()
+                        .map(placeDto -> {
+                            PlaceEntity place = getPlaceEntityBean.exec(placeDto.getId());
                             List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
                             double stars = getReviewStarsAvgBean.exec(reviewList);
 
                             return GetPlaceBySearchDto.builder()
                                     .place(place)
-                                    .category(category.getName())
-                                    .subCategory(subCategory.getName())
+                                    .category(placeDto.getCategory())
+                                    .subCategory(placeDto.getSubcategory())
                                     .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
                                     .build();
                         })
                         .collect(Collectors.toList()))
-                .placeList(placeList.stream()
-                        .map(place -> {
-                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
-                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                .placeList(response.getPlaces().getNormal().stream()
+                        .map(placeDto -> {
+                            PlaceEntity place = getPlaceEntityBean.exec(placeDto.getId());
                             List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
                             double stars = getReviewStarsAvgBean.exec(reviewList);
 
                             return GetPlaceBySearchDto.builder()
                                     .place(place)
-                                    .category(category.getName())
-                                    .subCategory(subCategory.getName())
+                                    .category(placeDto.getCategory())
+                                    .subCategory(placeDto.getSubcategory())
                                     .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
                                     .build();
                         })
