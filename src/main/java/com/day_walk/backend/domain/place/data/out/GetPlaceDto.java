@@ -26,7 +26,7 @@ public class GetPlaceDto {
     private String openTime;
     private String closeDate;
     private String content;
-    private List<String> phoneNum;
+    private String phoneNum;
     private boolean like;
 
     @Builder
@@ -41,7 +41,7 @@ public class GetPlaceDto {
         this.openTime = place.getOpenTime();
         this.closeDate = place.getCloseDate();
         this.content = place.getContent();
-        this.phoneNum = Arrays.stream(place.getPhoneNum().split("<br>")).toList();
+        this.phoneNum = place.getPhoneNum();
         this.like = like;
     }
 }

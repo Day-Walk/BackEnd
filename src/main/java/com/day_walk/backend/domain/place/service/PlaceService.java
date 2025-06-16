@@ -21,7 +21,6 @@ import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -71,12 +70,10 @@ public class PlaceService {
         String uri = UriComponentsBuilder
                 .fromUriString(ML_SERVER_URL + "/place/search")
                 .queryParam("query", searchStr)
+                .queryParam("userid", userId)
                 .toUriString();
 
         GetPlaceByMlDto response = restTemplate.getForEntity(uri, GetPlaceByMlDto.class).getBody();
-
-        System.out.println(response.getPlaces().getNormal().size());
-        System.out.println(response.getTotal());
 
         if (!response.isSuccess()) {
             return GetPlaceBySearchListDto.builder()
