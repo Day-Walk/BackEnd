@@ -40,3 +40,4 @@ application-db.properties
 application-jwt.properties
 application-kafka.properties
 application-s3.properties
+application-ml.properties
