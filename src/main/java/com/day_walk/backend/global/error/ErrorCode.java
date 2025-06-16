@@ -31,7 +31,9 @@ public enum ErrorCode {
 
     PLACE_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, false, "PLACE_LIKE_010", "장소 찜 내역을 찾을 수 없습니다."),
 
-    SSE_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "SSE_CONNECTION_040", "SSE 연결에 실패하였습니다.");
+    SSE_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "SSE_CONNECTION_040", "SSE 연결에 실패하였습니다."),
+
+    ML_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ML_SERVER_050", "ML Server 문제가 생겼습니다.");
 
     private final HttpStatus httpStatus;
     private final boolean success;
