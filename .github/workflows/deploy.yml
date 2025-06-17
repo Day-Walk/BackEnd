@@ -34,6 +34,7 @@ jobs:
             echo "${{ secrets.APPLICATION_JWT_PROPERTIES }}" > ./src/main/resources/application-jwt.properties
             echo "${{ secrets.APPLICATION_KAFKA_PROPERTIES }}" > ./src/main/resources/application-kafka.properties
             echo "${{ secrets.APPLICATION_S3_PROPERTIES }}" > ./src/main/resources/application-s3.properties
+            echo "${{ secrets.APPLICATION_ML_PROPERTIES }}" > ./src/main/resources/application-ml.properties
 
             # 4. 빌드 권한 확보
             chmod +x ./gradlew
