@@ -50,6 +50,7 @@ public class SseClient {
             @Override
             public void onEvent(EventSource eventSource, String id, String type, String data) {
                 if ("[DONE]".equals(data)) {
+                    sseEmitters.sendToClientDone(userId);
                     System.out.println("ML 응답 스트림 종료 신호 수신");
                     return;
                 }
