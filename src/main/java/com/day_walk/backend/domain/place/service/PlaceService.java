@@ -40,8 +40,8 @@ public class PlaceService {
     private final GetReviewStarsAvgBean getReviewStarsAvgBean;
     private final RestTemplate restTemplate;
 
-    @Value("${ml-server-url}")
-    private String ML_SERVER_URL;
+    @Value("${ml-server-uri}")
+    private String ML_SERVER_URI;
 
     public GetPlaceDto getPlace(UUID placeId, UUID userId) {
         PlaceEntity place = getPlaceEntityBean.exec(placeId);
@@ -66,14 +66,78 @@ public class PlaceService {
                 .build();
     }
 
-    public GetPlaceBySearchListDto searchPlace(String searchStr, UUID userId) {
+    // Test Code
+    public GetPlaceBySearchListDto searchPlaceTest(String searchStr, UUID userId) {
+        List<PlaceEntity> placeEntityList = getPlaceEntityBean.exec(searchStr);
+        List<PlaceEntity> recommendList = new ArrayList<>();
+        List<PlaceEntity> placeList = new ArrayList<>();
+
+        if (!placeEntityList.isEmpty() && placeEntityList.size() < 12) {
+            recommendList.add(placeEntityList.get(0));
+            for (int i = 1; i < placeEntityList.size(); i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        } else if (!placeEntityList.isEmpty() && placeEntityList.size() < 23) {
+            recommendList.add(placeEntityList.get(0));
+            recommendList.add(placeEntityList.get(1));
+            for (int i = 2; i < placeEntityList.size(); i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        } else if(!placeEntityList.isEmpty()) {
+            recommendList.add(placeEntityList.get(0));
+            recommendList.add(placeEntityList.get(1));
+            recommendList.add(placeEntityList.get(2));
+            for (int i = 3; i < 24; i++) {
+                placeList.add(placeEntityList.get(i));
+            }
+        }
+
+        return GetPlaceBySearchListDto.builder()
+                .recommendList(recommendList.stream()
+                        .map(place -> {
+                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
+                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                            List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
+                            double stars = getReviewStarsAvgBean.exec(reviewList);
+
+                            return GetPlaceBySearchDto.builder()
+                                    .place(place)
+                                    .category(category.getName())
+                                    .subCategory(subCategory.getName())
+                                    .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
+                                    .build();
+                        })
+                        .collect(Collectors.toList()))
+                .placeList(placeList.stream()
+                        .map(place -> {
+                            SubCategoryEntity subCategory = getSubCategoryEntityBean.exec(place.getSubCategoryId());
+                            CategoryEntity category = getCategoryEntityBean.exec(subCategory.getCategoryId());
+                            List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
+                            double stars = getReviewStarsAvgBean.exec(reviewList);
+
+                            return GetPlaceBySearchDto.builder()
+                                    .place(place)
+                                    .category(category.getName())
+                                    .subCategory(subCategory.getName())
+                                    .stars(Math.max(0.0, Math.min(5.0, Math.round(stars * 10.0) / 10.0)))
+                                    .build();
+                        })
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public GetPlaceBySearchListDto searchPlaceByMl(String searchStr, UUID userId) {
         String uri = UriComponentsBuilder
-                .fromUriString(ML_SERVER_URL + "/place/search")
+                .fromUriString(ML_SERVER_URI + "/recommend")
                 .queryParam("query", searchStr)
                 .queryParam("userid", userId)
                 .toUriString();
 
         GetPlaceByMlDto response = restTemplate.getForEntity(uri, GetPlaceByMlDto.class).getBody();
+
+        if (response == null) {
+            throw new CustomException(ErrorCode.ML_SERVER_ERROR);
+        }
 
         if (!response.isSuccess()) {
             return GetPlaceBySearchListDto.builder()

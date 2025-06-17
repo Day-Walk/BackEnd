@@ -1,6 +1,5 @@
-package com.day_walk.backend.global.config;
+package com.day_walk.backend.global.config.kafka;
 
-import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
