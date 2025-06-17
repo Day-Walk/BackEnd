@@ -43,7 +43,7 @@ public class SseEmitters {
         SseEmitter old = emitters.remove(userId);
 
         if (old != null) {
-            old.complete();
+            old.completeWithError(new CustomException(ErrorCode.SSE_CONNECTION_ERROR));
         }
 
         SseEmitter emitter = new SseEmitter(30_000L);
@@ -102,6 +102,22 @@ public class SseEmitters {
                 emitter.send(SseEmitter.event()
                         .name("chatbot")
                         .data(response));
+            } catch (IOException e) {
+                throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR);
+            }
+        }
+    }
+
+    public void sendToClientDone(UUID userId) {
+        SseEmitter emitter = emitters.get(userId);
+
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event()
+                        .name("chatbot")
+                        .data("[DONE]"));
+
+                emitter.complete();
             } catch (IOException e) {
                 throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR);
             }
