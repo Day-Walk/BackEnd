@@ -33,7 +33,8 @@ public enum ErrorCode {
 
     SSE_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "SSE_CONNECTION_040", "SSE 연결에 실패하였습니다."),
 
-    ML_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ML_SERVER_050", "ML Server 문제가 생겼습니다.");
+    ML_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ML_SERVER_050", "ML Server 문제가 생겼습니다."),
+    ELK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ELK_SERVER_050", "ELK Server 문제가 생겼습니다.");
 
     private final HttpStatus httpStatus;
     private final boolean success;

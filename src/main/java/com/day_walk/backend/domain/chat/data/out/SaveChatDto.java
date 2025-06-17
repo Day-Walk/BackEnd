@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
@@ -16,5 +16,5 @@ public class SaveChatDto {
     private UUID userId;
     private String question;
     private GetChatDto answer;
-    private LocalDateTime createAt;
+    private String createAt;
 }

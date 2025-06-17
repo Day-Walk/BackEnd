@@ -66,6 +66,9 @@ public class SseClient {
             public void onFailure(EventSource eventSource, Throwable t, Response response) {
                 if (t != null) {
                     System.err.println("ML SSE 연결 실패 (예외): " + t.getMessage());
+                    System.err.println("Exception class: " + t.getClass().getName());
+                    System.err.println("Exception message: " + t.getMessage());
+                    t.printStackTrace();
                 } else if (response != null) {
                     System.err.println("ML SSE 연결 실패 (응답): HTTP " + response.code() + " - " + response.message());
                 } else {

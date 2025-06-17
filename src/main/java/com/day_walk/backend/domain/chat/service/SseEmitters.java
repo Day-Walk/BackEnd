@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.chat.service;
 
 import com.day_walk.backend.domain.chat.data.in.GetChatByMlDto;
+import com.day_walk.backend.domain.chat.data.in.SaveChatLogDto;
 import com.day_walk.backend.domain.chat.data.out.GetChatDto;
 import com.day_walk.backend.domain.chat.data.out.SaveChatDto;
 import com.day_walk.backend.domain.place.bean.GetPlaceEntityBean;
@@ -17,6 +18,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -76,21 +81,22 @@ public class SseEmitters {
                                         .build();
                             })
                             .collect(Collectors.toList()))
-                    .detail(getChatByMlDto.getStr2())
+                    .detail(getChatByMlDto.getStr2() == null ? "" : getChatByMlDto.getStr2())
                     .build();
 
             SaveChatDto saveChatDto = SaveChatDto.builder()
                     .userId(userId)
                     .question(question)
                     .answer(response)
-                    .createAt(LocalDateTime.now())
+                    .createAt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
                     .build();
 
             String uri = UriComponentsBuilder
                     .fromUriString(ELK_SERVER_URI + "/chatbot")
                     .toUriString();
 
-            String success = restTemplate.postForObject(uri, saveChatDto, String.class);
+            SaveChatLogDto saveChatLogDto = restTemplate.postForObject(uri, saveChatDto, SaveChatLogDto.class);
+            System.out.println(saveChatLogDto.getMessage());
 
             try {
                 emitter.send(SseEmitter.event()
