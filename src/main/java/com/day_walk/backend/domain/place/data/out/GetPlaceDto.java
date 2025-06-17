@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +23,7 @@ public class GetPlaceDto {
     private String openTime;
     private String closeDate;
     private String content;
-    private String phoneNum;
+    private List<String> phoneNum;
     private boolean like;
 
     @Builder
@@ -41,7 +38,7 @@ public class GetPlaceDto {
         this.openTime = place.getOpenTime();
         this.closeDate = place.getCloseDate();
         this.content = place.getContent();
-        this.phoneNum = place.getPhoneNum();
+        this.phoneNum = place.getPhoneNum() == null ? Collections.emptyList() : Arrays.stream(place.getPhoneNum().split("<br>")).toList();
         this.like = like;
     }
 }
