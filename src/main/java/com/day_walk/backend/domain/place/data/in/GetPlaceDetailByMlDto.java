@@ -11,7 +11,6 @@ import java.util.UUID;
 @Getter
 public class GetPlaceDetailByMlDto {
     private UUID id;
-    private String name;
     private String category;
     private String subcategory;
 }
