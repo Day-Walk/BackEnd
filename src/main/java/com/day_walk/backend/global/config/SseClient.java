@@ -56,7 +56,7 @@ public class SseClient {
 
                 try {
                     GetChatByMlDto getChatByMlDto = objectMapper.readValue(data, GetChatByMlDto.class);
-                    sseEmitters.sendToClient(userId, getChatByMlDto);
+                    sseEmitters.sendToClient(userId, question, getChatByMlDto);
                 } catch (IOException e) {
                     System.err.println("ML SSE 응답 파싱 실패: " + e.getMessage());
                 }
