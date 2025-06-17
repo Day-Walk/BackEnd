@@ -1,4 +1,4 @@
-package com.day_walk.backend.global.config;
+package com.day_walk.backend.global.config.kafka;
 
 import com.day_walk.backend.domain.place_like.data.out.PlaceLikeEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;

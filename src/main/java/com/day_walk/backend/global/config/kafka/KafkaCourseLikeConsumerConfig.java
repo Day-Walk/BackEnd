@@ -1,6 +1,6 @@
-package com.day_walk.backend.global.config;
+package com.day_walk.backend.global.config.kafka;
 
-import com.day_walk.backend.domain.place_like.data.out.PlaceLikeEvent;
+import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaPlaceLikeConsumerConfig {
+public class KafkaCourseLikeConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, PlaceLikeEvent> placeLikeConsumerFactory() {
-        JsonDeserializer<PlaceLikeEvent> deserializer = new JsonDeserializer<>(PlaceLikeEvent.class);
+    public ConsumerFactory<String, CourseLikeEvent> courseLikeConsumerFactory() {
+        JsonDeserializer<CourseLikeEvent> deserializer = new JsonDeserializer<>(CourseLikeEvent.class);
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
@@ -34,10 +34,10 @@ public class KafkaPlaceLikeConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PlaceLikeEvent> placeLikeKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PlaceLikeEvent> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, CourseLikeEvent> courseLikeKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CourseLikeEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(placeLikeConsumerFactory());
+        factory.setConsumerFactory(courseLikeConsumerFactory());
         return factory;
     }
 }
