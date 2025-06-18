@@ -1,15 +1,16 @@
 package com.day_walk.backend.domain.user.controller;
 
-import com.day_walk.backend.domain.user.data.UserRole;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
+import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Tag(name = "User 관련 API", description = "User 관련된 API 명세서입니다.")
 public class UserController {
-
-    private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
+    private final GenerateCookie generateCookie;
 
     @Operation(summary = "유저 상세 조회", description = "한 유저의 상세 정보를 조회합니다.")
     @GetMapping
@@ -74,7 +74,7 @@ public class UserController {
 
     @Operation(summary = "로그인 및 회원가입", description = "최초 로그인 시 회원가입이 됩니다.")
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInUserDto signInDto) {
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInUserDto signInDto, HttpServletResponse httpResponse) {
         GetUserBySignInDto getUserBySignInDto = userService.signIn(signInDto);
 
         Map<String, Object> response = new HashMap<>();
@@ -83,13 +83,16 @@ public class UserController {
         response.put("userInfo", getUserBySignInDto);
 
         if (getUserBySignInDto != null) {
-            UserRole role = userService.getUserRole(getUserBySignInDto.getUserId());
-            String token = jwtUtil.generateToken(getUserBySignInDto.getUserId(), role);
+            httpResponse.addCookie(generateCookie.exec("access-token",
+                    jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(),
+                            userService.getUserRole(getUserBySignInDto.getUserId()))));
 
-            return ResponseEntity.status(HttpStatus.OK).header("Authorization", "Bearer " + token).body(response);
+            httpResponse.addCookie(generateCookie.exec("refresh-token",
+                    jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId())));
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

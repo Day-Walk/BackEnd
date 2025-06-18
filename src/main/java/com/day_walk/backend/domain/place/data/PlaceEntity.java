@@ -3,10 +3,7 @@ package com.day_walk.backend.domain.place.data;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
 import com.day_walk.backend.global.util.StringToMapConverter;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,15 +23,22 @@ public class PlaceEntity extends BaseEntity {
     @Id
     private UUID id;
     private String name;
+
+    @Lob
     private String content;
     private String address;
     private String phoneNum;
+
+    @Lob
     private String openTime;
+
+    @Lob
     private String closeDate;
 
     @Convert(converter = StringToMapConverter.class)
     private Map<String, BigDecimal> location;
 
+    @Lob
     @Convert(converter = StringToListConverter.class)
     private List<String> imgList;
 
