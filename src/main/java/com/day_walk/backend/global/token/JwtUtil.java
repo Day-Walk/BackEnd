@@ -6,44 +6,42 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.UUID;
 
 @Component
 public class JwtUtil {
     @Value("${jwt-secret-key}")
-    private static String secretKey;
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(secretKey.getBytes());
+    private String SECRET_KEY;
 
     public String generateAccessToken(UUID userId, UserRole role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60); // 1시간
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60);
 
         return Jwts.builder()
                 .claim("userId", userId.toString())
                 .claim("role", role.name())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String generateRefreshToken(UUID userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7); // 7일
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7);
 
         return Jwts.builder()
                 .claim("userId", userId.toString())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Claims getClaims(String token) {
         JwtParser parser = Jwts.parser()
-                .verifyWith(SECRET_KEY)
+                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
                 .build();
 
         return parser.parseSignedClaims(token).getPayload();
@@ -59,7 +57,7 @@ public class JwtUtil {
     }
 
     public UUID getUserId(String token) {
-        return UUID.fromString(getClaims(token).getSubject());
+        return UUID.fromString(getClaims(token).get("userId", String.class));
     }
 
     public UserRole getUserRole(String token) {

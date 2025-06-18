@@ -30,6 +30,7 @@ import java.util.UUID;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final GetUserEntityBean getUserEntityBean;
     private final JwtUtil jwtUtil;
+    private final GenerateCookie generateCookie;
 
     private String getTokenFromCookies(Cookie[] cookies, String tokenName) {
         if (cookies != null) {
@@ -42,11 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    public void addToken(HttpServletResponse response, String tokenName, String token, int maxAge) {
-        Cookie cookie = new Cookie(tokenName, token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(maxAge);
+    public void addToken(HttpServletResponse response, String tokenName, String token) {
+        Cookie cookie = generateCookie.exec(tokenName, token);
         response.addCookie(cookie);
     }
 
@@ -74,10 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 String newAccessToken = jwtUtil.generateAccessToken(userId, user.getUserRole());
-                addToken(response, "access_token", newAccessToken, 60 * 60 * 24);
+                addToken(response, "access_token", newAccessToken);
 
                 String newRefreshToken = jwtUtil.generateRefreshToken(userId);
-                addToken(response, "refresh_token", newRefreshToken, 60 * 60 * 24);
+                addToken(response, "refresh_token", newRefreshToken);
 
                 authenticateUser(newAccessToken, request);
             }
