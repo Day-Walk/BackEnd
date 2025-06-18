@@ -4,10 +4,7 @@ import com.day_walk.backend.domain.review.data.in.SaveReviewDto;
 import com.day_walk.backend.global.BaseEntity;
 import com.day_walk.backend.global.util.StringToListConverter;
 import com.day_walk.backend.global.util.StringToUUIDListConverter;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +23,16 @@ public class ReviewEntity extends BaseEntity {
     private UUID id;
     private double stars;
     private String imgUrl;
+
+    @Lob
     private String content;
+
     private boolean hasDelete;
 
     private UUID userId;
     private UUID placeId;
+
+    @Lob
     @Convert(converter = StringToUUIDListConverter.class)
     private List<UUID> tagList;
 
