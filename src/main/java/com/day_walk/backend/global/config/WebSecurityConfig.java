@@ -1,6 +1,8 @@
 package com.day_walk.backend.global.config;
 
+import com.day_walk.backend.domain.user.bean.GetUserEntityBean;
 import com.day_walk.backend.domain.user.data.UserRole;
+import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtAuthenticationFilter;
 import com.day_walk.backend.global.token.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +23,16 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtUtil jwtUtil,
+                                                   GetUserEntityBean getUserEntityBean,
+                                                   GenerateCookie generateCookie) throws Exception {
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(getUserEntityBean, jwtUtil, generateCookie),
+                        UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
                         auth
                                 // Swagger 접근 가능
@@ -53,7 +59,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173", "https://final-front-end-fawn.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));
