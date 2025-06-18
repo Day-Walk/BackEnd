@@ -34,7 +34,9 @@ public enum ErrorCode {
     SSE_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "SSE_CONNECTION_040", "SSE 연결에 실패하였습니다."),
 
     ML_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ML_SERVER_050", "ML Server 문제가 생겼습니다."),
-    ELK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ELK_SERVER_050", "ELK Server 문제가 생겼습니다.");
+    ELK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "ELK_SERVER_050", "ELK Server 문제가 생겼습니다."),
+
+    TOKEN_ERROR(HttpStatus.BAD_REQUEST, false, "TOKEN_020", "찾을 수 없는 유저가 Token 생성을 시도했습니다.");
 
     private final HttpStatus httpStatus;
     private final boolean success;

@@ -6,35 +6,44 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.UUID;
 
 @Component
 public class JwtUtil {
     @Value("${jwt-secret-key}")
-    private String SECRET_KEY;
+    private static String secretKey;
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(secretKey.getBytes());
 
-    public String generateToken(UUID userId, UserRole role) {
+    public String generateAccessToken(UUID userId, UserRole role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7);
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60); // 1시간
 
         return Jwts.builder()
-                .header()
-                .type(JwsHeader.TYPE)
-                .and()
-                .claims()
-                .subject(userId.toString())
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .add("role", role.name())
-                .and()
-                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
+                .claim("userId", userId.toString())
+                .claim("role", role.name())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(UUID userId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7); // 7일
+
+        return Jwts.builder()
+                .claim("userId", userId.toString())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Claims getClaims(String token) {
         JwtParser parser = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .verifyWith(SECRET_KEY)
                 .build();
 
         return parser.parseSignedClaims(token).getPayload();
