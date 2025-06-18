@@ -1,5 +1,7 @@
 package com.day_walk.backend.domain.user_like.data;
 
+import com.day_walk.backend.global.util.StringToUUIDListConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,6 +21,8 @@ public class UserLikeEntity {
     private UUID id;
     private UUID userId;
     private UUID categoryId;
+
+    @Convert(converter = StringToUUIDListConverter.class)
     private List<UUID> tagList;
 
     @Builder
@@ -28,5 +32,4 @@ public class UserLikeEntity {
         this.categoryId = categoryId;
         this.tagList = tagList;
     }
-
 }
