@@ -53,18 +53,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        final String accessToken = getTokenFromCookies(request.getCookies(), "access_token");
-        final String refreshToken = getTokenFromCookies(request.getCookies(), "refresh_token");
+        final String accessToken = getTokenFromCookies(request.getCookies(), "accessToken");
+        final String refreshToken = getTokenFromCookies(request.getCookies(), "refreshToken");
 
         log.info("AccessToken from cookies : {}", accessToken);
         log.info("RefreshToken from cookies : {}", refreshToken);
 
         try {
-            if (accessToken != null && !accessToken.isEmpty() && !jwtUtil.validateToken(accessToken)) {
+            if (accessToken != null && !accessToken.isEmpty() && jwtUtil.validateToken(accessToken)) {
                 authenticateUser(accessToken, request);
             }
         } catch (ExpiredJwtException e) {
-            if (refreshToken != null && !refreshToken.isEmpty() && !jwtUtil.validateToken(refreshToken)) {
+            if (refreshToken != null && !refreshToken.isEmpty() && jwtUtil.validateToken(refreshToken)) {
                 UUID userId = jwtUtil.getUserId(refreshToken);
                 UserEntity user = getUserEntityBean.exec(userId);
                 if (user == null) {
@@ -72,10 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 String newAccessToken = jwtUtil.generateAccessToken(userId, user.getUserRole());
-                addToken(response, "access_token", newAccessToken);
+                addToken(response, "accessToken", newAccessToken);
 
                 String newRefreshToken = jwtUtil.generateRefreshToken(userId);
-                addToken(response, "refresh_token", newRefreshToken);
+                addToken(response, "refreshToken", newRefreshToken);
 
                 authenticateUser(newAccessToken, request);
             }
@@ -90,9 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("userId : {}", userId);
         log.info("role : {}", role);
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
-
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, authorities);
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
