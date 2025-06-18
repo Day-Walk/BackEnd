@@ -83,11 +83,11 @@ public class UserController {
         response.put("userInfo", getUserBySignInDto);
 
         if (getUserBySignInDto != null) {
-            httpResponse.addCookie(generateCookie.exec("access-token",
+            httpResponse.addCookie(generateCookie.exec("accessToken",
                     jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(),
                             userService.getUserRole(getUserBySignInDto.getUserId()))));
 
-            httpResponse.addCookie(generateCookie.exec("refresh-token",
+            httpResponse.addCookie(generateCookie.exec("refreshToken",
                     jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId())));
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
