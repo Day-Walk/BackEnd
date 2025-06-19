@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class GetChatDto {
-    private String title;
     private List<GetPlaceByChatDto> placeList;
     private String detail;
 }
