@@ -2,6 +2,8 @@ package com.day_walk.backend.global.config;
 
 import com.day_walk.backend.domain.chat.data.in.GetChatByMlDto;
 import com.day_walk.backend.domain.chat.service.SseEmitters;
+import com.day_walk.backend.global.error.CustomException;
+import com.day_walk.backend.global.error.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
@@ -14,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
@@ -21,7 +24,9 @@ public class SseClient {
     private final ObjectMapper objectMapper;
     private final SseEmitters sseEmitters;
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .readTimeout(0, TimeUnit.MILLISECONDS)
+            .build();
 
     @Value("${ml-server-uri}")
     private String ML_SERVER_URI;
@@ -29,8 +34,8 @@ public class SseClient {
     public boolean sendToMl(UUID userId, String question) {
         String url = UriComponentsBuilder
                 .fromUriString(ML_SERVER_URI + "/chat/stream")
+                .queryParam("query", question)
                 .queryParam("userid", userId.toString())
-                .queryParam("message", question)
                 .build()
                 .toUriString();
 
@@ -49,7 +54,7 @@ public class SseClient {
 
             @Override
             public void onEvent(EventSource eventSource, String id, String type, String data) {
-                if ("[DONE]".equals(data)) {
+                if ("[DONE]".equals(data.trim())) {
                     sseEmitters.sendToClientDone(userId);
                     System.out.println("ML 응답 스트림 종료 신호 수신");
                     return;
@@ -66,14 +71,14 @@ public class SseClient {
             @Override
             public void onFailure(EventSource eventSource, Throwable t, Response response) {
                 if (t != null) {
-                    System.err.println("ML SSE 연결 실패 (예외): " + t.getMessage());
-                    System.err.println("Exception class: " + t.getClass().getName());
-                    System.err.println("Exception message: " + t.getMessage());
                     t.printStackTrace();
-                } else if (response != null) {
-                    System.err.println("ML SSE 연결 실패 (응답): HTTP " + response.code() + " - " + response.message());
-                } else {
-                    System.err.println("ML SSE 연결 실패: 알 수 없는 이유");
+                }
+                if (response != null && response.body() != null) {
+                    try {
+                        System.err.println("응답 바디: " + response.body().string());
+                    } catch (IOException e) {
+                        throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR);
+                    }
                 }
             }
         });
