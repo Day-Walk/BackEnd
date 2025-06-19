@@ -69,7 +69,6 @@ public class SseEmitters {
 
         if (emitter != null) {
             GetChatDto response = GetChatDto.builder()
-                    .title(getChatByMlDto.getStr1())
                     .placeList(getChatByMlDto.getPlaceid() == null
                             ? Collections.emptyList()
                             : getChatByMlDto.getPlaceid().stream()
@@ -81,7 +80,7 @@ public class SseEmitters {
                                         .build();
                             })
                             .collect(Collectors.toList()))
-                    .detail(getChatByMlDto.getStr2() == null ? "" : getChatByMlDto.getStr2())
+                    .detail(getChatByMlDto.getStr())
                     .build();
 
             SaveChatDto saveChatDto = SaveChatDto.builder()

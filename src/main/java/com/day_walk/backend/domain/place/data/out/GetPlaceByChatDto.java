@@ -25,7 +25,7 @@ public class GetPlaceByChatDto {
         this.placeId = place.getId();
         this.name = place.getName();
         this.address = place.getAddress();
-        this.imgUrl = place.getImgList().isEmpty() ? null : place.getImgList().get(0);
+        this.imgUrl = place.getImgList().isEmpty() ? "" : place.getImgList().get(0);
         this.location = place.getLocation();
     }
 }
