@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class ChatController {
     @Operation(summary = "SSE 연결 요청", description = "한 명의 유저가 서버에 SSE 연결을 요청합니다.")
     @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(@RequestParam("userId") UUID userId) {
+        System.out.println(LocalDateTime.now());
         return ResponseEntity.ok(sseEmitters.add(userId));
     }
 
