@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                                         "/api/user/login"
                                 ).permitAll()
                                 // 로그인한 사용자만 가능
-                                .requestMatchers("/api/**").hasRole(UserRole.USER.name())
+                                .requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .build();
