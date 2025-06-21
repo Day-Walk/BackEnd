@@ -38,6 +38,9 @@ jobs:
 
             # 4. 빌드 권한 확보
             chmod +x ./gradlew
+            
+            # 5. nginx 권한 확보
+            chmod +x -H nginx
 
             # 5. 빌드
             ./gradlew clean build
