@@ -40,7 +40,7 @@ jobs:
             chmod +x ./gradlew
             
             # 5. nginx 권한 확보
-            chmod -R +x nginx
+            chmod -R 777 nginx
 
             # 5. 빌드
             ./gradlew clean build
