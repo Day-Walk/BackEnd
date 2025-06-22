@@ -4,11 +4,14 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = {"com.day_walk.backend.domain.controller"})
@@ -23,7 +26,13 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("accessToken").addList("refreshToken"))
+                .servers(List.of(
+                        new Server().url("http://localhost:8080").description("로컬 개발 서버"),
+                        new Server().url("https://hktoss.shop").description("운영 서버")
+                ))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("accessToken")
+                        .addList("refreshToken"))
                 .components(new Components()
                         .addSecuritySchemes("accessToken", new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)

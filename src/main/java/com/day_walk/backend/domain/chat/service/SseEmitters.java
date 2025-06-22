@@ -46,8 +46,9 @@ public class SseEmitters {
             old.completeWithError(new CustomException(ErrorCode.SSE_CONNECTION_ERROR));
         }
 
-        SseEmitter emitter = new SseEmitter(30_000L);
+        SseEmitter emitter = new SseEmitter(60_000L);
         emitters.put(userId, emitter);
+        System.out.println(LocalDateTime.now());
 
         emitter.onCompletion(() -> emitters.remove(userId));
         emitter.onTimeout(() -> emitters.remove(userId));
@@ -57,6 +58,7 @@ public class SseEmitters {
             emitter.send(SseEmitter.event()
                     .name("connect")
                     .data("SSE connection success!"));
+            System.out.println(LocalDateTime.now());
         } catch (IOException e) {
             throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR);
         }

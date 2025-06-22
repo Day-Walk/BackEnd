@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                                         "/api/user/login"
                                 ).permitAll()
                                 // 로그인한 사용자만 가능
-                                .requestMatchers("/api/**").hasRole(UserRole.USER.name())
+                                .requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .build();
@@ -59,7 +59,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173", "https://final-front-end-fawn.vercel.app", "https://day-walk.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173", "https://final-front-end-fawn.vercel.app", "https://day-walk.vercel.app", "https://hktoss.shop"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));
