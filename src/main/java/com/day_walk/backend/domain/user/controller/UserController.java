@@ -1,10 +1,10 @@
 package com.day_walk.backend.domain.user.controller;
 
-import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
-import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
-import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
-import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
-import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
+import com.day_walk.backend.domain.user.data.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.in.SignInUserDto;
+import com.day_walk.backend.domain.user.data.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.out.GetUserBySignInDto;
+import com.day_walk.backend.domain.user.data.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
 import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtUtil;
@@ -83,12 +83,9 @@ public class UserController {
         response.put("userInfo", getUserBySignInDto);
 
         if (getUserBySignInDto != null) {
-            httpResponse.addCookie(generateCookie.exec("accessToken",
-                    jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(),
-                            userService.getUserRole(getUserBySignInDto.getUserId()))));
+            httpResponse.addCookie(generateCookie.exec("accessToken", jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(), userService.getUserRole(getUserBySignInDto.getUserId()))));
 
-            httpResponse.addCookie(generateCookie.exec("refreshToken",
-                    jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId())));
+            httpResponse.addCookie(generateCookie.exec("refreshToken", jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId())));
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }

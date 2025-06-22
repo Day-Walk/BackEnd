@@ -1,6 +1,5 @@
-package com.day_walk.backend.domain.user.data.dto.out;
+package com.day_walk.backend.domain.user.data.out;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
