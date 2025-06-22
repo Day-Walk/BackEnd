@@ -1,6 +1,5 @@
 package com.day_walk.backend.domain.chat.service;
 
-import com.day_walk.backend.domain.chat.data.in.SaveChatLogDto;
 import com.day_walk.backend.domain.chat.data.out.SaveChatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +30,8 @@ public class ChatService {
                 uri,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<SaveChatDto>>() {}
+                new ParameterizedTypeReference<List<SaveChatDto>>() {
+                }
         );
 
         return response.getBody();

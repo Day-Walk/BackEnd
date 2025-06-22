@@ -1,6 +1,5 @@
 package com.day_walk.backend.domain.chat.controller;
 
-import com.day_walk.backend.domain.chat.data.in.SaveChatLogDto;
 import com.day_walk.backend.domain.chat.data.out.SaveChatDto;
 import com.day_walk.backend.domain.chat.service.ChatService;
 import com.day_walk.backend.domain.chat.service.SseEmitters;
