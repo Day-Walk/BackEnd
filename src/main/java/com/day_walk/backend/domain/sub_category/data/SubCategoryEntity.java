@@ -20,14 +20,5 @@ public class SubCategoryEntity extends BaseEntity {
     @Id
     private UUID id;
     private String name;
-
     private UUID categoryId;
-
-    // Test Builder
-    @Builder
-    public SubCategoryEntity(String name, UUID categoryId) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.categoryId = categoryId;
-    }
 }
