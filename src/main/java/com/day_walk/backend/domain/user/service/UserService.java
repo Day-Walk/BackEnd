@@ -7,21 +7,34 @@ import com.day_walk.backend.domain.user.data.UserRole;
 import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
 import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.dto.out.GetCrowdLevelDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
 import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final GetUserEntityBean getUserEntityBean;
     private final SaveUserBean saveUserBean;
+    private final RestTemplate restTemplate;
+
+    @Value("${ml-server-uri}")
+    private String ML_SERVER_URI;
 
     public GetUserDto getUserInfo(UUID userId) {
         UserEntity user = getUserEntityBean.exec(userId);
@@ -111,5 +124,37 @@ public class UserService {
         }
 
         return user.getUserRole();
+    }
+
+    public GetCrowdLevelDto getCrowdLevel(int hour) {
+        String uri = UriComponentsBuilder
+                .fromUriString(ML_SERVER_URI)
+                .queryParam("hour", hour)
+                .toUriString();
+        try {
+            ResponseEntity<GetCrowdLevelDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    GetCrowdLevelDto.class
+            );
+
+            log.info("ML 응답 상태 코드: {}", response.getStatusCode());
+            log.info("ML 응답 본문: {}", response.getBody());
+
+            if (response.getBody() == null) {
+                log.warn("ML 응답 body가 null입니다. 요청 URI: {}", uri);
+                throw new CustomException(ErrorCode.ML_SERVER_ERROR);
+            }
+
+            return response.getBody();
+        }catch (HttpStatusCodeException e) {
+            log.error("ML 서버 HTTP 오류 발생: {}", e.getStatusCode());
+            log.error("오류 응답 본문: {}", e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error("ML 서버 요청 중 예외 발생: ", e);
+        }
+        return null;
+
     }
 }
