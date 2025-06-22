@@ -2,7 +2,7 @@ package com.day_walk.backend.domain.course_like.service;
 
 import com.day_walk.backend.domain.course.bean.GetCourseEntityBean;
 import com.day_walk.backend.domain.course.data.CourseEntity;
-import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
+import com.day_walk.backend.domain.course.data.out.GetCourseByLikeDto;
 import com.day_walk.backend.domain.course_like.bean.GetCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
@@ -92,7 +92,7 @@ public class CourseLikeService {
         return PaginationUtil.paginate(courseByLikeDtoList, 10);
     }
 
-    @Scheduled(cron = "0 0 9 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     public void flushLikesToKafka() {
         Set<String> keys = redisTemplate.keys("*:*");
         if (keys != null) {

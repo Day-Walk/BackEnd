@@ -1,6 +1,5 @@
 package com.day_walk.backend.domain.course_like.repository;
 
-import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
