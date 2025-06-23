@@ -212,7 +212,7 @@ public class CourseService {
                 })
                 .sorted((dto1, dto2) -> {
                     if ("like".equals(sortStr)) {
-                        return Integer.compare(dto1.getCourseLike(), dto2.getCourseLike());
+                        return Integer.compare(dto2.getCourseLike(), dto1.getCourseLike());
                     } else if ("latest".equals(sortStr)) {
                         return dto2.getCreateAt().compareTo(dto1.getCreateAt());
                     }
