@@ -173,7 +173,7 @@ public class CourseService {
     }
 
     public List<PageDto<GetAllCourseDto>> getAllCourse(String sortStr, UUID userId) {
-        List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec(sortStr);
+        List<CourseEntity> courseEntityList = getAllCourseEntityBean.exec();
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
         } else if (courseEntityList.isEmpty()) {
@@ -203,15 +203,22 @@ public class CourseService {
                             .collect(Collectors.toList());
 
                     return GetAllCourseDto.builder()
-                            .courseId(courseEntity.getId())
-                            .title(courseEntity.getTitle())
+                            .course(courseEntity)
                             .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
                             .placeList(placeList)
                             .like(liked)
                             .courseLike(getCourseLikeEntityBean.exec(courseEntity))
                             .build();
                 })
-                .toList();
+                .sorted((dto1, dto2) -> {
+                    if ("like".equals(sortStr)) {
+                        return Integer.compare(dto1.getCourseLike(), dto2.getCourseLike());
+                    } else if ("latest".equals(sortStr)) {
+                        return dto2.getCreateAt().compareTo(dto1.getCreateAt());
+                    }
+                    return 0;
+                })
+                .collect(Collectors.toList());
 
         return PaginationUtil.paginate(allCourseDtoList, 10);
     }
