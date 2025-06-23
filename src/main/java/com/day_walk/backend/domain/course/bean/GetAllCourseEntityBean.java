@@ -12,14 +12,7 @@ import java.util.List;
 public class GetAllCourseEntityBean {
     private final CourseRepository courseRepository;
 
-    public List<CourseEntity> exec(String sortStr) {
-
-        if (sortStr.equals("latest")) {
-            return courseRepository.findAllByOrderByCreateAtDesc();
-        } else if (sortStr.equals("like")) {
-            return courseRepository.findAllOrderByLikeCount();
-        }
+    public List<CourseEntity> exec() {
         return courseRepository.findAll();
     }
-
 }

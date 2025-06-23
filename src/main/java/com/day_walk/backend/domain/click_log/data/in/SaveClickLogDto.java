@@ -10,5 +10,4 @@ import java.util.UUID;
 public class SaveClickLogDto {
     private UUID userId;
     private UUID placeId;
-    private String timestamp;
 }

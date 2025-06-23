@@ -144,6 +144,9 @@ public class ReviewService {
         }
 
         List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
+        if (reviewList == null || reviewList.isEmpty()) {
+            return null;
+        }
 
         List<UUID> top5TagIds = reviewList.stream()
                 .flatMap(review -> review.getTagList().stream())
