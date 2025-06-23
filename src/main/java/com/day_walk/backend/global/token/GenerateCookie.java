@@ -9,6 +9,7 @@ public class GenerateCookie {
         Cookie cookie = new Cookie(tokenName, token);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setMaxAge(60*60*24);
 
         return cookie;
