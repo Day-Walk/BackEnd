@@ -1,4 +1,4 @@
-package com.day_walk.backend.domain.category.data.dto.out;
+package com.day_walk.backend.domain.category.data.out;
 
 import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;

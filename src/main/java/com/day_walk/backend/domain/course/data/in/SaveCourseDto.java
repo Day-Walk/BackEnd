@@ -1,4 +1,4 @@
-package com.day_walk.backend.domain.course.data.dto.in;
+package com.day_walk.backend.domain.course.data.in;
 
 import lombok.Data;
 

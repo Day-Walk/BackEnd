@@ -1,4 +1,4 @@
-package com.day_walk.backend.domain.user_like.data.dto.out;
+package com.day_walk.backend.domain.user_like.data.out;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

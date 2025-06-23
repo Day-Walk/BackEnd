@@ -83,7 +83,7 @@ public class PlaceService {
             for (int i = 2; i < placeEntityList.size(); i++) {
                 placeList.add(placeEntityList.get(i));
             }
-        } else if(!placeEntityList.isEmpty()) {
+        } else if (!placeEntityList.isEmpty()) {
             recommendList.add(placeEntityList.get(0));
             recommendList.add(placeEntityList.get(1));
             recommendList.add(placeEntityList.get(2));

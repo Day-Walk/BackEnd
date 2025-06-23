@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.image.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageService {
 
-    private final String bucketName = "team04-image-bucket";
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucketName;
 
     private final S3Client s3Client;
 

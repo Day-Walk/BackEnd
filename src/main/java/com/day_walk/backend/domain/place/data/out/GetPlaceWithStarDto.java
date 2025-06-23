@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class GetPlaceWithStarDto {
     private double stars;
 
     @Builder
-    public GetPlaceWithStarDto(PlaceEntity place, double stars,String category, String subCategory, String imgUrl) {
+    public GetPlaceWithStarDto(PlaceEntity place, double stars, String category, String subCategory, String imgUrl) {
         this.placeId = place.getId();
         this.placeName = place.getName();
         this.address = place.getAddress();

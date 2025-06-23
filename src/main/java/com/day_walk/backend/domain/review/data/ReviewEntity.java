@@ -2,7 +2,6 @@ package com.day_walk.backend.domain.review.data;
 
 import com.day_walk.backend.domain.review.data.in.SaveReviewDto;
 import com.day_walk.backend.global.BaseEntity;
-import com.day_walk.backend.global.util.StringToListConverter;
 import com.day_walk.backend.global.util.StringToUUIDListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

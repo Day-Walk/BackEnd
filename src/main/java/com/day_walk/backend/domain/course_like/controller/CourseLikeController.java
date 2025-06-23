@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.course_like.controller;
 
-import com.day_walk.backend.domain.course.data.dto.out.GetCourseByLikeDto;
+import com.day_walk.backend.domain.course.data.out.GetCourseByLikeDto;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.course_like.service.CourseLikeService;
 import com.day_walk.backend.global.util.page.PageDto;

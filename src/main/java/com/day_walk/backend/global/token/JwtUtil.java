@@ -51,6 +51,8 @@ public class JwtUtil {
         try {
             getClaims(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
             return false;
         }
