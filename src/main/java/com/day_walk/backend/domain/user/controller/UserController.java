@@ -1,11 +1,10 @@
 package com.day_walk.backend.domain.user.controller;
 
-import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
-import com.day_walk.backend.domain.user.data.dto.in.SignInUserDto;
-import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
-import com.day_walk.backend.domain.user.data.dto.out.GetCrowdLevelDto;
-import com.day_walk.backend.domain.user.data.dto.out.GetUserBySignInDto;
-import com.day_walk.backend.domain.user.data.dto.out.GetUserDto;
+import com.day_walk.backend.domain.user.data.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.in.SignInUserDto;
+import com.day_walk.backend.domain.user.data.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.out.GetUserBySignInDto;
+import com.day_walk.backend.domain.user.data.out.GetUserDto;
 import com.day_walk.backend.domain.user.service.UserService;
 import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtUtil;
@@ -93,20 +92,6 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "혼잡도 예측", description = "시간별 혼잡도 예측도를 확인합니다.")
-    @GetMapping("/crowd")
-    public ResponseEntity<Map<String, Object>> getCrowdLevel(@RequestParam("hour") int hour) {
-
-        GetCrowdLevelDto getCrowdLevelDto = userService.getCrowdLevel(hour);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", getCrowdLevelDto != null);
-        response.put("message", getCrowdLevelDto == null ? "혼잡도 예측 실패.." : "혼잡도 예측 성공!");
-        response.put("crowdLevel", getCrowdLevelDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -90,7 +90,7 @@ public class PlaceLikeService {
         return PaginationUtil.paginate(placeByLikeDtoList, 10);
     }
 
-    @Scheduled(cron = "0 45 17 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     public void flushLikesToKafka() {
         Set<String> keys = redisTemplate.keys("*:*");
         if (keys != null) {

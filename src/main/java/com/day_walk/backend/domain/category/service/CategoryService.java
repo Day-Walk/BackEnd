@@ -2,7 +2,7 @@ package com.day_walk.backend.domain.category.service;
 
 import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
-import com.day_walk.backend.domain.category.data.dto.out.GetCategoryDto;
+import com.day_walk.backend.domain.category.data.out.GetCategoryDto;
 import com.day_walk.backend.domain.tag.bean.GetTagEntityBean;
 import com.day_walk.backend.domain.tag.data.out.GetTagByCategoryDto;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class CategoryService {
                         .tagList(getTagEntityBean.exec(category).stream()
                                 .map(tag -> GetTagByCategoryDto.builder().tag(tag).build())
                                 .toList()
-                ).build())
+                        ).build())
                 .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.category.controller;
 
-import com.day_walk.backend.domain.category.data.dto.out.GetCategoryDto;
+import com.day_walk.backend.domain.category.data.out.GetCategoryDto;
 import com.day_walk.backend.domain.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
