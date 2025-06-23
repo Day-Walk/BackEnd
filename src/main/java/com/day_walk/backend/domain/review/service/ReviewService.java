@@ -143,13 +143,15 @@ public class ReviewService {
             throw new CustomException(ErrorCode.PLACE_NOT_FOUND);
         }
 
-        List<ReviewEntity> reviewList = getReviewEntityBean.exec(place);
-        if (reviewList == null || reviewList.isEmpty()) {
+        List<ReviewEntity> reviewList = Optional.ofNullable(getReviewEntityBean.exec(place))
+                .orElse(List.of());
+
+        if (reviewList.isEmpty()) {
             return null;
         }
 
         List<UUID> top5TagIds = reviewList.stream()
-                .flatMap(review -> review.getTagList().stream())
+                .flatMap(review -> Optional.ofNullable(review.getTagList()).orElse(List.of()).stream())
                 .collect(Collectors.groupingBy(tagId -> tagId, Collectors.counting()))
                 .entrySet().stream()
                 .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue()))
@@ -159,11 +161,13 @@ public class ReviewService {
 
         List<TagEntity> topTags = top5TagIds.stream()
                 .map(getTagEntityBean::exec)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .toList();
 
-        List<String> tagNames = getTagNameBean.exec(topTags);
+        List<String> tagNames = Optional.ofNullable(getTagNameBean.exec(topTags)).orElse(List.of());
 
-        double stars = Math.round(getReviewStarsAvgBean.exec(reviewList) * 10) / 10.0;
+        double starsRaw = getReviewStarsAvgBean.exec(reviewList);
+        double stars = Math.round(starsRaw * 10) / 10.0;
 
         return GetReviewTotalDto.builder()
                 .reviewNum(reviewList.size())

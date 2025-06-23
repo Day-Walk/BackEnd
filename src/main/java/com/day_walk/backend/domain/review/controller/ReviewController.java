@@ -84,11 +84,10 @@ public class ReviewController {
     @GetMapping("/all/total")
     public ResponseEntity<Map<String, Object>> getTotalByPlace(@RequestParam("placeId") UUID placeId) {
         GetReviewTotalDto reviewTotal = reviewService.getReviewTotal(placeId);
-        boolean success = reviewTotal != null;
 
         Map<String, Object> response = new HashMap<>();
-        response.put("success", success);
-        response.put("message", success ? "장소별 리뷰 통계 조회 성공!" : "장소별 리뷰 통계 조회 실패..");
+        response.put("success", true);
+        response.put("message", "장소별 리뷰 통계 조회 성공!");
         response.put("reviewTotal", reviewTotal);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
