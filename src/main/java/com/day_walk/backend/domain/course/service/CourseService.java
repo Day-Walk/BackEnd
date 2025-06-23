@@ -164,7 +164,7 @@ public class CourseService {
         like = (likeEntity != null);
 
         return GetCourseDto.builder()
-                .userName(userEntity.getName())
+                .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
                 .title(courseEntity.getTitle())
                 .placeList(getPlaceDtoList)
                 .like(like)
