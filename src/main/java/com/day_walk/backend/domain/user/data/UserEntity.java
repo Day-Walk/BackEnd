@@ -1,7 +1,7 @@
 package com.day_walk.backend.domain.user.data;
 
-import com.day_walk.backend.domain.user.data.dto.in.SaveUserDto;
-import com.day_walk.backend.domain.user.data.dto.in.UpdateUserDto;
+import com.day_walk.backend.domain.user.data.in.SaveUserDto;
+import com.day_walk.backend.domain.user.data.in.UpdateUserDto;
 import com.day_walk.backend.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

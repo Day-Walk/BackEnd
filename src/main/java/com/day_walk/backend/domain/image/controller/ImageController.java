@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.image.controller;
 
 import com.day_walk.backend.domain.image.service.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class ImageController {
     private final ImageService imageService;
 
     // 파일 업로드 API
+    @Operation(summary = "이미지 저장", description = "유저가 리뷰에 올릴 이미지를 S3에 저장합니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadImage(@RequestBody MultipartFile file) {
 

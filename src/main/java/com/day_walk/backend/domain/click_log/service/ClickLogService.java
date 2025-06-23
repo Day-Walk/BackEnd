@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.click_log.service;
 
-import com.day_walk.backend.domain.click_log.data.dto.in.SaveClickLogDto;
+import com.day_walk.backend.domain.click_log.data.in.SaveClickLogDto;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;

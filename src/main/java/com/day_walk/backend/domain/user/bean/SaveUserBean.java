@@ -12,8 +12,6 @@ public class SaveUserBean {
     private final UserRepository userRepository;
 
     public void exec(UserEntity user) {
-
         userRepository.save(user);
     }
-
 }

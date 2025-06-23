@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.user_like.controller;
 
-import com.day_walk.backend.domain.user_like.data.dto.in.SaveUserLikeDto;
+import com.day_walk.backend.domain.user_like.data.in.SaveUserLikeDto;
 import com.day_walk.backend.domain.user_like.service.UserLikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,4 +1,4 @@
-package com.day_walk.backend.domain.course.data.dto.out;
+package com.day_walk.backend.domain.course.data.out;
 
 import com.day_walk.backend.domain.course.data.CourseEntity;
 import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;

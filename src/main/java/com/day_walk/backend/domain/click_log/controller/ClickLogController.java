@@ -1,6 +1,6 @@
 package com.day_walk.backend.domain.click_log.controller;
 
-import com.day_walk.backend.domain.click_log.data.dto.in.SaveClickLogDto;
+import com.day_walk.backend.domain.click_log.data.in.SaveClickLogDto;
 import com.day_walk.backend.domain.click_log.service.ClickLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

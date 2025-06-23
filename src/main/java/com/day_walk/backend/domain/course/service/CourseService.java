@@ -4,13 +4,13 @@ import com.day_walk.backend.domain.category.bean.GetCategoryEntityBean;
 import com.day_walk.backend.domain.category.data.CategoryEntity;
 import com.day_walk.backend.domain.course.bean.*;
 import com.day_walk.backend.domain.course.data.CourseEntity;
-import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
-import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
-import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
+import com.day_walk.backend.domain.course.data.in.ChangeBooleanDto;
+import com.day_walk.backend.domain.course.data.in.ModifyCourseTitleDto;
+import com.day_walk.backend.domain.course.data.in.SaveCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetAllCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetSearchCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course_like.bean.GetCourseLikeEntityBean;
 import com.day_walk.backend.domain.course_like.data.CourseLikeEntity;
 import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
@@ -57,6 +57,7 @@ public class CourseService {
         if (userEntity == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
+
         CourseEntity courseEntity = CourseEntity.builder()
                 .id(UUID.randomUUID())
                 .userId(saveCourseDto.getUserId())
@@ -65,6 +66,7 @@ public class CourseService {
                 .placeList(saveCourseDto.getPlaceList())
                 .hasDelete(false)
                 .build();
+
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity course = saveCourseEntityBean.exec(courseEntity.getId());
         return course == null ? null : course.getId();
@@ -75,8 +77,10 @@ public class CourseService {
         if (courseEntity == null) {
             throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
         }
+
         courseEntity.modifyCourseTitle(modifyCourseTitleDto);
         saveCourseEntityBean.exec(courseEntity);
+
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
         return courseId == null ? null : courseId.getId();
     }
@@ -86,7 +90,7 @@ public class CourseService {
         if (courseEntity == null) {
             throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
         }
-        ;
+
         courseEntity.changeVisible();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -100,6 +104,7 @@ public class CourseService {
         } else if (courseEntity.isHasDelete()) {
             throw new CustomException(ErrorCode.COURSE_DELETE_TRUE);
         }
+
         courseEntity.deleteCourse();
         saveCourseEntityBean.exec(courseEntity);
         CourseEntity courseId = saveCourseEntityBean.exec(courseEntity.getId());
@@ -250,7 +255,7 @@ public class CourseService {
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
         } else if (courseEntityList.isEmpty()) {
-            Collections.emptyList();
+            return Collections.emptyList();
         }
 
         UserEntity userEntity = getUserEntityBean.exec(userId);

@@ -1,12 +1,12 @@
 package com.day_walk.backend.domain.course.controller;
 
-import com.day_walk.backend.domain.course.data.dto.in.ChangeBooleanDto;
-import com.day_walk.backend.domain.course.data.dto.in.ModifyCourseTitleDto;
-import com.day_walk.backend.domain.course.data.dto.in.SaveCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetAllCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetSearchCourseDto;
-import com.day_walk.backend.domain.course.data.dto.out.GetUsersAllCourseDto;
+import com.day_walk.backend.domain.course.data.in.ChangeBooleanDto;
+import com.day_walk.backend.domain.course.data.in.ModifyCourseTitleDto;
+import com.day_walk.backend.domain.course.data.in.SaveCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetAllCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetSearchCourseDto;
+import com.day_walk.backend.domain.course.data.out.GetUsersAllCourseDto;
 import com.day_walk.backend.domain.course.service.CourseService;
 import com.day_walk.backend.global.util.page.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
