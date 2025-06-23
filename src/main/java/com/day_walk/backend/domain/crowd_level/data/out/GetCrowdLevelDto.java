@@ -1,4 +1,4 @@
-package com.day_walk.backend.domain.user.data.out;
+package com.day_walk.backend.domain.crowd_level.data.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
