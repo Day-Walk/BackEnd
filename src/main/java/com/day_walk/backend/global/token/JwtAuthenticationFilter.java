@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -44,8 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     public void addToken(HttpServletResponse response, String tokenName, String token) {
-        Cookie cookie = generateCookie.exec(tokenName, token);
-        response.addCookie(cookie);
+        ResponseCookie responseCookie = generateCookie.exec(tokenName, token);
+        response.addHeader("Set-Cookie", responseCookie.toString());
     }
 
     @Override
