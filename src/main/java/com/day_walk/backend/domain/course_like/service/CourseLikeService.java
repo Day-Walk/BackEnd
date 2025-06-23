@@ -71,7 +71,7 @@ public class CourseLikeService {
         List<GetCourseByLikeDto> courseByLikeDtoList = courseLikeList.stream()
                 .map(courseLike -> {
                     CourseEntity course = getCourseEntityBean.exec(courseLike.getCourseId());
-                    if (!course.isVisible()) {
+                    if (course == null || !course.isVisible()) {
                         return null;
                     }
 
