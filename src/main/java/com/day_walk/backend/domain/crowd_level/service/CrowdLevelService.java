@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.crowd_level.service;
 
 import com.day_walk.backend.domain.crowd_level.data.out.GetCrowdLevelDto;
+import com.day_walk.backend.domain.crowd_level.data.out.MlCrowdResponseDto;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -27,35 +28,31 @@ public class CrowdLevelService {
 
     public GetCrowdLevelDto getCrowdLevel(int hour) {
         String uri = UriComponentsBuilder
-                .fromUriString(ML_SERVER_URI+"/crowd")
+                .fromUriString(ML_SERVER_URI + "/crowd")
                 .queryParam("hour", hour)
                 .toUriString();
-        log.info("ML_SERVER_URI: {}", ML_SERVER_URI);
-        log.info("최종 요청 URI: {}", uri);
 
-        log.info("요청 URI 빌드 시작");
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", "application/json");
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-            ResponseEntity<GetCrowdLevelDto> response = restTemplate.exchange(
+            ResponseEntity<MlCrowdResponseDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     entity,
-                    GetCrowdLevelDto.class
+                    MlCrowdResponseDto.class
             );
 
-            log.info("ML 응답 상태 코드: {}", response.getStatusCode());
-            log.info("ML 응답 본문: {}", response.getBody());
+            MlCrowdResponseDto result = response.getBody();
 
-            if (response.getBody() == null) {
-                log.warn("ML 응답 body가 null입니다. 요청 URI: {}", uri);
+            if (result == null || result.getCrowdLevel() == null) {
+                log.warn("ML 응답이 null이거나 crowdLevel이 없습니다.");
                 throw new CustomException(ErrorCode.ML_SERVER_ERROR);
             }
 
-            return response.getBody();
+            return result.getCrowdLevel();
         } catch (HttpStatusCodeException e) {
             log.error("ML 서버 HTTP 오류 발생: {}", e.getStatusCode());
             log.error("오류 응답 본문: {}", e.getResponseBodyAsString());
