@@ -1,6 +1,7 @@
 package com.day_walk.backend.domain.click_log.service;
 
 import com.day_walk.backend.domain.click_log.data.in.SaveClickLogDto;
+import com.day_walk.backend.domain.click_log.data.out.SaveClickLogByElkDto;
 import com.day_walk.backend.global.error.CustomException;
 import com.day_walk.backend.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -22,23 +27,29 @@ public class ClickLogService {
     @Value("${elk-server-uri}")
     private String ELK_SERVER_URI;
 
-    public SaveClickLogDto saveClickLog(SaveClickLogDto saveClickLogDto) {
+    public SaveClickLogByElkDto saveClickLog(SaveClickLogDto saveClickLogDto) {
         String uri = UriComponentsBuilder
                 .fromUriString(ELK_SERVER_URI)
-                .pathSegment("click-log")
+                .pathSegment("/click-log")
                 .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<SaveClickLogDto> requestEntity = new HttpEntity<>(saveClickLogDto, headers);
+        SaveClickLogByElkDto saveClickLogByElkDto = SaveClickLogByElkDto.builder()
+                .userId(saveClickLogDto.getUserId())
+                .placeId(saveClickLogDto.getPlaceId())
+                .timestamp(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                .build();
+
+        HttpEntity<SaveClickLogByElkDto> requestEntity = new HttpEntity<>(saveClickLogByElkDto, headers);
 
         try {
-            ResponseEntity<SaveClickLogDto> response = restTemplate.exchange(
+            ResponseEntity<SaveClickLogByElkDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.POST,
                     requestEntity,
-                    SaveClickLogDto.class
+                    SaveClickLogByElkDto.class
             );
 
             log.info("ELK 응답 상태 코드: {}", response.getStatusCode());

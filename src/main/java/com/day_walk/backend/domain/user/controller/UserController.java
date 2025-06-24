@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,12 +84,11 @@ public class UserController {
         response.put("userInfo", getUserBySignInDto);
 
         if (getUserBySignInDto != null) {
-            httpResponse.addCookie(generateCookie.exec("accessToken",
-                    jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(),
-                            userService.getUserRole(getUserBySignInDto.getUserId()))));
+            ResponseCookie accessCookie = generateCookie.exec("accessToken", jwtUtil.generateAccessToken(getUserBySignInDto.getUserId(), userService.getUserRole(getUserBySignInDto.getUserId())));
+            ResponseCookie refreshCookie = generateCookie.exec("refreshToken", jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId()));
 
-            httpResponse.addCookie(generateCookie.exec("refreshToken",
-                    jwtUtil.generateRefreshToken(getUserBySignInDto.getUserId())));
+            httpResponse.addHeader("Set-Cookie", accessCookie.toString());
+            httpResponse.addHeader("Set-Cookie", refreshCookie.toString());
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }

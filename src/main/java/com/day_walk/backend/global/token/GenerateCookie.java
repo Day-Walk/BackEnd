@@ -1,15 +1,21 @@
 package com.day_walk.backend.global.token;
 
-import jakarta.servlet.http.Cookie;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Component
 public class GenerateCookie {
-    public Cookie exec(String tokenName, String token) {
-        Cookie cookie = new Cookie(tokenName, token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(60*60*24);
+    public ResponseCookie exec(String tokenName, String token) {
+        ResponseCookie cookie = ResponseCookie
+                .from(tokenName, token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(Duration.ofDays(1))
+                .build();
 
         return cookie;
     }
