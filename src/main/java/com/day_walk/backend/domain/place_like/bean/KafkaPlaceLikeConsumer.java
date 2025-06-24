@@ -15,20 +15,19 @@ import java.util.UUID;
 public class KafkaPlaceLikeConsumer {
     private final PlaceLikeRepository placeLikeRepository;
     private final PlaceLikeRedisRepository placeLikeRedisRepository;
-    private final GetPlaceLikeEntityBean getPlaceLikeEntityBean;
 
     @KafkaListener(topics = "save-place-like", groupId = "save-place-like", containerFactory = "placeLikeKafkaListenerContainerFactory")
     public void redisSaveConsume(PlaceLikeEvent placeLikeEvent) {
-        placeLikeRedisRepository.savePlaceLike(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId(), placeLikeEvent.isLiked());
+        placeLikeRedisRepository.savePlaceLike(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId(), placeLikeEvent.getLiked());
     }
 
     @KafkaListener(topics = "bulk-place-like", groupId = "bulk-place-like", containerFactory = "placeLikeKafkaListenerContainerFactory")
     public void mysqlConsume(PlaceLikeEvent placeLikeEvent) {
-        if (placeLikeEvent.isLiked()) {
+        if (Boolean.TRUE.equals(placeLikeEvent.getLiked())) {
             PlaceLikeEntity placeLike = new PlaceLikeEntity(UUID.randomUUID(), placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
             placeLikeRepository.save(placeLike);
         } else {
-            PlaceLikeEntity placeLike = getPlaceLikeEntityBean.exec(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
+            PlaceLikeEntity placeLike = placeLikeRepository.findByUserIdAndPlaceId(placeLikeEvent.getUserId(), placeLikeEvent.getPlaceId());
 
             if (placeLike != null) {
                 placeLikeRepository.delete(placeLike);
