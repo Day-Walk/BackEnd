@@ -195,11 +195,15 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
-//                                if (placeEntity == null) return null;
+                                if (placeEntity == null) {
+                                    return null;
+                                }
+
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
                             })
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
 
                     return GetAllCourseDto.builder()
@@ -237,11 +241,15 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
-//                                if (placeEntity == null) return null;
+                                if (placeEntity == null) {
+                                    return null;
+                                }
+
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
                             })
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
 
                     return GetUsersAllCourseDto.builder()
@@ -280,11 +288,15 @@ public class CourseService {
                     List<GetPlaceByCourseDto> placeList = courseEntity.getPlaceList().stream()
                             .map(placeId -> {
                                 PlaceEntity placeEntity = getPlaceEntityBean.exec(placeId);
-//                                if (placeEntity == null) return null;
+                                if (placeEntity == null) {
+                                    return null;
+                                }
+
                                 return GetPlaceByCourseDto.builder()
                                         .place(placeEntity)
                                         .build();
                             })
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
 
                     return GetSearchCourseDto.builder()
