@@ -77,7 +77,7 @@ public class CourseLikeService {
 
                     return GetCourseByLikeDto.builder()
                             .course(getCourseEntityBean.exec(courseLike.getCourseId()))
-                            .user(getUserEntityBean.exec(courseLike.getUserId()))
+                            .user(getUserEntityBean.exec(course.getUserId()))
                             .courseLike(getCourseLikeEntityBean.exec(course))
                             .placeList(course.getPlaceList().stream()
                                     .map(placeId -> GetPlaceByCourseDto.builder()
