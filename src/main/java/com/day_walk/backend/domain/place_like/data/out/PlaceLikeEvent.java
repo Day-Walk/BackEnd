@@ -12,5 +12,5 @@ import java.util.UUID;
 public class PlaceLikeEvent {
     private UUID userId;
     private UUID placeId;
-    private boolean liked;
+    private Boolean liked;
 }

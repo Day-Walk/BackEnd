@@ -15,20 +15,19 @@ import java.util.UUID;
 public class KafkaCourseLikeConsumer {
     private final CourseLikeRepository courseLikeRepository;
     private final CourseLikeRedisRepository courseLikeRedisRepository;
-    private final GetCourseLikeEntityBean getCourseLikeEntityBean;
 
     @KafkaListener(topics = "save-course-like", groupId = "save-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
     public void redisSaveConsume(CourseLikeEvent courseLikeEvent) {
-        courseLikeRedisRepository.saveCourseLike(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId(), courseLikeEvent.isLiked());
+        courseLikeRedisRepository.saveCourseLike(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId(), courseLikeEvent.getLiked());
     }
 
     @KafkaListener(topics = "bulk-course-like", groupId = "bulk-course-like", containerFactory = "courseLikeKafkaListenerContainerFactory")
     public void mysqlConsume(CourseLikeEvent courseLikeEvent) {
-        if (courseLikeEvent.isLiked()) {
+        if (Boolean.TRUE.equals(courseLikeEvent.getLiked())) {
             CourseLikeEntity courseLike = new CourseLikeEntity(UUID.randomUUID(), courseLikeEvent.getUserId(), courseLikeEvent.getCourseId());
             courseLikeRepository.save(courseLike);
         } else {
-            CourseLikeEntity courseLike = getCourseLikeEntityBean.exec(courseLikeEvent);
+            CourseLikeEntity courseLike = courseLikeRepository.findByUserIdAndCourseId(courseLikeEvent.getUserId(), courseLikeEvent.getCourseId());
 
             if (courseLike != null) {
                 courseLikeRepository.delete(courseLike);
