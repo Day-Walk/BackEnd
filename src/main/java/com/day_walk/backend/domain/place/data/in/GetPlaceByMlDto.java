@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class GetPlaceByMlDto {
     private boolean success;
     private GetPlaceListByMlDto places;
-    private int total;
 }
