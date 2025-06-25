@@ -11,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.ZoneOffset;
@@ -28,10 +29,10 @@ public class ClickLogService {
     private String ELK_SERVER_URI;
 
     public SaveClickLogByElkDto saveClickLog(SaveClickLogDto saveClickLogDto) {
-        String uri = UriComponentsBuilder
-                .fromUriString(ELK_SERVER_URI)
-                .pathSegment("/click-log")
-                .toUriString();
+        UriComponents uri = UriComponentsBuilder
+                .fromUriString(ELK_SERVER_URI + "/click-log")
+                .build()
+                .encode();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -46,7 +47,7 @@ public class ClickLogService {
 
         try {
             ResponseEntity<SaveClickLogByElkDto> response = restTemplate.exchange(
-                    uri,
+                    uri.toUri(),
                     HttpMethod.POST,
                     requestEntity,
                     SaveClickLogByElkDto.class
