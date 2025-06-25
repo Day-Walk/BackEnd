@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class GetCrowdLevelInfoDto {
 
     private String area_nm;
+    private String category;
     private BigDecimal x;
     private BigDecimal y;
     private String area_congest_lvl;
