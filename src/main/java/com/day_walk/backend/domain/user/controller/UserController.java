@@ -10,7 +10,6 @@ import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -99,7 +98,7 @@ public class UserController {
 
     @Operation(summary = "로그아웃", description = "유저가 서비스를 로그아웃합니다.")
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse httpResponse) {
         ResponseCookie accessCookie = generateCookie.exec("accessToken");
         ResponseCookie refreshCookie = generateCookie.exec("refreshToken");
 
@@ -109,6 +108,16 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "로그아웃 성공!");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "권한 확인", description = "유저의 권한을 확인합니다.")
+    @PostMapping("/auth")
+    public ResponseEntity<Map<String, Object>> auth() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "권한이 있습니다!");
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
