@@ -20,7 +20,7 @@ public class GetCourseDto {
     private LocalDateTime createAt;
 
     @Builder
-    public GetCourseDto(String userName, String title,LocalDateTime createAt, List<GetPlaceWithStarDto> placeList, boolean like, int courseLike) {
+    public GetCourseDto(String userName, String title, LocalDateTime createAt, List<GetPlaceWithStarDto> placeList, boolean like, int courseLike) {
         this.userName = userName;
         this.title = title;
         this.createAt = createAt;
