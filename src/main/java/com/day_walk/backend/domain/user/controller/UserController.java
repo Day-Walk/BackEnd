@@ -10,6 +10,7 @@ import com.day_walk.backend.global.token.GenerateCookie;
 import com.day_walk.backend.global.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -92,6 +93,22 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "로그아웃", description = "유저가 서비스를 로그아웃합니다.")
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        ResponseCookie accessCookie = generateCookie.exec("accessToken");
+        ResponseCookie refreshCookie = generateCookie.exec("refreshToken");
+
+        httpResponse.addHeader("Set-Cookie", accessCookie.toString());
+        httpResponse.addHeader("Set-Cookie", refreshCookie.toString());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "로그아웃 성공!");
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

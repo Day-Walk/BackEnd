@@ -19,4 +19,17 @@ public class GenerateCookie {
 
         return cookie;
     }
+
+    public ResponseCookie exec(String tokenName) {
+        ResponseCookie cookie = ResponseCookie
+                .from(tokenName, "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0) // 즉시 만료
+                .build();
+
+        return cookie;
+    }
 }
