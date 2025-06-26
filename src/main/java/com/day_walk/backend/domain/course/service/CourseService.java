@@ -166,6 +166,7 @@ public class CourseService {
         return GetCourseDto.builder()
                 .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
                 .title(courseEntity.getTitle())
+                .createAt(courseEntity.getCreateAt())
                 .placeList(getPlaceDtoList)
                 .like(like)
                 .courseLike(getCourseLikeEntityBean.exec(courseEntity))
@@ -257,6 +258,7 @@ public class CourseService {
                             .title(courseEntity.getTitle())
                             .visible(courseEntity.isVisible())
                             .placeList(placeList)
+                            .createAt(courseEntity.getCreateAt())
                             .build();
                 })
                 .filter(Objects::nonNull)
@@ -302,6 +304,7 @@ public class CourseService {
                     return GetSearchCourseDto.builder()
                             .courseId(courseEntity.getId())
                             .title(courseEntity.getTitle())
+                            .createAt(courseEntity.getCreateAt())
                             .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
                             .placeList(placeList)
                             .like(liked)
