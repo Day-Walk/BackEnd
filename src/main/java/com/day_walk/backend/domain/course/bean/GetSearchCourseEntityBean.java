@@ -15,10 +15,10 @@ public class GetSearchCourseEntityBean {
     public List<CourseEntity> exec(String searchStr, String sortStr) {
 
         if (sortStr.equals("latest")) {
-            return courseRepository.findByTitleContainingOrderByCreateAtDesc(searchStr);
+            return courseRepository.searchByTitleOrUserName(searchStr);
         } else if (sortStr.equals("like")) {
-            return courseRepository.findByTitleOrderByLikeCount(searchStr);
+            return courseRepository.findByTitleOrUserNameOrderByLikeCount(searchStr);
         }
-        return courseRepository.findByTitleContaining(searchStr);
+        return courseRepository.findByTitleOrUserName(searchStr);
     }
 }

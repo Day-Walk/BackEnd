@@ -4,6 +4,7 @@ import com.day_walk.backend.domain.place.data.out.GetPlaceByCourseDto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,4 +15,5 @@ public class GetUsersAllCourseDto {
     private String title;
     private boolean visible;
     private List<GetPlaceByCourseDto> placeList;
+    private LocalDateTime createAt;
 }
