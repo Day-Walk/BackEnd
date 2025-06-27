@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,7 +40,7 @@ public class ClickLogService {
         SaveClickLogByElkDto saveClickLogByElkDto = SaveClickLogByElkDto.builder()
                 .userId(saveClickLogDto.getUserId())
                 .placeId(saveClickLogDto.getPlaceId())
-                .timestamp(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                .timestamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .build();
 
         HttpEntity<SaveClickLogByElkDto> requestEntity = new HttpEntity<>(saveClickLogByElkDto, headers);
