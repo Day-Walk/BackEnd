@@ -268,7 +268,7 @@ public class CourseService {
     }
 
     public List<PageDto<GetSearchCourseDto>> getSearchCourse(String searchStr, String sortStr, UUID userId) {
-        List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr, sortStr);
+        List<CourseEntity> courseEntityList = getSearchCourseEntityBean.exec(searchStr);
         if (courseEntityList == null) {
             throw new CustomException(ErrorCode.COURSE_LIST_NOT_FOUND);
         } else if (courseEntityList.isEmpty()) {
@@ -312,7 +312,15 @@ public class CourseService {
                             .build();
                 })
                 .filter(Objects::nonNull)
-                .toList();
+                .sorted((dto1, dto2) -> {
+                    if ("like".equals(sortStr)) {
+                        return Integer.compare(dto2.getCourseLike(), dto1.getCourseLike());
+                    } else if ("latest".equals(sortStr)) {
+                        return dto2.getCreateAt().compareTo(dto1.getCreateAt());
+                    }
+                    return 0;
+                })
+                .collect(Collectors.toList());
 
         return PaginationUtil.paginate(courseDtoList, 10);
     }
