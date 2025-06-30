@@ -12,13 +12,7 @@ import java.util.List;
 public class GetSearchCourseEntityBean {
     private final CourseRepository courseRepository;
 
-    public List<CourseEntity> exec(String searchStr, String sortStr) {
-
-        if (sortStr.equals("latest")) {
-            return courseRepository.searchByTitleOrUserName(searchStr);
-        } else if (sortStr.equals("like")) {
-            return courseRepository.findByTitleOrUserNameOrderByLikeCount(searchStr);
-        }
+    public List<CourseEntity> exec(String searchStr) {
         return courseRepository.findByTitleOrUserName(searchStr);
     }
 }
