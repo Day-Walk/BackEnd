@@ -159,9 +159,8 @@ public class CourseService {
                 })
                 .collect(Collectors.toList());
 
-        boolean like = false;
         CourseLikeEntity likeEntity = getCourseLikeEntityBean.exec(new CourseLikeDto(userEntity.getId(), courseEntity.getId()));
-        like = (likeEntity != null);
+        boolean like = (likeEntity != null);
 
         return GetCourseDto.builder()
                 .userName(getUserEntityBean.exec(courseEntity.getUserId()).getName())
