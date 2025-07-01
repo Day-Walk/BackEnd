@@ -6,7 +6,6 @@ import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRedisRepository;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRepository;
-import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,8 @@ public class GetCourseLikeEntityBean {
     public CourseLikeEntity exec(CourseLikeDto courseLikeDto) {
         CourseLikeEntity courseLike = courseLikeRepository.findByUserIdAndCourseId(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
         if (courseLike != null) {
-            return courseLike;
+            boolean existsInRedis = courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+            return existsInRedis ? courseLike : null;
         }
 
         if (courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId())) {
