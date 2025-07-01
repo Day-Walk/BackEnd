@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -16,19 +17,28 @@ public class GetPlaceLikeEntityBean {
     private final PlaceLikeRedisRepository placeLikeRedisRepository;
 
     public List<PlaceLikeEntity> exec(UUID userId) {
-        List<UUID> redisPlaceIds = placeLikeRedisRepository.findAllLikedPlaceIds(userId);
+        Map<UUID, Boolean> redisLikeStates = placeLikeRedisRepository.findAllPlaceLikeStates(userId);
 
-        List<PlaceLikeEntity> redisLikes = redisPlaceIds.stream()
-                .map(placeId -> new PlaceLikeEntity(UUID.randomUUID(), userId, placeId))
+        List<PlaceLikeEntity> redisLikes = redisLikeStates.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(entry -> new PlaceLikeEntity(UUID.randomUUID(), userId, entry.getKey()))
                 .toList();
 
         List<PlaceLikeEntity> mysqlLikes = placeLikeRepository.findAllByUserId(userId);
+
+        Set<UUID> redisFalseIds = redisLikeStates.entrySet().stream()
+                .filter(entry -> !entry.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
 
         Set<String> uniqueKeys = new HashSet<>();
         List<PlaceLikeEntity> merged = new ArrayList<>();
 
         for (PlaceLikeEntity like : Stream.concat(mysqlLikes.stream(), redisLikes.stream()).toList()) {
-            String key = like.getUserId().toString() + "-" + like.getPlaceId().toString();
+            if (redisFalseIds.contains(like.getPlaceId())) {
+                continue;
+            }
+            String key = like.getUserId() + "-" + like.getPlaceId();
             if (uniqueKeys.add(key)) {
                 merged.add(like);
             }

@@ -5,9 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,24 +28,29 @@ public class PlaceLikeRedisRepository {
         return Boolean.TRUE.equals(value);
     }
 
-    public List<UUID> findAllLikedPlaceIds(UUID userId) {
+    public Map<UUID, Boolean> findAllPlaceLikeStates(UUID userId) {
         String pattern = "place-like:" + userId + ":*";
         Set<String> keys = redisTemplate.keys(pattern);
 
-        if (keys == null) {
-            return List.of();
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyMap();
         }
 
-        return keys.stream()
-                .filter(key -> {
-                    Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
-                    return Boolean.TRUE.equals(value);
-                })
-                .map(key -> {
-                    String[] parts = key.split(":");
-                    System.out.println(parts[2]);
-                    return UUID.fromString(parts[2]);
-                })
-                .toList();
+        Map<UUID, Boolean> result = new HashMap<>();
+
+        for (String key : keys) {
+            Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
+            String[] parts = key.split(":");
+            if (parts.length >= 3) {
+                try {
+                    UUID placeId = UUID.fromString(parts[2]);
+                    result.put(placeId, Boolean.TRUE.equals(value));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Invalid UUID in Redis key: " + key);
+                }
+            }
+        }
+
+        return result;
     }
 }
