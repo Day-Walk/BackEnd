@@ -50,11 +50,11 @@ public class GetPlaceLikeEntityBean {
     public PlaceLikeEntity exec(UUID userId, UUID placeId) {
         PlaceLikeEntity placeLike = placeLikeRepository.findByUserIdAndPlaceId(userId, placeId);
         if (placeLike != null) {
-            boolean existsInRedis = placeLikeRedisRepository.findPlaceLike(placeLike.getUserId(), placeLike.getPlaceId());
-            return existsInRedis ? placeLike : null;
+            Boolean existsInRedis = placeLikeRedisRepository.findPlaceLike(placeLike.getUserId(), placeLike.getPlaceId());
+            return existsInRedis == null || Boolean.TRUE.equals(existsInRedis) ? placeLike : null;
         }
 
-        if (placeLikeRedisRepository.findPlaceLike(userId, placeId)) {
+        if (Boolean.TRUE.equals(placeLikeRedisRepository.findPlaceLike(userId, placeId))) {
             return new PlaceLikeEntity(UUID.randomUUID(), userId, placeId);
         }
 

@@ -22,10 +22,9 @@ public class CourseLikeRedisRepository {
         redisTemplate.delete(key);
     }
 
-    public boolean findCourseLike(UUID userId, UUID courseId) {
+    public Boolean findCourseLike(UUID userId, UUID courseId) {
         String key = "course-like:" + userId + ":" + courseId;
-        Boolean value = (Boolean) redisTemplate.opsForValue().get(key);
-        return Boolean.TRUE.equals(value);
+        return (Boolean) redisTemplate.opsForValue().get(key);
     }
 
     public List<UUID> findAllLikedUserIds(UUID courseId) {

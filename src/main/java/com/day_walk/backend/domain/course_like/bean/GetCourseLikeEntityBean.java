@@ -26,11 +26,11 @@ public class GetCourseLikeEntityBean {
     public CourseLikeEntity exec(CourseLikeDto courseLikeDto) {
         CourseLikeEntity courseLike = courseLikeRepository.findByUserIdAndCourseId(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
         if (courseLike != null) {
-            boolean existsInRedis = courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
-            return existsInRedis ? courseLike : null;
+            Boolean existsInRedis = courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId());
+            return existsInRedis == null || Boolean.TRUE.equals(existsInRedis) ? courseLike : null;
         }
 
-        if (courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId())) {
+        if (Boolean.TRUE.equals(courseLikeRedisRepository.findCourseLike(courseLikeDto.getUserId(), courseLikeDto.getCourseId()))) {
             return new CourseLikeEntity(UUID.randomUUID(), courseLikeDto.getUserId(), courseLikeDto.getCourseId());
         }
 
