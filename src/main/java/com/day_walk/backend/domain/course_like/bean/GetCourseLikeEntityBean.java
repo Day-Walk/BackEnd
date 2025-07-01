@@ -6,10 +6,12 @@ import com.day_walk.backend.domain.course_like.data.in.CourseLikeDto;
 import com.day_walk.backend.domain.course_like.data.out.CourseLikeEvent;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRedisRepository;
 import com.day_walk.backend.domain.course_like.repository.CourseLikeRepository;
+import com.day_walk.backend.domain.place_like.data.PlaceLikeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -36,19 +38,28 @@ public class GetCourseLikeEntityBean {
     }
 
     public List<CourseLikeEntity> exec(UUID userId) {
-        List<UUID> redisCourseIds = courseLikeRedisRepository.findAllLikedCourseIds(userId);
+        Map<UUID, Boolean> redisLikeStates = courseLikeRedisRepository.findAllCourseLikeStates(userId);
 
-        List<CourseLikeEntity> redisLikes = redisCourseIds.stream()
-                .map(courseId -> new CourseLikeEntity(UUID.randomUUID(), userId, courseId))
+        List<CourseLikeEntity> redisLikes = redisLikeStates.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(entry -> new CourseLikeEntity(UUID.randomUUID(), userId, entry.getKey()))
                 .toList();
 
         List<CourseLikeEntity> mysqlLikes = courseLikeRepository.findAllByUserId(userId);
+
+        Set<UUID> redisFalseIds = redisLikeStates.entrySet().stream()
+                .filter(entry -> !entry.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
 
         Set<String> uniqueKeys = new HashSet<>();
         List<CourseLikeEntity> merged = new ArrayList<>();
 
         for (CourseLikeEntity like : Stream.concat(mysqlLikes.stream(), redisLikes.stream()).toList()) {
-            String key = like.getUserId().toString() + "-" + like.getCourseId().toString();
+            if (redisFalseIds.contains(like.getCourseId())) {
+                continue;
+            }
+            String key = like.getUserId() + "-" + like.getCourseId();
             if (uniqueKeys.add(key)) {
                 merged.add(like);
             }
